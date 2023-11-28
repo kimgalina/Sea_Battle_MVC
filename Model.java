@@ -41,7 +41,6 @@ public class Model {
 
         for (int count : shipsCount) {
             if (count != 0) {
-                System.out.println(count);
                 return false;
             }
         }
