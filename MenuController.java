@@ -13,6 +13,15 @@ public class MenuController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         String command = event.getActionCommand();
-        System.out.println(" In menu Controller command: " + command);
+
+        switch (command) {
+            case "Play":
+                break;
+            case "Settings":add m
+                break;
+            case "Exit":
+                System.exit(0);
+                break;
+        }
     }
 }
