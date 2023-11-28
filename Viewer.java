@@ -6,7 +6,6 @@ public class Viewer {
     private Canvas canvas;
     private JFrame frame;
     private CardLayout cardLayout;
-
     public Viewer() {
 
         cardLayout = new CardLayout();
