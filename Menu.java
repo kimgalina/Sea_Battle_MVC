@@ -74,6 +74,8 @@ public class Menu extends JPanel {
         JButton button = new JButton(text);
         button.setBounds(x,y,200,40);
         button.setFocusable(false);
+        button.setBackground(new Color(0, 83, 128));
+        button.setForeground(new Color(49,186, 213));
         button.setFont(font);
         button.setEnabled(true);
         button.setActionCommand(command);
