@@ -17,7 +17,8 @@ public class MenuController implements ActionListener {
         switch (command) {
             case "Play":
                 break;
-            case "Settings":add m
+            case "Settings":
+                viewer.showSettings();
                 break;
             case "Exit":
                 System.exit(0);
