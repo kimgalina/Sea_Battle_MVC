@@ -1,6 +1,7 @@
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.Rectangle;
+
 public class Cell extends Rectangle implements MouseListener {
 
   // private int x;
@@ -56,5 +57,7 @@ public class Cell extends Rectangle implements MouseListener {
   public void mouseExited(MouseEvent event) {
   }
 
-
+  public boolean contains(int row, int col) {
+        return row >= y && row <= y + height && col >= x && col <= x + width;
+    }
 }
