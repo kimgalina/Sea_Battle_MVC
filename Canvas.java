@@ -30,6 +30,10 @@ public class Canvas extends JPanel {
         int xOffset = (getWidth() - boardSize * cellSize * 2) / 4; // Общее смещение
         int yOffset = (getHeight() - boardSize * cellSize) / 2; // Вертикальное смещение
 
+        // Размер шрифта для цифр
+        Font numberFont = new Font("Arial", Font.PLAIN, 20);
+        g2d.setFont(numberFont);
+
         // Рисуем сетку для вашего поля
         for (int i = 0; i <= boardSize; i++) {
             g2d.drawLine(i * cellSize + xOffset, yOffset, i * cellSize + xOffset, boardSize * cellSize + yOffset);
