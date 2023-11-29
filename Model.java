@@ -38,7 +38,7 @@
     }
 
     public int getBoardSize() {
-        return 10; // Ваш размер игрового поля
+        return 10; 
     }
 
     public boolean isCellOccupied(int row, int col) {

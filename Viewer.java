@@ -44,10 +44,6 @@ public class Viewer {
         frame.setResizable(true);
 
         frame.addMouseListener(controller);
-        Cell cell1 = model.getCell1();
-        frame.addMouseListener(cell1);
-        Cell cell2 = model.getCell2();
-        frame.addMouseListener(cell2);
     }
 
     public void update() {
