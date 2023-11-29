@@ -5,6 +5,7 @@
 
     private Cell cell1;
     private Cell cell2;
+    private Cell[][] board;
 
     public Model(Viewer viewer) {
       this.viewer = viewer;
@@ -13,6 +14,11 @@
 
       cell1 = new Cell("RED", 100, 100, 100, 100);
       cell2 = new Cell("YELLOW", 250, 100, 100, 100);
+      board = new Cell[10][10];
+    }
+
+    public Cell[][] getBoard() {
+        return board;
     }
 
     public void doAction(int x, int y) {
@@ -38,11 +44,32 @@
     }
 
     public int getBoardSize() {
-        return 10; 
+        return 10;
     }
 
     public boolean isCellOccupied(int row, int col) {
         return cell1.contains(row, col) || cell2.contains(row, col);
+    }
+
+    public void placeShip(int row, int col, int shipSize, boolean isHorizontal) {
+        // Проверки на корректность координат и направления корабля
+        // ...
+
+        // Смещение начальных координат для центрирования
+        int xOffset = (10 - shipSize) / 2; // смещение по горизонтали
+        int yOffset = (10 - shipSize) / 2; // смещение по вертикали
+
+        // Заполнение соответствующих ячеек в массиве
+        for (int i = 0; i < shipSize; i++) {
+            int adjustedRow = row + yOffset;
+            int adjustedCol = col + xOffset;
+
+            if (isHorizontal) {
+                board[adjustedRow][adjustedCol + i] = new Cell("SHIP", adjustedCol + i, adjustedRow, 40, 40);
+            } else {
+                board[adjustedRow + i][adjustedCol] = new Cell("SHIP", adjustedCol, adjustedRow + i, 40, 40);
+            }
+        }
     }
 
     public boolean validateBattlefield(int[][] field) {
