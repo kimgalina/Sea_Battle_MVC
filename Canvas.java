@@ -9,12 +9,14 @@ public class Canvas extends JPanel {
     private Font font;
 
     public Canvas(Model model) {
+      System.out.println("constructor");
         this.model = model;
         setBackground(new Color(0, 119, 190));
         font = new Font("Arial", Font.PLAIN, 20);
     }
 
     public void paint(Graphics g) {
+        System.out.println("paint");
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
 

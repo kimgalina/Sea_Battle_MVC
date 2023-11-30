@@ -10,15 +10,11 @@ public class Viewer {
     private Canvas player2Canvas;
     private JFrame frame;
     private CardLayout cardLayout;
-    private SettingsPanel settings;
-    private Menu menu;
 
     public Viewer() {
         Controller controller = new Controller(this);
         Model model = controller.getModel();
         canvas = new Canvas(model);
-        settings = new SettingsPanel(this, model);
-        menu = new Menu(this, model);
         player1Canvas = new Canvas(model);
         player2Canvas = new Canvas(model);
 
@@ -30,8 +26,6 @@ public class Viewer {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(cardLayout);
 
-        frame.add(menu, "menu");
-        frame.add(settings, "settings");
         frame.add(canvas, "canvas");
 
         JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
@@ -50,11 +44,7 @@ public class Viewer {
         canvas.repaint();
     }
 
-    public void showSettings() {
-        cardLayout.show(frame.getContentPane(), "settings");
-    }
-
     public void showCanvas() {
-        cardLayout.show(frame.getContentPane(), "canvas");
+    cardLayout.show(frame.getContentPane(), "canvas");
     }
 }
