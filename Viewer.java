@@ -6,14 +6,11 @@ public class Viewer {
     private Canvas canvas;
     private JFrame frame;
     private CardLayout cardLayout;
-    private SettingsPanel settings;
-    public Viewer() {
 
+    public Viewer() {
         controller = new Controller(this);
         Model model = controller.getModel();
         canvas = new Canvas(model);
-        settings = new SettingsPanel(this, model);
-        Menu menu = new Menu(this, model);
 
         cardLayout = new CardLayout();
 
@@ -23,15 +20,6 @@ public class Viewer {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(cardLayout);
 
-        frame.add(menu, "menu");
-        frame.add(settings, "settings");
-        frame.setVisible(true);
-        frame.setResizable(true);
-
-    }
-
-    public void showSettings() {
-        cardLayout.show(frame.getContentPane(), "settings");
     }
 
 }
