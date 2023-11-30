@@ -5,6 +5,35 @@ public class Model {
         this.viewer = viewer;
     }
 
+    public int[][] findShipCoordinates(int[][] field, int x, int y) {
+        int shipStartX = x;
+        int shipStartY = y;
+        int shipEndX = x;
+        int shipEndY = y;
+
+        if(field[x][y] != 1) {
+            return null;
+        }
+
+        while (shipStartY > 0 && field[x][shipStartY - 1] == 1) {
+            shipStartY--;
+        }
+
+        while (shipEndY < field[0].length - 1 && field[x][shipEndY + 1] == 1) {
+            shipEndY++;
+        }
+
+        while (shipStartX > 0 && field[shipStartX - 1][y] == 1) {
+            shipStartX--;
+        }
+
+        while (shipEndX < field.length - 1 && field[shipEndX + 1][y] == 1) {
+            shipEndX++;
+        }
+
+        return new int[][]{{shipStartX, shipStartY}, {shipEndX, shipEndY}};
+    }
+
     public boolean validateBattlefield(int[][] field) {
         if (field.length != 10 || field[0].length != 10) {
             return false;
