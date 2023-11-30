@@ -15,8 +15,8 @@ public class Viewer {
         cardLayout = new CardLayout();
 
         frame = new JFrame("Battleship");
-        frame.setSize(1200,720);
-        frame.setLocation(100,10);
+        frame.setSize(1200, 720);
+        frame.setLocation(100, 10);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(cardLayout);
 

@@ -11,7 +11,7 @@ public class Model {
         int shipEndX = x;
         int shipEndY = y;
 
-        if(field[x][y] != 1) {
+        if (field[x][y] != 1) {
             return null;
         }
 
