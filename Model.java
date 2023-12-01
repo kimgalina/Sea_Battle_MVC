@@ -1,75 +1,56 @@
-  public class Model {
+public class Model {
     private Viewer viewer;
     private int x;
     private int y;
 
-    private Cell cell1;
-    private Cell cell2;
-    private Cell[][] board;
+    private Cell[][] boardArray;
+
+    private Cell enemyBoard;
 
     public Model(Viewer viewer) {
-      this.viewer = viewer;
-      x = -1;
-      y = -1;
+        this.viewer = viewer;
+        x = -1;
+        y = -1;
 
-      cell1 = new Cell("RED", 100, 100, 100, 100);
-      cell2 = new Cell("YELLOW", 250, 100, 100, 100);
-      board = new Cell[10][10];
+        boardArray = new Cell[10][10];
+        enemyBoard = new Cell("Enemy Board", 50, 110, 10 * 50, 10 * 50, 0);
     }
 
-    public Cell[][] getBoard() {
-        return board;
+    public Cell[][] getBoardArray() {
+        return boardArray;
+    }
+
+    public Cell getBoardEnemyBoard() {
+        return enemyBoard;
     }
 
     public void doAction(int x, int y) {
-      this.x = x;
-      this.y = y;
-      viewer.update();
+        this.x = x;
+        this.y = y;
+        if (enemyBoard.contains(x, y)) {
+            System.out.println("In Enemy board pressed mouse!!!");
+            viewer.update();
+        }
+    }
+
+    public void mouseEnteredInEnemyBoard(int x, int y) {
+        System.out.println("Mouse entered in JFrame");
+        if (enemyBoard.contains(x, y)) {
+            System.out.println("Mouse entered in enemy board!!!");
+        }
+
     }
 
     public int getX() {
-      return x;
+        return x;
     }
 
     public int getY() {
-      return y;
-    }
-
-    public Cell getCell1() {
-      return cell1;
-    }
-
-    public Cell getCell2() {
-      return cell2;
+        return y;
     }
 
     public int getBoardSize() {
         return 10;
-    }
-
-    public boolean isCellOccupied(int row, int col) {
-        return cell1.contains(row, col) || cell2.contains(row, col);
-    }
-
-    public void placeShip(int row, int col, int shipSize, boolean isHorizontal) {
-        // Проверки на корректность координат и направления корабля
-        // ...
-
-        // Смещение начальных координат для центрирования
-        int xOffset = (10 - shipSize) / 2; // смещение по горизонтали
-        int yOffset = (10 - shipSize) / 2; // смещение по вертикали
-
-        // Заполнение соответствующих ячеек в массиве
-        for (int i = 0; i < shipSize; i++) {
-            int adjustedRow = row + yOffset;
-            int adjustedCol = col + xOffset;
-
-            if (isHorizontal) {
-                board[adjustedRow][adjustedCol + i] = new Cell("SHIP", adjustedCol + i, adjustedRow, 40, 40);
-            } else {
-                board[adjustedRow + i][adjustedCol] = new Cell("SHIP", adjustedCol, adjustedRow + i, 40, 40);
-            }
-        }
     }
 
     public int[][] findShipCoordinates(int[][] field, int x, int y) {
