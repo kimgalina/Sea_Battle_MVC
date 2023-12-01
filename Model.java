@@ -13,7 +13,7 @@ public class Model {
         y = -1;
 
         boardArray = new Cell[10][10];
-        enemyBoard = new Cell("Enemy Board", 50, 100, 10 * 50, 10 * 50);
+        enemyBoard = new Cell("Enemy Board", 50, 110, 10 * 50, 10 * 50, 0);
     }
 
     public Cell[][] getBoardArray() {
@@ -51,27 +51,6 @@ public class Model {
 
     public int getBoardSize() {
         return 10;
-    }
-
-    public void placeShip(int row, int col, int shipSize, boolean isHorizontal) {
-        // Проверки на корректность координат и направления корабля
-        // ...
-
-        // Смещение начальных координат для центрирования
-        int xOffset = (10 - shipSize) / 2; // смещение по горизонтали
-        int yOffset = (10 - shipSize) / 2; // смещение по вертикали
-
-        // Заполнение соответствующих ячеек в массиве
-        for (int i = 0; i < shipSize; i++) {
-            int adjustedRow = row + yOffset;
-            int adjustedCol = col + xOffset;
-
-            if (isHorizontal) {
-                boardArray[adjustedRow][adjustedCol + i] = new Cell("SHIP", adjustedCol + i, adjustedRow, 50, 50);
-            } else {
-                boardArray[adjustedRow + i][adjustedCol] = new Cell("SHIP", adjustedCol, adjustedRow + i, 50, 50);
-            }
-        }
     }
 
     public int[][] findShipCoordinates(int[][] field, int x, int y) {

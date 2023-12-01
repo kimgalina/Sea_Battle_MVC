@@ -19,7 +19,7 @@ public class Canvas extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         drawGrid(g2d);
-        drawShips(g2d);
+        drawShips(g2d, new Cell("", 0, 0, 0, 0, 0)); // todo: how to update right image
     }
 
     private void drawGrid(Graphics2D g2d) {
@@ -32,12 +32,12 @@ public class Canvas extends JPanel {
         int xOffset = (getWidth() - boardSize * cellSize * 2) / 4; // Общее смещение
         int yOffset = (getHeight() - boardSize * cellSize) / 2; // Вертикальное смещение
 
-//        Cell enemyBoard = model.getBoardEnemyBoard();
-//        enemyBoard.setLocation(xOffset, yOffset);
-//        g2d.setColor(Color.GRAY);
-//        g2d.fill(enemyBoard);
-//        g2d.setColor(Color.WHITE);
-//        g2d.draw(enemyBoard);
+        Cell enemyBoard = model.getBoardEnemyBoard();
+        enemyBoard.setLocation(xOffset, yOffset);
+        g2d.setColor(Color.GRAY);
+        g2d.fill(enemyBoard);
+        g2d.setColor(Color.WHITE);
+        g2d.draw(enemyBoard);
 
         // Размер шрифта для цифр
         Font numberFont = new Font("Arial", Font.PLAIN, 20);
@@ -105,14 +105,14 @@ public class Canvas extends JPanel {
 
 
 
-    private void drawShips(Graphics2D g2d) {
+    private void drawShips(Graphics2D g2d, Cell cell) {
         Cell[][] board = model.getBoardArray();
-        int cellSize = 40;
+        int cellSize = 50;
 
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                Cell cell = board[i][j];
-                if (cell != null) {
+                Cell cell1 = board[i][j];
+                if (cell1 != null) {
                     g2d.setColor(Color.WHITE);
                     g2d.fillRect(cell.x, cell.y, cell.width, cell.height);
                     g2d.setColor(Color.RED);
