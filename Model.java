@@ -22,7 +22,7 @@ public class Model {
             }
             System.out.println();
         }
-        git 
+
         enemyBoard = new Cell(50, 110, 10 * 50, 10 * 50, 0);
         startGame();
     }
@@ -51,13 +51,7 @@ public class Model {
         this.y = y;
         if (enemyBoard.contains(x, y)) {
             System.out.println("In Enemy board pressed mouse!!!");
-<<<<<<< HEAD
-            //
-            //
-            //
-=======
             makeUserShot();
->>>>>>> 031d62f011a90fa2017f0ef9090889f590cd6a85
             viewer.update();
         }
     }
