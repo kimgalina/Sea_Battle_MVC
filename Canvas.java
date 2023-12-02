@@ -19,7 +19,7 @@ public class Canvas extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         drawGrid(g2d);
-        drawShips(g2d, new Cell("", 0, 0, 0, 0, 0)); // todo: how to update right image
+        drawShips(g2d, new Cell(0, 0, 0, 0, 0)); 
     }
 
     private void drawGrid(Graphics2D g2d) {
@@ -28,9 +28,9 @@ public class Canvas extends JPanel {
         int cellSize = 50;
         int boardSize = model.getBoardSize();
 
-        // Вычисляем смещение по горизонтали и вертикали для центрирования левой половины поля
-        int xOffset = (getWidth() - boardSize * cellSize * 2) / 4; // Общее смещение
-        int yOffset = (getHeight() - boardSize * cellSize) / 2; // Вертикальное смещение
+
+        int xOffset = (getWidth() - boardSize * cellSize * 2) / 4;
+        int yOffset = (getHeight() - boardSize * cellSize) / 2;
 
         Cell enemyBoard = model.getBoardEnemyBoard();
         enemyBoard.setLocation(xOffset, yOffset);
@@ -39,15 +39,15 @@ public class Canvas extends JPanel {
         g2d.setColor(Color.WHITE);
         g2d.draw(enemyBoard);
 
-        // Размер шрифта для цифр
+
         Font numberFont = new Font("Arial", Font.PLAIN, 20);
         g2d.setFont(numberFont);
 
-        // Рисуем сетку для вашего поля
+
         for (int i = 0; i <= boardSize; i++) {
             g2d.drawLine(i * cellSize + xOffset, yOffset, i * cellSize + xOffset, boardSize * cellSize + yOffset);
 
-            // Добавляем цифры слева
+
             if (i > 0 && i <= boardSize) {
                 String number = Integer.toString(i);
                 int numberX = xOffset / 2 - g2d.getFontMetrics().stringWidth(number) / 2;
@@ -59,7 +59,7 @@ public class Canvas extends JPanel {
         for (int i = 0; i <= boardSize; i++) {
             g2d.drawLine(xOffset, i * cellSize + yOffset, boardSize * cellSize + xOffset, i * cellSize + yOffset);
 
-            // Добавляем буквы сверху
+
             if (i > 0 && i <= boardSize) {
                 char letter = (char) ('A' + i - 1);
                 String letterStr = Character.toString(letter);
@@ -69,18 +69,18 @@ public class Canvas extends JPanel {
             }
         }
 
-        // Рисуем разделительную полосу
+
         g2d.drawLine(boardSize * cellSize + xOffset * 2, 0, boardSize * cellSize + xOffset * 2, getHeight());
 
-        // Рисуем сетку для поля противника
-        int enemyXOffset = getWidth() / 2 + boardSize * cellSize / 10; // Смещение вправо от разделительной полосы
-        int enemyYOffset = yOffset; // Также вертикальное смещение для правой половины окна
 
-        // Рисуем сетку для правой половины поля противника
+        int enemyXOffset = getWidth() / 2 + boardSize * cellSize / 10;
+        int enemyYOffset = yOffset;
+
+
         for (int i = 0; i <= boardSize; i++) {
             g2d.drawLine(i * cellSize + enemyXOffset, enemyYOffset, i * cellSize + enemyXOffset, boardSize * cellSize + enemyYOffset);
 
-            // Добавляем цифры справа
+
             if (i > 0 && i <= boardSize) {
                 String number = Integer.toString(i);
                 int numberX = boardSize * cellSize + xOffset * 2 + xOffset / 2 - g2d.getFontMetrics().stringWidth(number) / 2;
@@ -92,7 +92,7 @@ public class Canvas extends JPanel {
         for (int i = 0; i <= boardSize; i++) {
             g2d.drawLine(enemyXOffset, i * cellSize + enemyYOffset, boardSize * cellSize + enemyXOffset, i * cellSize + enemyYOffset);
 
-            // Добавляем буквы сверху
+
             if (i > 0 && i <= boardSize) {
                 char letter = (char) ('A' + i - 1);
                 String letterStr = Character.toString(letter);

@@ -1,5 +1,6 @@
 public class Model {
     private Viewer viewer;
+    private FieldGenerator fieldGenerator;
     private int x;
     private int y;
 
@@ -11,10 +12,18 @@ public class Model {
         this.viewer = viewer;
         x = -1;
         y = -1;
-
-        boardArray = new Cell[10][10];
-        enemyBoard = new Cell("Enemy Board", 50, 110, 10 * 50, 10 * 50, 0);
+        fieldGenerator = new FieldGenerator();
+        boardArray = fieldGenerator.getGeneratedField();
+        for(int i = 0; i < boardArray.length; i++) {
+            for(int j = 0; j < boardArray[i].length; j++) {
+                System.out.print(boardArray[i][j].getValue());
+            }
+            System.out.println();
+        }
+        enemyBoard = new Cell(50, 110, 10 * 50, 10 * 50, 0);
     }
+
+
 
     public Cell[][] getBoardArray() {
         return boardArray;

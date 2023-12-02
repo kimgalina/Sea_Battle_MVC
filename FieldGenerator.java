@@ -8,8 +8,17 @@ public class FieldGenerator {
         random = new Random();
     }
 
-
-    public int[][] generateField() {
+    public Cell[][] getGeneratedField() {
+        int[][] field = generateField();
+        Cell[][] generatedField = new Cell[field.length][10];
+        for(int i = 0; i < field.length; i++) {
+            for(int j = 0; j < field[i].length; j++) {
+                generatedField[i][j] = new Cell(i, j, 50, 50, field[i][j]);
+            }
+        }
+        return generatedField;
+    }
+    private int[][] generateField() {
         int[][] matrix = new int[10][10];
         for (int i = 4, k = 1; i > 0; i--, k++) {
             for (int j = k; j > 0; j--) {

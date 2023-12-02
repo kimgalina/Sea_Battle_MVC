@@ -6,9 +6,12 @@ public class Cell extends Rectangle {
     private int value;
 
 
-    public Cell(String name, int x, int y, int width, int height, int value) {
+    public Cell(int x, int y, int width, int height, int value) {
         super(x, y, width, height);
-        this.name = name;
         this.value = value;
+    }
+
+    public int getValue() {
+        return value;
     }
 }
