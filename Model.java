@@ -1,11 +1,13 @@
 public class Model {
+
     private Viewer viewer;
     private FieldGenerator fieldGenerator;
+    private Player user;
+    private Player computer;
+    private GameLogic gameLogic;
     private int x;
     private int y;
-
     private Cell[][] boardArray;
-
     private Cell enemyBoard;
 
     public Model(Viewer viewer) {
@@ -20,15 +22,21 @@ public class Model {
             }
             System.out.println();
         }
-        // 0 -> пустое место
-        // 1 -> корабль
-        // 2 -> подбитый корабль
-        // 3 -> промах
-        // 4 -> полностью потонувший корабль
-        enemyBoard = new Cell(50, 100, 10 * 50, 10 * 50, 0);
+        git 
+        enemyBoard = new Cell(50, 110, 10 * 50, 10 * 50, 0);
+        startGame();
     }
 
+    private void startGame() {
+        ShotsQueue buffer = new ShotsQueue(1);
+        user = new User(this, buffer);
+        computer = new Computer(this, buffer);
+        gameLogic = new GameLogic(buffer);
 
+        user.start();
+        computer.start();
+        gameLogic.start();
+    }
 
     public Cell[][] getBoardArray() {
         return boardArray;
@@ -43,9 +51,13 @@ public class Model {
         this.y = y;
         if (enemyBoard.contains(x, y)) {
             System.out.println("In Enemy board pressed mouse!!!");
+<<<<<<< HEAD
             //
             //
             //
+=======
+            makeUserShot();
+>>>>>>> 031d62f011a90fa2017f0ef9090889f590cd6a85
             viewer.update();
         }
     }
@@ -55,7 +67,11 @@ public class Model {
         if (enemyBoard.contains(x, y)) {
             System.out.println("Mouse entered in enemy board!!!");
         }
+    }
 
+    private void makeUserShot() {
+        user.notifyTurn();
+        computer.notifyTurn();
     }
 
     public int getX() {
