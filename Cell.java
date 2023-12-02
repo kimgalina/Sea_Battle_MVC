@@ -3,6 +3,7 @@ import java.awt.Rectangle;
 public class Cell extends Rectangle {
 
     private String name;
+    private Ship ship;
     private int value;
 
 
@@ -13,5 +14,9 @@ public class Cell extends Rectangle {
 
     public int getValue() {
         return value;
+    }
+
+    public Ship getShip() {
+        return ship;
     }
 }
