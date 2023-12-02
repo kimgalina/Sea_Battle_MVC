@@ -1,5 +1,4 @@
 import javax.swing.JFrame;
-import java.awt.*;
 
 public class Viewer {
     private Controller controller;

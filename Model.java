@@ -20,7 +20,12 @@ public class Model {
             }
             System.out.println();
         }
-        enemyBoard = new Cell(50, 110, 10 * 50, 10 * 50, 0);
+        // 0 -> пустое место
+        // 1 -> корабль
+        // 2 -> подбитый корабль
+        // 3 -> промах
+        // 4 -> полностью потонувший корабль
+        enemyBoard = new Cell(50, 100, 10 * 50, 10 * 50, 0);
     }
 
 
@@ -38,6 +43,9 @@ public class Model {
         this.y = y;
         if (enemyBoard.contains(x, y)) {
             System.out.println("In Enemy board pressed mouse!!!");
+            //
+            //
+            //
             viewer.update();
         }
     }
