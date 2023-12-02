@@ -22,6 +22,7 @@ public class Model {
             }
             System.out.println();
         }
+
         enemyBoard = new Cell(50, 110, 10 * 50, 10 * 50, 0);
         startGame();
     }
