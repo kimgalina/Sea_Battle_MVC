@@ -1,11 +1,13 @@
 public class Model {
+
     private Viewer viewer;
     private FieldGenerator fieldGenerator;
+    private Player user;
+    private Player computer;
+    private GameLogic gameLogic;
     private int x;
     private int y;
-
     private Cell[][] boardArray;
-
     private Cell enemyBoard;
 
     public Model(Viewer viewer) {
@@ -21,9 +23,19 @@ public class Model {
             System.out.println();
         }
         enemyBoard = new Cell(50, 110, 10 * 50, 10 * 50, 0);
+        startGame();
     }
 
+    private void startGame() {
+        ShotsQueue buffer = new ShotsQueue(1);
+        user = new User(this, buffer);
+        computer = new Computer(this, buffer);
+        gameLogic = new GameLogic(buffer);
 
+        user.start();
+        computer.start();
+        gameLogic.start();
+    }
 
     public Cell[][] getBoardArray() {
         return boardArray;
@@ -38,6 +50,7 @@ public class Model {
         this.y = y;
         if (enemyBoard.contains(x, y)) {
             System.out.println("In Enemy board pressed mouse!!!");
+            makeUserShot();
             viewer.update();
         }
     }
@@ -47,7 +60,11 @@ public class Model {
         if (enemyBoard.contains(x, y)) {
             System.out.println("Mouse entered in enemy board!!!");
         }
+    }
 
+    private void makeUserShot() {
+        user.notifyTurn();
+        computer.notifyTurn();
     }
 
     public int getX() {
