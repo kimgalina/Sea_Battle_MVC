@@ -8,13 +8,12 @@ public class Viewer {
     public Viewer() {
         controller = new Controller(this);
         Model model = controller.getModel();
-        canvas = new Canvas(model);
+        canvas = new Canvas(model,controller);
 
         frame = new JFrame("Battleship");
         frame.setSize(1200, 720);
         frame.setLocation(100, 10);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.addMouseListener(controller);
 
         frame.add(canvas);
 

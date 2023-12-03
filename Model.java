@@ -46,8 +46,9 @@ public class Model {
     }
 
     public void doAction(int x, int y) {
-        this.x = x;
-        this.y = y;
+
+        System.out.println(x + "    " + y);
+
 
         if (enemyBoard.contains(x, y)) {
             System.out.println("In Enemy board pressed mouse!!!");
