@@ -51,12 +51,13 @@ public class Model {
     }
 
     public void doAction(int x, int y) {
-        this.x = x;
-        this.y = y;
+
+        System.out.println(x + "    " + y);
+
 
         if (enemyBoard.contains(x, y)) {
             System.out.println("In Enemy board pressed mouse!!!");
-            makeUserShot();
+             makeUserShot();
 
             int indexY = (y - 100) / 50;
             int indexX = (x - 50) / 50;
