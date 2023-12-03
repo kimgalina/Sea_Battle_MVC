@@ -2,6 +2,7 @@ import java.util.Random;
 
 
 public class FieldGenerator {
+
     private Random random;
 
     public FieldGenerator() {
@@ -13,12 +14,7 @@ public class FieldGenerator {
         Cell[][] generatedField = new Cell[field.length][10];
         for(int i = 0; i < field.length; i++) {
             for(int j = 0; j < field[i].length; j++) {
-                if (field[i][j] == 1) {
-                    Ship ship = new Ship(1);
-                    generatedField[i][j] = new Cell(i * 50 + 50, j * 50 + 100, 50, 50, field[i][j], ship);
-                    continue;
-                }
-                generatedField[i][j] = new Cell(i * 50 + 50, j * 50 + 100, 50, 50, field[i][j], null);
+                generatedField[i][j] = new Cell(i * 50 + 50, j * 50 + 100, 50, 50, field[i][j]);
             }
         }
         return generatedField;

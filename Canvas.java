@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.Image;
 
 public class Canvas extends JPanel {
+
     private Model model;
     private Font font;
 
@@ -22,6 +23,7 @@ public class Canvas extends JPanel {
 
         drawGrid(g2d);
         drawShips(g2d);
+//        drawShips(g2d);
     }
 
     private void drawGrid(Graphics2D g2d) {
@@ -31,7 +33,8 @@ public class Canvas extends JPanel {
         int xOffset = 50;
         int yOffset = 100;
 
-        Cell enemyBoard = model.getBoardEnemyBoard();
+        Cell enemyBoard = model.getEnemyBoard();
+//        enemyBoard.setLocation(xOffset, yOffset);
         g2d.setColor(Color.GRAY);
         g2d.fill(enemyBoard);
         g2d.setColor(Color.WHITE);
@@ -96,18 +99,10 @@ public class Canvas extends JPanel {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 Cell cell = board[i][j];
+//                x = ((getWidth() - 10 * cellSize * 2) / 4) + cellSize * j;
+//                y = ((getHeight() - 10 * cellSize) / 2) + cellSize * i;
+//                cell.setLocation(x, y);
                 if (cell != null) {
-                    if(!cell.isState()){
-                        if(cell.getValue() == 1) {
-                            g2d.drawImage(cell.getShip().getImageSharped(), cell.x, cell.y, cell.width, cell.height, null);
-                        }
-                        continue;
-                    }
-
-                    if (cell.getValue() == 1) {
-                        g2d.drawImage(cell.getShip().getImage(), cell.x, cell.y, cell.width, cell.height, null);
-                        continue;
-                    }
                     g2d.setColor(Color.WHITE);
                     g2d.fillRect(cell.x, cell.y, cell.width, cell.height);
                     g2d.setColor(Color.RED);
