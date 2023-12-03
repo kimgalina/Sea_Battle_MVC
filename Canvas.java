@@ -9,10 +9,13 @@ public class Canvas extends JPanel {
     private Model model;
     private Font font;
 
-    public Canvas(Model model) {
+
+    public Canvas(Model model,Controller controller) {
+
         this.model = model;
         setBackground(new Color(0, 119, 190));
         font = new Font("Arial", Font.PLAIN, 20);
+        addMouseListener(controller);
     }
 
     public void paint(Graphics g) {
