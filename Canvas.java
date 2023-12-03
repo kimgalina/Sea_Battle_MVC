@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Font;
 
 public class Canvas extends JPanel {
+
     private Model model;
     private Font font;
 
@@ -19,7 +20,7 @@ public class Canvas extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         drawGrid(g2d);
-        drawShips(g2d);
+//        drawShips(g2d);
     }
 
     private void drawGrid(Graphics2D g2d) {
@@ -29,7 +30,7 @@ public class Canvas extends JPanel {
         int xOffset = 50;
         int yOffset = 100;
 
-        Cell enemyBoard = model.getBoardEnemyBoard();
+        Cell enemyBoard = model.getEnemyBoard();
 //        enemyBoard.setLocation(xOffset, yOffset);
         g2d.setColor(Color.GRAY);
         g2d.fill(enemyBoard);

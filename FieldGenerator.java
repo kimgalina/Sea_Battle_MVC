@@ -2,6 +2,7 @@ import java.util.Random;
 
 
 public class FieldGenerator {
+
     private Random random;
 
     public FieldGenerator() {
