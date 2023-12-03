@@ -23,7 +23,7 @@ public class Model {
             System.out.println();
         }
 
-        enemyBoard = new Cell(50, 110, 10 * 50, 10 * 50, 0);
+        enemyBoard = new Cell(50, 100, 10 * 50, 10 * 50, 0, null);
         startGame();
     }
 
@@ -38,34 +38,32 @@ public class Model {
         gameLogic.start();
     }
 
-    public Cell[][] getBoardArray() {
-        return boardArray;
-    }
-
-    public Cell getBoardEnemyBoard() {
-        return enemyBoard;
-    }
-
     public void doAction(int x, int y) {
         this.x = x;
         this.y = y;
         if (enemyBoard.contains(x, y)) {
             System.out.println("In Enemy board pressed mouse!!!");
             makeUserShot();
+            int indexX = (x - 50) / 50;
+            int indexY = (y - 120) / 50;
+            if(boardArray[indexX][indexY].isState()) {
+                boardArray[indexX][indexY].setState();
+            }
             viewer.update();
-        }
-    }
-
-    public void mouseEnteredInEnemyBoard(int x, int y) {
-        System.out.println("Mouse entered in JFrame");
-        if (enemyBoard.contains(x, y)) {
-            System.out.println("Mouse entered in enemy board!!!");
         }
     }
 
     private void makeUserShot() {
         user.notifyTurn();
         computer.notifyTurn();
+    }
+
+    public Cell[][] getBoardArray() {
+        return boardArray;
+    }
+
+    public Cell getBoardEnemyBoard() {
+        return enemyBoard;
     }
 
     public int getX() {

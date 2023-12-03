@@ -24,9 +24,6 @@ public class Controller implements MouseListener {
   }
 
   public void mouseEntered(MouseEvent event) {
-    int x = event.getX();
-    int y = event.getY();
-    model.mouseEnteredInEnemyBoard(x, y);
   }
 
   public void mouseExited(MouseEvent event) {
