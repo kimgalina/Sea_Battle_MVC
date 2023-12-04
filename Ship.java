@@ -1,11 +1,18 @@
 public class Ship {
 
     private int health;
-    private int isHorizontal;
+    private boolean isHorizontal;
     private Cell[] cells;
 
-    public Ship() {
+    public Ship(int health, boolean isHorizontal) {
+        this.health = health;
+        this.isHorizontal = isHorizontal;
+    }
 
+    public Ship(int health, boolean isHorizontal, Cell[] cells) {
+        this.health = health;
+        this.isHorizontal = isHorizontal;
+        this.cells = cells;
     }
 
     public int getHealth() {
@@ -16,13 +23,6 @@ public class Ship {
         this.health = health;
     }
 
-    public int getIsHorizontal() {
-        return isHorizontal;
-    }
-
-    public void setIsHorizontal(int isHorizontal) {
-        this.isHorizontal = isHorizontal;
-    }
 
     public Cell[] getCells() {
         return cells;
@@ -30,5 +30,13 @@ public class Ship {
 
     public void setCells(Cell[] cells) {
         this.cells = cells;
+    }
+
+    public boolean isHorizontal() {
+        return isHorizontal;
+    }
+
+    public void setHorizontal(boolean horizontal) {
+        isHorizontal = horizontal;
     }
 }
