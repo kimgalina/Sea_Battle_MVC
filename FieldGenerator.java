@@ -76,7 +76,7 @@ public class FieldGenerator {
                     matrix[x][y].setValue(1);
 
                     // каждой клетке в зависимости от ее положения ставим картинку части корабля
-                    String imagePath = decksCount + "ship-" + i + ".png";
+                    String imagePath =  "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
@@ -87,7 +87,7 @@ public class FieldGenerator {
                     matrix[x][y].setValue(1);
 
                     // каждой клетке в зависимости от ее положения ставим картинку части корабля
-                    String imagePath = decksCount + "ship-" + i + ".png";
+                    String imagePath =  "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
@@ -97,7 +97,7 @@ public class FieldGenerator {
                     matrix[x][y].setValue(1);
 
                     // каждой клетке в зависимости от ее положения ставим картинку части корабля
-                    String imagePath = decksCount + "ship-" + i + ".png";
+                    String imagePath =  "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
@@ -107,7 +107,7 @@ public class FieldGenerator {
                     matrix[x][y].setValue(1);
 
                     // каждой клетке в зависимости от ее положения ставим картинку части корабля
-                    String imagePath = decksCount + "ship-" + i + ".png";
+                    String imagePath = "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
                     matrix[x][y].setImage(ImageIO.read(file));
                 }

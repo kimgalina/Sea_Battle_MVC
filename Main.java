@@ -3,5 +3,5 @@ public class Main {
         FieldGenerator generator = new FieldGenerator();
         generator.getGeneratedField();
         Viewer viewer = new Viewer();
-    }git add
+    }
 }
