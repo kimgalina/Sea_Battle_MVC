@@ -16,21 +16,24 @@ public class ShotsQueue {
             wait();
         }
         System.out.println(shot.getPlayerType() + " inserted: " + shot);
+
         shots.add(shot);
         System.out.println("Shots count: " + shots.size());
 
         notifyAll();
     }
 
-    public synchronized void remove() throws InterruptedException {
+    public synchronized Shot remove() throws InterruptedException {
         if (shots.isEmpty()){
             System.out.println("Buffer is empty: waiting for production");
             wait();
         }
         Shot shot = shots.poll();
         System.out.println("RECEIVED: " + shot);
-        System.out.println("Shots count: " + shots.size());
 
+        System.out.println("Shots count: " + shots.size());
         notifyAll();
+
+        return shot;
     }
 }

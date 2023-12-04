@@ -20,11 +20,12 @@ public class GameLogic implements Runnable {
     private void processShot() {
         while (true) {
             try {
-                shotsQueue.remove();
+                Shot shot = shotsQueue.remove();
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
+
 }

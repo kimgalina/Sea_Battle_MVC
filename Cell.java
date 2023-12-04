@@ -6,10 +6,12 @@ public class Cell extends Rectangle {
     private Image image;
     private int value;
     private Ship ship;
+    private boolean isVisible;
 
     public Cell(int x, int y, int width, int height, int value) {
         super(x, y, width, height);
         this.value = value;
+        isVisible = true;
     }
 
     public Ship getShip() {
@@ -34,5 +36,13 @@ public class Cell extends Rectangle {
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible() {
+        isVisible = !isVisible;
     }
 }
