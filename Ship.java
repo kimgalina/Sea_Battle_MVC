@@ -4,14 +4,17 @@ public class Ship {
     private boolean isHorizontal;
     private Cell[] cells;
 
-    public Ship(int health, boolean isHorizontal) {
+    public Ship(int health) {
         this.health = health;
+    }
+    public Ship(int health, boolean isHorizontal) {
+        this(health);
         this.isHorizontal = isHorizontal;
     }
 
+
     public Ship(int health, boolean isHorizontal, Cell[] cells) {
-        this.health = health;
-        this.isHorizontal = isHorizontal;
+        this(health, isHorizontal);
         this.cells = cells;
     }
 
