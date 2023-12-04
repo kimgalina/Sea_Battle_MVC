@@ -1,8 +1,6 @@
 public abstract class Player implements Runnable {
-  
     private Thread thread;
     private ShotsQueue shotsQueue;
-
     public Player(ShotsQueue shotsQueue) {
         thread = new Thread(this);
         this.shotsQueue = shotsQueue;
@@ -11,8 +9,7 @@ public abstract class Player implements Runnable {
     @Override
     public void run() {
         while (true) {
-            waitForTurn();
-            makeShot();
+            doAction();
         }
     }
 
@@ -20,19 +17,7 @@ public abstract class Player implements Runnable {
         thread.start();
     }
 
-    public abstract void makeShot();
-
-    public synchronized void waitForTurn() {
-        try {
-            wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public synchronized void notifyTurn() {
-        notify();
-    }
+    public abstract void doAction();
 
     public ShotsQueue getShotsQueue() {
         return shotsQueue;

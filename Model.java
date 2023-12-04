@@ -5,6 +5,7 @@ public class Model {
     private Player user;
     private Player computer;
     private GameLogic gameLogic;
+    private final Object lock;
     private int x;
     private int y;
     private Cell[][] boardArray;
@@ -23,6 +24,7 @@ public class Model {
             System.out.println();
         }
         enemyBoard = new Cell(50, 110, 10 * 50, 10 * 50, 0);
+        lock = new Object();
         startGame();
     }
 
@@ -63,8 +65,13 @@ public class Model {
     }
 
     private void makeUserShot() {
-        user.notifyTurn();
-        computer.notifyTurn();
+        synchronized (lock) {
+            lock.notify();
+        }
+    }
+
+    public Object getLock() {
+        return lock;
     }
 
     public int getX() {
