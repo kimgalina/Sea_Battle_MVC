@@ -1,5 +1,4 @@
-import javax.swing.*;
-import java.awt.Image;
+import javax.swing.ImageIcon;
 
 public class Model {
 
@@ -22,12 +21,12 @@ public class Model {
 
         for (int i = 0; i < boardArray.length; i++) {
             for (int j = 0; j < boardArray[i].length; j++) {
-                System.out.print(boardArray[i][j].getValue());
+                 System.out.print(boardArray[j][i].getValue());
             }
-            System.out.println();
+             System.out.println();
         }
 
-        enemyBoard = new Cell(50, 100, 10 * 50, 10 * 50, 0);
+        enemyBoard = new Cell(650, 100, 10 * 50, 10 * 50, 0);
         startGame();
     }
 
@@ -42,25 +41,22 @@ public class Model {
         gameLogic.start();
     }
 
-    public Cell[][] getBoardArray() {
-        return boardArray;
-    }
-
     public Cell getEnemyBoard() {
         return enemyBoard;
     }
 
     public void doAction(int x, int y) {
-
-        System.out.println(x + "    " + y);
-
+        this.x = x;
+        this.y = y;
 
         if (enemyBoard.contains(x, y)) {
             System.out.println("In Enemy board pressed mouse!!!");
-             makeUserShot();
-
+            makeUserShot();
             int indexY = (y - 100) / 50;
-            int indexX = (x - 50) / 50;
+            int indexX = (x - 650) / 50;
+            if(boardArray[indexX][indexY].isVisible()) {
+                boardArray[indexX][indexY].setVisible();
+            }
             Ship ship = boardArray[indexY][indexX].getShip();
             Cell[] cells = ship.getCells();
 
@@ -88,29 +84,29 @@ public class Model {
         switch (shipSize) {
             case 1:
                 if (cell.getValue() == 2) {
-                    cell.setImage(new ImageIcon("images/sinkSmallShip").getImage());
+                    cell.setImage(new ImageIcon("images/1ship-1-sharped.png").getImage());
                     cell.setValue(4);
                 }
                 break;
             case 2:
                 if (cell.getValue() == 2) {
-                    cell.setImage(new ImageIcon("images/paddedTwoSizeShip" + i + ".png").getImage());
+                    cell.setImage(new ImageIcon("images/2ship-" + i + "-sharped.png").getImage());
                 } else if (cell.getValue() == 4) {
-                    cell.setImage(new ImageIcon("images/sinkTwoSizeShip" + i + ".png").getImage());
+                    cell.setImage(new ImageIcon("images/2ship-" + i + "-sharped.png").getImage());
                 }
                 break;
             case 3:
                 if (cell.getValue() == 2) {
-                    cell.setImage(new ImageIcon("images/paddedThreeSizeShip" + i + ".png").getImage());
+                    cell.setImage(new ImageIcon("images/3ship-" + i + "-sharped.png").getImage());
                 } else if (cell.getValue() == 4) {
-                    cell.setImage(new ImageIcon("images/sinkThreeSizeShip" + i + ".png").getImage());
+                    cell.setImage(new ImageIcon("images/2ship-" + i + "-sharped.png").getImage());
                 }
                 break;
             case 4:
                 if (cell.getValue() == 2) {
-                    cell.setImage(new ImageIcon("images/paddedFourSizeShip" + i + ".png").getImage());
+                    cell.setImage(new ImageIcon("images/4ship-" + i + "-sharped.png").getImage());
                 } else if (cell.getValue() == 4) {
-                    cell.setImage(new ImageIcon("images/sinkFourSizeShip" + i + ".png").getImage());
+                    cell.setImage(new ImageIcon("images/4ship-" + i + "-sharped.png").getImage());
                 }
                 break;
         }
@@ -126,16 +122,17 @@ public class Model {
         return true;
     }
 
-    public void mouseEnteredInEnemyBoard(int x, int y) {
-        System.out.println("Mouse entered in JFrame");
-        if (enemyBoard.contains(x, y)) {
-            System.out.println("Mouse entered in enemy board!!!");
-        }
-    }
-
     private void makeUserShot() {
         user.notifyTurn();
         computer.notifyTurn();
+    }
+
+    public Cell[][] getBoardArray() {
+        return boardArray;
+    }
+
+    public Cell getBoardEnemyBoard() {
+        return enemyBoard;
     }
 
     public int getX() {

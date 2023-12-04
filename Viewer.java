@@ -1,7 +1,6 @@
 import javax.swing.JFrame;
 
 public class Viewer {
-
     private Controller controller;
     private Canvas canvas;
     private JFrame frame;

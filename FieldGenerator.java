@@ -14,7 +14,7 @@ public class FieldGenerator {
         Cell[][] generatedField = new Cell[field.length][10];
         for(int i = 0; i < field.length; i++) {
             for(int j = 0; j < field[i].length; j++) {
-                generatedField[i][j] = new Cell(i * 50 + 50, j * 50 + 100, 50, 50, field[i][j]);
+                generatedField[i][j] = new Cell(i * 50 + 650, j * 50 + 100, 50, 50, field[i][j]);
             }
         }
         return generatedField;
