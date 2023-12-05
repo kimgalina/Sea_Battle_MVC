@@ -1,10 +1,8 @@
 import javax.swing.JPanel;
-import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Font;
-import java.awt.Image;
 
 public class Canvas extends JPanel {
 
@@ -34,12 +32,6 @@ public class Canvas extends JPanel {
 
         int xOffset = 50;
         int yOffset = 100;
-
-        Cell enemyBoard = model.getEnemyBoard();
-        g2d.setColor(Color.GRAY);
-        g2d.fill(enemyBoard);
-        g2d.setColor(Color.WHITE);
-        g2d.draw(enemyBoard);
 
         Font numberFont = new Font("Arial", Font.PLAIN, 20);
         g2d.setFont(numberFont);
@@ -95,11 +87,46 @@ public class Canvas extends JPanel {
     }
 
     private void drawShips(Graphics2D g2d) {
-        Cell[][] board = model.getBoardArray();
+        Cell[][] userBoard = model.getUserBoardArray();
+        Cell[][] enemyBoard = model.getEnemyBoardArray();
 
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                Cell cell = board[i][j];
+        for (int i = 0; i < userBoard.length; i++) {
+            for (int j = 0; j < userBoard[i].length; j++) {
+                Cell cell = userBoard[i][j];
+                if (cell.getValue() == 1 ) {
+                    if(cell.getShip().isHorizontal()) {
+                        g2d.rotate(Math.toRadians(270), cell.x + cell.width / 2, cell.y + cell.height / 2);
+                        g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
+                        g2d.rotate(Math.toRadians(90), cell.x + cell.width / 2, cell.y + cell.height / 2);
+                    } else {
+                        g2d.setColor(Color.WHITE);
+                        g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
+                    }
+                    continue;
+                }
+                if (cell.isVisible()) {
+                    g2d.setColor(Color.WHITE);
+                    g2d.fillRect(cell.x, cell.y, cell.width, cell.height);
+                    g2d.setColor(Color.RED);
+                    g2d.drawRect(cell.x, cell.y, cell.width, cell.height);
+
+                }
+            }
+        }
+
+        for (int i = 0; i < enemyBoard.length; i++) {
+            for (int j = 0; j < enemyBoard[i].length; j++) {
+                Cell cell = enemyBoard[i][j];
+                if (cell.getValue() == 1 || cell.getValue() == 2 || cell.getValue() == 4 ) {
+                    if(cell.getShip().isHorizontal()) {
+                        g2d.rotate(Math.toRadians(270), cell.x + cell.width / 2, cell.y + cell.height / 2);
+                        g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
+                        g2d.rotate(Math.toRadians(90), cell.x + cell.width / 2, cell.y + cell.height / 2);
+                    } else {
+                        g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
+                    }
+                    continue;
+                }
                 if (cell.isVisible()) {
                     g2d.setColor(Color.WHITE);
                     g2d.fillRect(cell.x, cell.y, cell.width, cell.height);
@@ -107,17 +134,7 @@ public class Canvas extends JPanel {
                     g2d.drawRect(cell.x, cell.y, cell.width, cell.height);
                     continue;
                 }
-                if (cell.getValue() == 1 ) {
-                    g2d.setColor(Color.YELLOW);
-                    g2d.fillRect(cell.x, cell.y, cell.width, cell.height);
-                    g2d.setColor(Color.RED);
-                    g2d.drawRect(cell.x, cell.y, cell.width, cell.height);
-                }
             }
         }
-//        Image image1 = new ImageIcon("images/2ship-1.png").getImage();
-//        Image image2 = new ImageIcon("images/2ship-2.png").getImage();
-//        g2d.drawImage(image1, board[2][2].x, board[2][2].y, 50, 50, null);
-//        g2d.drawImage(image2, board[2][3].x, board[2][3].y, 50, 50, null);
     }
 }

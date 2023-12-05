@@ -12,8 +12,8 @@ public class FieldGenerator {
         random = new Random();
     }
 
-    public Cell[][] getGeneratedField() {
-        Cell[][] generatedField = generateField();
+    public Cell[][] getGeneratedField(int xOffset, int yOffset) {
+        Cell[][] generatedField = generateField(xOffset, yOffset);
         for(int i = 0; i < generatedField.length; i++) {
             for(int j = 0; j < generatedField[i].length; j++) {
                 System.out.print(generatedField[i][j].getValue() + " ");
@@ -22,9 +22,9 @@ public class FieldGenerator {
         }
         return generatedField;
     }
-    private Cell[][] generateField() {
+    private Cell[][] generateField(int xOffset, int yOffset) {
         Cell[][] matrix = new Cell[10][10];
-        initializeField(matrix);
+        initializeField(matrix, xOffset, yOffset);
         for (int i = 4, k = 1; i > 0; i--, k++) {
             for (int j = k; j > 0; j--) {
                 // создаем обьект корабль и каждой клетке этого корабля кидаем на него ссылку
@@ -43,11 +43,10 @@ public class FieldGenerator {
         return matrix;
     }
 
-    private void initializeField(Cell[][] matrix) {
+    private void initializeField(Cell[][] matrix, int xOffset, int yOffset) {
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[i].length; j++) {
-                matrix[i][j] = new Cell(i * 50 + 50, j * 50 + 100, 50, 50, 0);
-//                matrix[i][j] = new Cell(i , j , 50, 50, 0);
+                matrix[i][j] = new Cell(j * 50 + xOffset, i * 50 + yOffset, 50, 50, 0);
             }
         }
     }
@@ -92,6 +91,7 @@ public class FieldGenerator {
                     // каждой клетке в зависимости от ее положения ставим картинку части корабля
                     String imagePath =  "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
+                    matrix[x][y].setImagePath(imagePath); // сохраняем какой это путь для изменения на подбитый
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
                 // присваиваем кораблю его клетки
@@ -109,6 +109,7 @@ public class FieldGenerator {
                     // каждой клетке в зависимости от ее положения ставим картинку части корабля
                     String imagePath =  "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
+                    matrix[x][y].setImagePath(imagePath); // сохраняем какой это путь для изменения на подбитый
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
                 ship.setHorizontal(true);
@@ -127,13 +128,14 @@ public class FieldGenerator {
                     // каждой клетке в зависимости от ее положения ставим картинку части корабля
                     String imagePath =  "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
+                    matrix[x][y].setImagePath(imagePath); // сохраняем какой это путь для изменения на подбитый
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
                 // присваиваем кораблю его клетки
                 ship.setCells(decks);
                 return;
             case 3:// left
-                for (int i = 1, j = 0; i <= decksCount; i++, y--, j++) {
+                for (int i = decksCount, j = 0; i > 0; i--, y--, j++) {
                     matrix[x][y].setValue(1);
 
                     // каждой клетке указываем к какому кораблю она принадлежит
@@ -144,6 +146,7 @@ public class FieldGenerator {
                     // каждой клетке в зависимости от ее положения ставим картинку части корабля
                     String imagePath = "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
+                    matrix[x][y].setImagePath(imagePath); // сохраняем какой это путь для изменения на подбитый
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
                 ship.setHorizontal(true);
