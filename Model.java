@@ -56,8 +56,8 @@ public class Model {
             int indexY = (y - 100) / 50;
             int indexX = (x - 650) / 50;
 
-            if(enemyBoardArray[indexX][indexY].isVisible()) {
-                enemyBoardArray[indexX][indexY].setVisible(false);
+            if(enemyBoardArray[indexY][indexX].isVisible()) {
+                enemyBoardArray[indexY][indexX].setVisible(false);
             }
             Ship ship = enemyBoardArray[indexY][indexX].getShip();
 
