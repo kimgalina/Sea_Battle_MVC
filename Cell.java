@@ -51,7 +51,7 @@ public class Cell extends Rectangle {
         return isVisible;
     }
 
-    public void setVisible() {
-        isVisible = !isVisible;
+    public void setVisible(boolean visible) {
+        isVisible = visible;
     }
 }

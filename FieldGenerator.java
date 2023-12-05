@@ -47,6 +47,7 @@ public class FieldGenerator {
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[i].length; j++) {
                 matrix[i][j] = new Cell(j * 50 + xOffset, i * 50 + yOffset, 50, 50, 0);
+                matrix[i][j].setVisible(true);
             }
         }
     }
