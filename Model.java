@@ -57,7 +57,8 @@ public class Model {
         this.y = y;
 
         if (enemyBoard.contains(x, y)) {
-//            makeUserShot();
+            System.out.println("In Enemy board pressed mouse!!!");
+            makeUserShot();
             int indexY = (y - 100) / 50;
             int indexX = (x - 650) / 50;
 
@@ -233,7 +234,6 @@ public class Model {
                 return false;
             }
         }
-
         return true;
     }
 

@@ -85,7 +85,8 @@ public class Canvas extends JPanel {
                     g2d.fillRect(cell.x, cell.y, cell.width, cell.height);
                     g2d.setColor(Color.RED);
                     g2d.drawRect(cell.x, cell.y, cell.width, cell.height);
-
+                } else {
+                    g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
                 }
             }
         }
@@ -104,11 +105,14 @@ public class Canvas extends JPanel {
                     continue;
                 }
                 if (cell.isVisible()) {
+
                     g2d.setColor(Color.WHITE);
                     g2d.fillRect(cell.x, cell.y, cell.width, cell.height);
                     g2d.setColor(Color.RED);
                     g2d.drawRect(cell.x, cell.y, cell.width, cell.height);
                     continue;
+                } else {
+                    g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
                 }
             }
         }
