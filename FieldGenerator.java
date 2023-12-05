@@ -2,29 +2,32 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 import java.awt.Image;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 public class FieldGenerator {
 
     private Random random;
 
+
     public FieldGenerator() {
         random = new Random();
     }
 
-    public Cell[][] getGeneratedField() {
-        Cell[][] generatedField = generateField();
-        for(int i = 0; i < generatedField.length; i++) {
-            for(int j = 0; j < generatedField[i].length; j++) {
+    public Cell[][] getGeneratedField(int xOffset, int yOffset) {
+        Cell[][] generatedField = generateField(xOffset, yOffset);
+        for (int i = 0; i < generatedField.length; i++) {
+            for (int j = 0; j < generatedField[i].length; j++) {
                 System.out.print(generatedField[i][j].getValue() + " ");
             }
             System.out.println();
         }
         return generatedField;
     }
-    private Cell[][] generateField() {
+
+    private Cell[][] generateField(int xOffset, int yOffset) {
         Cell[][] matrix = new Cell[10][10];
-        initializeField(matrix);
+        initializeField(matrix, xOffset, yOffset);
         for (int i = 4, k = 1; i > 0; i--, k++) {
             for (int j = k; j > 0; j--) {
                 // создаем обьект корабль и каждой клетке этого корабля кидаем на него ссылку
@@ -34,7 +37,7 @@ public class FieldGenerator {
                 System.out.println("Новый корабль построен >>> " + ship.getHealth());
                 // проверяем клетки корабля
                 Cell[] shipCells = ship.getCells();
-                for(int m = 0; m < shipCells.length; m++) {
+                for (int m = 0; m < shipCells.length; m++) {
                     System.out.println("x = " + shipCells[m].getX() + " y = " + shipCells[m].getY());
                 }
             }
@@ -43,12 +46,20 @@ public class FieldGenerator {
         return matrix;
     }
 
-    private void initializeField(Cell[][] matrix) {
-        for(int i = 0; i < matrix.length; i++) {
-            for(int j = 0; j < matrix[i].length; j++) {
-                matrix[i][j] = new Cell(i * 50 + 50, j * 50 + 100, 50, 50, 0);
+    private void initializeField(Cell[][] matrix, int xOffset, int yOffset){
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                matrix[i][j] = new Cell(j * 50 + xOffset, i * 50 + yOffset, 50, 50, 0);
+                try {
+                    if (matrix[i][j].getValue() == 0) {
+                        String imagePath = "images/shot.png";
+                        File file = new File(imagePath);
+                        matrix[i][j].setImage(ImageIO.read(file));
+                    }
+                } catch (IOException ioe){
+                    System.out.println("you missed :(");
+                }
                 matrix[i][j].setVisible(true);
-//                matrix[i][j] = new Cell(i , j , 50, 50, 0);
             }
         }
     }
@@ -84,15 +95,16 @@ public class FieldGenerator {
         Cell[] decks = new Cell[decksCount];
         switch (direction) {
             case 0:// up
-                for (int i = decksCount,j = 0; i > 0; i--, x--,j++) {
+                for (int i = decksCount, j = 0; i > 0; i--, x--, j++) {
                     matrix[x][y].setValue(1);
                     // каждой клетке указываем к какому кораблю она принадлежит
                     matrix[x][y].setShip(ship);
                     // присваиваем массиву клеток для одного корабля клетки
-                    decks[j] =  matrix[x][y];
+                    decks[j] = matrix[x][y];
                     // каждой клетке в зависимости от ее положения ставим картинку части корабля
-                    String imagePath =  "images/" + decksCount + "ship-" + i + ".png";
+                    String imagePath = "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
+                    matrix[x][y].setImagePath(imagePath); // сохраняем какой это путь для изменения на подбитый
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
                 // присваиваем кораблю его клетки
@@ -106,10 +118,11 @@ public class FieldGenerator {
                     // каждой клетке указываем к какому кораблю она принадлежит
                     matrix[x][y].setShip(ship);
                     // присваиваем массиву клеток для одного корабля клетки
-                    decks[j] =  matrix[x][y];
+                    decks[j] = matrix[x][y];
                     // каждой клетке в зависимости от ее положения ставим картинку части корабля
-                    String imagePath =  "images/" + decksCount + "ship-" + i + ".png";
+                    String imagePath = "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
+                    matrix[x][y].setImagePath(imagePath); // сохраняем какой это путь для изменения на подбитый
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
                 ship.setHorizontal(true);
@@ -123,28 +136,30 @@ public class FieldGenerator {
                     // каждой клетке указываем к какому кораблю она принадлежит
                     matrix[x][y].setShip(ship);
                     // присваиваем массиву клеток для одного корабля клетки
-                    decks[j] =  matrix[x][y];
+                    decks[j] = matrix[x][y];
 
                     // каждой клетке в зависимости от ее положения ставим картинку части корабля
-                    String imagePath =  "images/" + decksCount + "ship-" + i + ".png";
+                    String imagePath = "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
+                    matrix[x][y].setImagePath(imagePath); // сохраняем какой это путь для изменения на подбитый
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
                 // присваиваем кораблю его клетки
                 ship.setCells(decks);
                 return;
             case 3:// left
-                for (int i = 1, j = 0; i <= decksCount; i++, y--, j++) {
+                for (int i = decksCount, j = 0; i > 0; i--, y--, j++) {
                     matrix[x][y].setValue(1);
 
                     // каждой клетке указываем к какому кораблю она принадлежит
                     matrix[x][y].setShip(ship);
                     // присваиваем массиву клеток для одного корабля клетки
-                    decks[j] =  matrix[x][y];
+                    decks[j] = matrix[x][y];
 
                     // каждой клетке в зависимости от ее положения ставим картинку части корабля
                     String imagePath = "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
+                    matrix[x][y].setImagePath(imagePath); // сохраняем какой это путь для изменения на подбитый
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
                 ship.setHorizontal(true);

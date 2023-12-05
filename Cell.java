@@ -7,11 +7,20 @@ public class Cell extends Rectangle {
     private int value;
     private Ship ship;
     private boolean isVisible;
+    private String imagePath;
 
     public Cell(int x, int y, int width, int height, int value) {
         super(x, y, width, height);
         this.value = value;
         isVisible = true;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public Ship getShip() {
