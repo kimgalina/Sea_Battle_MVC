@@ -14,6 +14,9 @@ public class Model {
     private Cell[][] enemyBoardArray;
     private Cell enemyBoard;
     private Cell userBoard;
+    private Cell exitButton;
+    private Cell restartButton;
+    private Cell startButton;
 
     public Model(Viewer viewer) {
         this.viewer = viewer;
@@ -32,6 +35,9 @@ public class Model {
         lock = new Object();
         enemyBoard = new Cell(650, 100, 10 * 50, 10 * 50, 0);
         userBoard = new Cell(50, 100, 10 * 50, 10 * 50, 0);
+        exitButton = new Cell(100,620,100,50,0);
+        restartButton = new Cell(250,620,100,50,0);
+        startButton = new Cell(400,620,100,50,0);
         startGame();
     }
 
@@ -51,10 +57,11 @@ public class Model {
         this.y = y;
 
         if (enemyBoard.contains(x, y)) {
-            System.out.println("In Enemy board pressed mouse!!!");
-            makeUserShot();
+//            makeUserShot();
             int indexY = (y - 100) / 50;
             int indexX = (x - 650) / 50;
+
+
 
             if(enemyBoardArray[indexY][indexX].isVisible()) {
                 enemyBoardArray[indexY][indexX].setVisible(false);
@@ -95,6 +102,17 @@ public class Model {
             if(userBoardArray[indexY][indexX].isVisible()) {
                 userBoardArray[indexY][indexX].setVisible(false);
             }
+            viewer.update();
+        }
+
+        if(startButton.contains(x,y)) {
+            System.out.println("Do something for START");
+            viewer.update();
+        }else if(restartButton.contains(x,y)) {
+            System.out.println("Do something for RESTART");
+            viewer.update();
+        }else if(exitButton.contains(x,y)) {
+            System.out.println("Do something for EXIT");
             viewer.update();
         }
     }
@@ -138,10 +156,6 @@ public class Model {
 
     public int getY() {
         return y;
-    }
-
-    public int getBoardSize() {
-        return 10;
     }
 
     public boolean validateBattlefield(Cell[][] field) {
@@ -221,5 +235,17 @@ public class Model {
         }
 
         return true;
+    }
+
+    public Cell getExitButton() {
+        return exitButton;
+    }
+
+    public Cell getRestartButton() {
+        return restartButton;
+    }
+
+    public Cell getStartButton() {
+        return startButton;
     }
 }

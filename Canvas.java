@@ -1,8 +1,10 @@
 import javax.swing.JPanel;
+import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Font;
+import java.awt.Image;
 
 public class Canvas extends JPanel {
 
@@ -13,9 +15,9 @@ public class Canvas extends JPanel {
     public Canvas(Model model, Controller controller) {
 
         this.model = model;
-        setBackground(new Color(0, 119, 190));
         font = new Font("Arial", Font.PLAIN, 20);
         addMouseListener(controller);
+
     }
 
     public void paint(Graphics g) {
@@ -27,63 +29,37 @@ public class Canvas extends JPanel {
     }
 
     private void drawGrid(Graphics2D g2d) {
-        int cellSize = 50;
-        int boardSize = model.getBoardSize();
+        Image backgroundImage = new ImageIcon("images/background.jpg").getImage();
+        Image seaBattleImage = new ImageIcon("images/sea-battle-cell.png").getImage();
 
-        int xOffset = 50;
-        int yOffset = 100;
+        g2d.drawImage(backgroundImage,0,0, getWidth(), getHeight(), this);
+        g2d.drawImage(seaBattleImage,0,50, 600, 600, this);
+        g2d.drawImage(seaBattleImage,600,50, 600, 600, this);
 
-        Font numberFont = new Font("Arial", Font.PLAIN, 20);
+        Font numberFont = new Font("Arial", Font.PLAIN, 30);
         g2d.setFont(numberFont);
+        String boardName = "User Board";
+        g2d.drawString(boardName, 240, 30);
+        boardName = "Computer Board";
+        g2d.drawString(boardName, 780, 30);
 
-        for (int i = 0; i <= boardSize; i++) {
-            g2d.drawLine(i * cellSize + xOffset, yOffset, i * cellSize + xOffset, boardSize * cellSize + yOffset);
+        Cell exitCell = model.getExitButton();
+        Cell restartCell = model.getRestartButton();
+        Cell startCell = model.getStartButton();
 
-            if (i > 0 && i <= boardSize) {
-                String number = Integer.toString(i);
-                int numberX = xOffset / 2 - g2d.getFontMetrics().stringWidth(number) / 2;
-                int numberY = i * cellSize + yOffset - cellSize / 2 + g2d.getFontMetrics().getAscent() / 2;
-                g2d.drawString(number, numberX, numberY);
-            }
-        }
+        g2d.setFont(font);
+        String exit = "Exit";
+        String restart = "Restart";
+        String start = "Start";
 
-        for (int i = 0; i <= boardSize; i++) {
-            g2d.drawLine(xOffset, i * cellSize + yOffset, boardSize * cellSize + xOffset, i * cellSize + yOffset);
+        g2d.setColor(Color.RED);
+        g2d.drawRect(exitCell.x, exitCell.y, exitCell.width, exitCell.height);
+        g2d.drawString(exit, 135, 650);
+        g2d.drawRect(restartCell.x, restartCell.y, restartCell.width, restartCell.height);
+        g2d.drawString(restart, 270, 650);
+        g2d.drawRect(startCell.x, startCell.y, startCell.width, startCell.height);
+        g2d.drawString(start, 430, 650);
 
-            if (i > 0 && i <= boardSize) {
-                char letter = (char) ('A' + i - 1);
-                String letterStr = Character.toString(letter);
-                int letterX = i * cellSize + xOffset - cellSize / 2 - g2d.getFontMetrics().stringWidth(letterStr) / 2;
-                int letterY = yOffset / 2 + g2d.getFontMetrics().getAscent() / 2;
-                g2d.drawString(letterStr, letterX, letterY);
-            }
-        }
-
-        int enemyXOffset = 650;
-        int enemyYOffset = yOffset;
-
-        for (int i = 0; i <= boardSize; i++) {
-            g2d.drawLine(i * cellSize + enemyXOffset, enemyYOffset, i * cellSize + enemyXOffset, boardSize * cellSize + enemyYOffset);
-
-            if (i > 0 && i <= boardSize) {
-                String number = Integer.toString(i);
-                int numberX = boardSize * cellSize + xOffset * 2 + xOffset / 2 - g2d.getFontMetrics().stringWidth(number) / 2;
-                int numberY = i * cellSize + enemyYOffset - cellSize / 2 + g2d.getFontMetrics().getAscent() / 2;
-                g2d.drawString(number, numberX, numberY);
-            }
-        }
-
-        for (int i = 0; i <= boardSize; i++) {
-            g2d.drawLine(enemyXOffset, i * cellSize + enemyYOffset, boardSize * cellSize + enemyXOffset, i * cellSize + enemyYOffset);
-
-            if (i > 0 && i <= boardSize) {
-                char letter = (char) ('A' + i - 1);
-                String letterStr = Character.toString(letter);
-                int letterX = boardSize * cellSize + xOffset * 2 + i * cellSize + xOffset - cellSize / 2 - g2d.getFontMetrics().stringWidth(letterStr) / 2;
-                int letterY = yOffset / 2 + g2d.getFontMetrics().getAscent() / 2;
-                g2d.drawString(letterStr, letterX, letterY);
-            }
-        }
     }
 
     private void drawShips(Graphics2D g2d) {
