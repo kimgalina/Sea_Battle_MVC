@@ -18,7 +18,6 @@ public class Model {
     private Cell[][] enemyBoardArray;
     private Cell[][] visualUserBoard; //computer pov on player map
     private Cell enemyBoard;
-    private Cell userBoard;
     private Cell exitButton;
     private Cell restartButton;
     private Cell startButton;
@@ -31,16 +30,8 @@ public class Model {
         userBoardArray = fieldGenerator.getGeneratedField(50, 100);
         enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
 
-        for (int i = 0; i < userBoardArray.length; i++) {
-            for (int j = 0; j < userBoardArray[i].length; j++) {
-                System.out.print(userBoardArray[i][j].getValue());
-            }
-            System.out.println();
-        }
-
         lock = new Object();
         enemyBoard = new Cell(650, 100, 10 * 50, 10 * 50, 0);
-        userBoard = new Cell(50, 100, 10 * 50, 10 * 50, 0);
         exitButton = new Cell(100, 620, 100, 50, 0);
         restartButton = new Cell(250, 620, 100, 50, 0);
         startButton = new Cell(400, 620, 100, 50, 0);
@@ -64,8 +55,7 @@ public class Model {
         this.x = x;
         this.y = y;
 
-        if (enemyBoard.contains(x, y) || userBoard.contains(x, y)) {
-            updateBoard(userBoard, userBoardArray, 50, 100);
+        if (enemyBoard.contains(x, y)) {
             updateBoard(enemyBoard, enemyBoardArray, 650, 100);
 
             viewer.update();

@@ -1,7 +1,7 @@
-import java.io.File;
+import javax.swing.ImageIcon;
+import java.awt.Image;
 import java.io.IOException;
 import java.util.Random;
-import javax.imageio.ImageIO;
 
 public class FieldGenerator {
 
@@ -42,17 +42,13 @@ public class FieldGenerator {
     }
 
     private void initializeField(Cell[][] matrix, int xOffset, int yOffset) {
+        String imagePath = "images/shot.png";
+        Image image = new ImageIcon(imagePath).getImage();
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 matrix[i][j] = new Cell(j * 50 + xOffset, i * 50 + yOffset, 50, 50, 0);
-                try {
-                    if (matrix[i][j].getValue() == 0) {
-                        String imagePath = "images/shot.png";
-                        File file = new File(imagePath);
-                        matrix[i][j].setImage(ImageIO.read(file));
-                    }
-                } catch (IOException ioe) {
-                    System.out.println("you missed :(");
+                if (matrix[i][j].getValue() == 0) {
+                    matrix[i][j].setImage(image);
                 }
                 matrix[i][j].setVisible(true);
             }
@@ -95,9 +91,9 @@ public class FieldGenerator {
                     matrix[x][y].setShip(ship);
                     decks[j] = matrix[x][y];
                     String imagePath = "images/" + decksCount + "ship-" + i + ".png";
-                    File file = new File(imagePath);
+                    Image image = new ImageIcon(imagePath).getImage();
                     matrix[x][y].setImagePath(imagePath);
-                    matrix[x][y].setImage(ImageIO.read(file));
+                    matrix[x][y].setImage(image);
                 }
                 ship.setCells(decks);
                 return;
@@ -108,9 +104,9 @@ public class FieldGenerator {
                     matrix[x][y].setShip(ship);
                     decks[j] = matrix[x][y];
                     String imagePath = "images/" + decksCount + "ship-" + i + ".png";
-                    File file = new File(imagePath);
+                    Image image = new ImageIcon(imagePath).getImage();
                     matrix[x][y].setImagePath(imagePath);
-                    matrix[x][y].setImage(ImageIO.read(file));
+                    matrix[x][y].setImage(image);
                 }
                 ship.setHorizontal(true);
                 ship.setCells(decks);
@@ -121,9 +117,9 @@ public class FieldGenerator {
                     matrix[x][y].setShip(ship);
                     decks[j] = matrix[x][y];
                     String imagePath = "images/" + decksCount + "ship-" + i + ".png";
-                    File file = new File(imagePath);
+                    Image image = new ImageIcon(imagePath).getImage();
                     matrix[x][y].setImagePath(imagePath);
-                    matrix[x][y].setImage(ImageIO.read(file));
+                    matrix[x][y].setImage(image);
                 }
                 ship.setCells(decks);
                 return;
@@ -133,9 +129,9 @@ public class FieldGenerator {
                     matrix[x][y].setShip(ship);
                     decks[j] = matrix[x][y];
                     String imagePath = "images/" + decksCount + "ship-" + i + ".png";
-                    File file = new File(imagePath);
+                    Image image = new ImageIcon(imagePath).getImage();
                     matrix[x][y].setImagePath(imagePath);
-                    matrix[x][y].setImage(ImageIO.read(file));
+                    matrix[x][y].setImage(image);
                 }
                 ship.setHorizontal(true);
                 ship.setCells(decks);
