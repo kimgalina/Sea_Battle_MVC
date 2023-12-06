@@ -18,8 +18,6 @@ public class ShotsQueue {
         System.out.println(shot.getPlayerType() + " inserted: " + shot);
 
         shots.add(shot);
-        System.out.println("Shots count: " + shots.size());
-
         notifyAll();
     }
 
@@ -31,9 +29,7 @@ public class ShotsQueue {
         Shot shot = shots.poll();
         System.out.println("RECEIVED: " + shot);
 
-        System.out.println("Shots count: " + shots.size());
         notifyAll();
-
         return shot;
     }
 }

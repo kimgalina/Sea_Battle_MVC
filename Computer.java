@@ -1,15 +1,17 @@
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Computer extends Player {
 
-    private Object lock;
+    private final Object lock;
     private Model model;
-    
-    public Computer(Model model, ShotsQueue shotsQueue) {
-        super(shotsQueue);
+
+    public Computer(Model model, ShotsQueue shotsQueue, boolean isGameRunning) {
+        super(shotsQueue, isGameRunning);
         this.model = model;
         lock = model.getLock();
     }
 
-    @Override
     public void doAction() {
         synchronized (lock) {
             waitForTurn();

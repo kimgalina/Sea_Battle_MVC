@@ -4,6 +4,8 @@ public class Model {
 
     private Viewer viewer;
     private FieldGenerator fieldGenerator;
+    private volatile boolean isGameRunning;
+    private volatile boolean isUserTurn;
     private Player user;
     private Player computer;
     private GameLogic gameLogic;
@@ -32,10 +34,12 @@ public class Model {
     }
 
     private void startGame() {
-        ShotsQueue buffer = new ShotsQueue(1);
-        user = new User(this, buffer);
-        computer = new Computer(this, buffer);
-        gameLogic = new GameLogic(buffer);
+        isGameRunning = true;
+
+        ShotsQueue shotsQueue = new ShotsQueue(1);
+        user = new User(this, shotsQueue, isGameRunning);
+        computer = new Computer(this, shotsQueue, isGameRunning);
+        gameLogic = new GameLogic(this, shotsQueue, isGameRunning);
 
         user.start();
         computer.start();
@@ -51,7 +55,7 @@ public class Model {
         this.y = y;
 
         if (enemyBoard.contains(x, y)) {
-            System.out.println("In Enemy board pressed mouse!!!");
+//            System.out.println("In Enemy board pressed mouse!!!");
             makeUserShot();
             int indexY = (y - 100) / 50;
             int indexX = (x - 650) / 50;
@@ -127,6 +131,18 @@ public class Model {
         synchronized (lock) {
             lock.notify();
         }
+    }
+
+    public boolean isGameRunning() {
+        return isGameRunning;
+    }
+
+    public boolean isUserTurn() {
+        return isUserTurn;
+    }
+
+    public void setUserTurn(boolean userTurn) {
+        isUserTurn = userTurn;
     }
 
     public Object getLock() {
