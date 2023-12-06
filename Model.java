@@ -57,12 +57,12 @@ public class Model {
         this.x = x;
         this.y = y;
 
-            if(enemyBoard.contains(x, y) || userBoard.contains(x, y)) {
-                updateBoard(userBoard, userBoardArray, 50, 100);
-                updateBoard(enemyBoard, enemyBoardArray, 650, 100);
+        if (enemyBoard.contains(x, y) || userBoard.contains(x, y)) {
+            updateBoard(userBoard, userBoardArray, 50, 100);
+            updateBoard(enemyBoard, enemyBoardArray, 650, 100);
 
-                viewer.update();
-            }
+            viewer.update();
+        }
 
         if (startButton.contains(x, y)) {
             System.out.println("Do something for START");

@@ -76,7 +76,7 @@ public class Canvas extends JPanel {
         drawButton(g2d, new Color(0, 102, 0), "Start", 420, 650, font, startButton);
     }
 
-    private void drawButton(Graphics2D g2d, Color color, String label, int x, int y, Font font,  RoundRectangle2D roundedRectangle) {
+    private void drawButton(Graphics2D g2d, Color color, String label, int x, int y, Font font, RoundRectangle2D roundedRectangle) {
         g2d.setColor(color);
         g2d.draw(roundedRectangle);
         g2d.setFont(font);
