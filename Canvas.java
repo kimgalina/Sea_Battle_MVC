@@ -6,7 +6,10 @@ import java.awt.Graphics2D;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.geom.RoundRectangle2D;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
+@SuppressWarnings("serial")
 public class Canvas extends JPanel {
 
     private Model model;
@@ -113,5 +116,9 @@ public class Canvas extends JPanel {
         } else if (!cell.isVisible()) {
             g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
         }
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }

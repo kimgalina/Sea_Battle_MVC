@@ -1,6 +1,9 @@
 import java.awt.Rectangle;
 import java.awt.Image;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
+@SuppressWarnings("serial")
 public class Cell extends Rectangle {
 
     private Image image;
@@ -53,5 +56,9 @@ public class Cell extends Rectangle {
 
     public void setVisible(boolean visible) {
         isVisible = visible;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }
