@@ -1,8 +1,6 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
-import java.awt.Image;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 public class FieldGenerator {
@@ -30,12 +28,9 @@ public class FieldGenerator {
         initializeField(matrix, xOffset, yOffset);
         for (int i = 4, k = 1; i > 0; i--, k++) {
             for (int j = k; j > 0; j--) {
-                // создаем обьект корабль и каждой клетке этого корабля кидаем на него ссылку
                 Ship ship = new Ship(i);
                 buildShip(i, matrix, ship);
-                ///////////////
                 System.out.println("Новый корабль построен >>> " + ship.getHealth());
-                // проверяем клетки корабля
                 Cell[] shipCells = ship.getCells();
                 for (int m = 0; m < shipCells.length; m++) {
                     System.out.println("x = " + shipCells[m].getX() + " y = " + shipCells[m].getY());
@@ -46,7 +41,7 @@ public class FieldGenerator {
         return matrix;
     }
 
-    private void initializeField(Cell[][] matrix, int xOffset, int yOffset){
+    private void initializeField(Cell[][] matrix, int xOffset, int yOffset) {
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 matrix[i][j] = new Cell(j * 50 + xOffset, i * 50 + yOffset, 50, 50, 0);
@@ -56,7 +51,7 @@ public class FieldGenerator {
                         File file = new File(imagePath);
                         matrix[i][j].setImage(ImageIO.read(file));
                     }
-                } catch (IOException ioe){
+                } catch (IOException ioe) {
                     System.out.println("you missed :(");
                 }
                 matrix[i][j].setVisible(true);
@@ -94,76 +89,55 @@ public class FieldGenerator {
     private void setShip(int x, int y, int direction, int decksCount, Cell[][] matrix, Ship ship) throws IOException {
         Cell[] decks = new Cell[decksCount];
         switch (direction) {
-            case 0:// up
+            case 0:
                 for (int i = decksCount, j = 0; i > 0; i--, x--, j++) {
                     matrix[x][y].setValue(1);
-                    // каждой клетке указываем к какому кораблю она принадлежит
                     matrix[x][y].setShip(ship);
-                    // присваиваем массиву клеток для одного корабля клетки
                     decks[j] = matrix[x][y];
-                    // каждой клетке в зависимости от ее положения ставим картинку части корабля
                     String imagePath = "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
-                    matrix[x][y].setImagePath(imagePath); // сохраняем какой это путь для изменения на подбитый
+                    matrix[x][y].setImagePath(imagePath);
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
-                // присваиваем кораблю его клетки
                 ship.setCells(decks);
                 return;
             case 1:// right
 
                 for (int i = 1, j = 0; i <= decksCount; i++, y++, j++) {
                     matrix[x][y].setValue(1);
-
-                    // каждой клетке указываем к какому кораблю она принадлежит
                     matrix[x][y].setShip(ship);
-                    // присваиваем массиву клеток для одного корабля клетки
                     decks[j] = matrix[x][y];
-                    // каждой клетке в зависимости от ее положения ставим картинку части корабля
                     String imagePath = "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
-                    matrix[x][y].setImagePath(imagePath); // сохраняем какой это путь для изменения на подбитый
+                    matrix[x][y].setImagePath(imagePath);
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
                 ship.setHorizontal(true);
-                // присваиваем кораблю его клетки
                 ship.setCells(decks);
                 return;
             case 2:// down
                 for (int i = 1, j = 0; i <= decksCount; i++, x++, j++) {
                     matrix[x][y].setValue(1);
-
-                    // каждой клетке указываем к какому кораблю она принадлежит
                     matrix[x][y].setShip(ship);
-                    // присваиваем массиву клеток для одного корабля клетки
                     decks[j] = matrix[x][y];
-
-                    // каждой клетке в зависимости от ее положения ставим картинку части корабля
                     String imagePath = "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
-                    matrix[x][y].setImagePath(imagePath); // сохраняем какой это путь для изменения на подбитый
+                    matrix[x][y].setImagePath(imagePath);
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
-                // присваиваем кораблю его клетки
                 ship.setCells(decks);
                 return;
             case 3:// left
                 for (int i = decksCount, j = 0; i > 0; i--, y--, j++) {
                     matrix[x][y].setValue(1);
-
-                    // каждой клетке указываем к какому кораблю она принадлежит
                     matrix[x][y].setShip(ship);
-                    // присваиваем массиву клеток для одного корабля клетки
                     decks[j] = matrix[x][y];
-
-                    // каждой клетке в зависимости от ее положения ставим картинку части корабля
                     String imagePath = "images/" + decksCount + "ship-" + i + ".png";
                     File file = new File(imagePath);
-                    matrix[x][y].setImagePath(imagePath); // сохраняем какой это путь для изменения на подбитый
+                    matrix[x][y].setImagePath(imagePath);
                     matrix[x][y].setImage(ImageIO.read(file));
                 }
                 ship.setHorizontal(true);
-                // присваиваем кораблю его клетки
                 ship.setCells(decks);
                 return;
         }

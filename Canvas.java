@@ -1,21 +1,24 @@
 import javax.swing.JPanel;
+import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.geom.RoundRectangle2D;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
+@SuppressWarnings("serial")
 public class Canvas extends JPanel {
 
     private Model model;
-    private Font font;
-
 
     public Canvas(Model model, Controller controller) {
 
         this.model = model;
-        setBackground(new Color(0, 119, 190));
-        font = new Font("Arial", Font.PLAIN, 20);
         addMouseListener(controller);
+
     }
 
     public void paint(Graphics g) {
@@ -23,122 +26,99 @@ public class Canvas extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         drawGrid(g2d);
-        drawShips(g2d);
+        drawBoards(g2d);
     }
+
 
     private void drawGrid(Graphics2D g2d) {
-        int cellSize = 50;
-        int boardSize = model.getBoardSize();
-
-        int xOffset = 50;
-        int yOffset = 100;
-
-        Font numberFont = new Font("Arial", Font.PLAIN, 20);
-        g2d.setFont(numberFont);
-
-        for (int i = 0; i <= boardSize; i++) {
-            g2d.drawLine(i * cellSize + xOffset, yOffset, i * cellSize + xOffset, boardSize * cellSize + yOffset);
-
-            if (i > 0 && i <= boardSize) {
-                String number = Integer.toString(i);
-                int numberX = xOffset / 2 - g2d.getFontMetrics().stringWidth(number) / 2;
-                int numberY = i * cellSize + yOffset - cellSize / 2 + g2d.getFontMetrics().getAscent() / 2;
-                g2d.drawString(number, numberX, numberY);
-            }
-        }
-
-        for (int i = 0; i <= boardSize; i++) {
-            g2d.drawLine(xOffset, i * cellSize + yOffset, boardSize * cellSize + xOffset, i * cellSize + yOffset);
-
-            if (i > 0 && i <= boardSize) {
-                char letter = (char) ('A' + i - 1);
-                String letterStr = Character.toString(letter);
-                int letterX = i * cellSize + xOffset - cellSize / 2 - g2d.getFontMetrics().stringWidth(letterStr) / 2;
-                int letterY = yOffset / 2 + g2d.getFontMetrics().getAscent() / 2;
-                g2d.drawString(letterStr, letterX, letterY);
-            }
-        }
-
-        int enemyXOffset = 650;
-        int enemyYOffset = yOffset;
-
-        for (int i = 0; i <= boardSize; i++) {
-            g2d.drawLine(i * cellSize + enemyXOffset, enemyYOffset, i * cellSize + enemyXOffset, boardSize * cellSize + enemyYOffset);
-
-            if (i > 0 && i <= boardSize) {
-                String number = Integer.toString(i);
-                int numberX = boardSize * cellSize + xOffset * 2 + xOffset / 2 - g2d.getFontMetrics().stringWidth(number) / 2;
-                int numberY = i * cellSize + enemyYOffset - cellSize / 2 + g2d.getFontMetrics().getAscent() / 2;
-                g2d.drawString(number, numberX, numberY);
-            }
-        }
-
-        for (int i = 0; i <= boardSize; i++) {
-            g2d.drawLine(enemyXOffset, i * cellSize + enemyYOffset, boardSize * cellSize + enemyXOffset, i * cellSize + enemyYOffset);
-
-            if (i > 0 && i <= boardSize) {
-                char letter = (char) ('A' + i - 1);
-                String letterStr = Character.toString(letter);
-                int letterX = boardSize * cellSize + xOffset * 2 + i * cellSize + xOffset - cellSize / 2 - g2d.getFontMetrics().stringWidth(letterStr) / 2;
-                int letterY = yOffset / 2 + g2d.getFontMetrics().getAscent() / 2;
-                g2d.drawString(letterStr, letterX, letterY);
-            }
-        }
+        drawBackground(g2d);
+        drawSeaBattleImages(g2d);
+        drawBoardNames(g2d);
+        drawButtons(g2d);
     }
 
-    private void drawShips(Graphics2D g2d) {
+    private void drawBackground(Graphics2D g2d) {
+        Image backgroundImage = new ImageIcon("images/background.jpg").getImage();
+        g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+    }
+
+    private void drawSeaBattleImages(Graphics2D g2d) {
+        Image seaBattleImage = new ImageIcon("images/sea-battle-cell.png").getImage();
+        g2d.drawImage(seaBattleImage, 0, 50, 600, 600, this);
+        g2d.drawImage(seaBattleImage, 600, 50, 600, 600, this);
+    }
+
+    private void drawBoardNames(Graphics2D g2d) {
+        Font numberFont = new Font("Arial", Font.BOLD, 30);
+        Font font = new Font("Arial", Font.BOLD, 25);
+
+        drawBoardName(g2d, numberFont, Color.BLACK, "User's Board", 240, 30);
+        drawBoardName(g2d, numberFont, new Color(153, 0, 0), "Computer's Board", 780, 30);
+    }
+
+    private void drawBoardName(Graphics2D g2d, Font font, Color color, String name, int x, int y) {
+        g2d.setFont(font);
+        g2d.setColor(color);
+        g2d.drawString(name, x, y);
+    }
+
+    private void drawButtons(Graphics2D g2d) {
+        Font font = new Font("Arial", Font.BOLD, 25);
+        int arcWidth = 20;
+        int arcHeight = 20;
+
+        RoundRectangle2D exitButton = new RoundRectangle2D.Double(100, 620, 100, 50, arcWidth, arcHeight);
+        RoundRectangle2D restartButton = new RoundRectangle2D.Double(250, 620, 100, 50, arcWidth, arcHeight);
+        RoundRectangle2D startButton = new RoundRectangle2D.Double(400, 620, 100, 50, arcWidth, arcHeight);
+
+        drawButton(g2d, Color.RED, "Exit", 120, 650, font, exitButton);
+        drawButton(g2d, new Color(189, 189, 0), "Restart", 260, 650, font, restartButton);
+        drawButton(g2d, new Color(0, 102, 0), "Start", 420, 650, font, startButton);
+    }
+
+    private void drawButton(Graphics2D g2d, Color color, String label, int x, int y, Font font, RoundRectangle2D roundedRectangle) {
+        g2d.setColor(color);
+        g2d.draw(roundedRectangle);
+        g2d.setFont(font);
+        g2d.drawString(label, x, y);
+    }
+
+    public void drawBoards(Graphics2D g2d) {
         Cell[][] userBoard = model.getUserBoardArray();
         Cell[][] enemyBoard = model.getEnemyBoardArray();
 
-        for (int i = 0; i < userBoard.length; i++) {
-            for (int j = 0; j < userBoard[i].length; j++) {
-                Cell cell = userBoard[i][j];
-                if (cell.getValue() == 1 ) {
-                    if(cell.getShip().isHorizontal()) {
-                        g2d.rotate(Math.toRadians(270), cell.x + cell.width / 2, cell.y + cell.height / 2);
-                        g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
-                        g2d.rotate(Math.toRadians(90), cell.x + cell.width / 2, cell.y + cell.height / 2);
-                    } else {
-                        g2d.setColor(Color.WHITE);
-                        g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
-                    }
-                    continue;
-                }
-                if (cell.isVisible()) {
-                    g2d.setColor(Color.WHITE);
-                    g2d.fillRect(cell.x, cell.y, cell.width, cell.height);
-                    g2d.setColor(Color.RED);
-                    g2d.drawRect(cell.x, cell.y, cell.width, cell.height);
-                } else {
-                    g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
-                }
+        for (Cell[] row : userBoard) {
+            for (Cell cell : row) {
+                drawCell(g2d, cell, false);
             }
         }
 
-        for (int i = 0; i < enemyBoard.length; i++) {
-            for (int j = 0; j < enemyBoard[i].length; j++) {
-                Cell cell = enemyBoard[i][j];
-                if (cell.getValue() == 1 || cell.getValue() == 2 || cell.getValue() == 4 ) {
-                    if(cell.getShip().isHorizontal()) {
-                        g2d.rotate(Math.toRadians(270), cell.x + cell.width / 2, cell.y + cell.height / 2);
-                        g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
-                        g2d.rotate(Math.toRadians(90), cell.x + cell.width / 2, cell.y + cell.height / 2);
-                    } else {
-                        g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
-                    }
-                    continue;
-                }
-                if (cell.isVisible()) {
-
-                    g2d.setColor(Color.WHITE);
-                    g2d.fillRect(cell.x, cell.y, cell.width, cell.height);
-                    g2d.setColor(Color.RED);
-                    g2d.drawRect(cell.x, cell.y, cell.width, cell.height);
-                    continue;
-                } else {
-                    g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
-                }
+        for (Cell[] row : enemyBoard) {
+            for (Cell cell : row) {
+                drawCell(g2d, cell, true);
             }
         }
+    }
+
+    private void drawCell(Graphics2D g2d, Cell cell, boolean isEnemyBoard) {
+        if (cell.isVisible() && isEnemyBoard) {
+            return;
+        }
+
+        if (cell.getValue() == 1 || cell.getValue() == 2 || cell.getValue() == 4) {
+            if (cell.getShip().isHorizontal()) {
+                g2d.rotate(Math.toRadians(270), cell.x + cell.width / 2, cell.y + cell.height / 2);
+                g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
+                g2d.rotate(Math.toRadians(90), cell.x + cell.width / 2, cell.y + cell.height / 2);
+            } else {
+                g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
+            }
+        } else if (!cell.isVisible()) {
+            g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
+        }
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }

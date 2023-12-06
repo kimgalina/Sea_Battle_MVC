@@ -1,5 +1,5 @@
 public class GameLogic implements Runnable {
-  
+
     private Thread thread;
     private ShotsQueue shotsQueue;
 
