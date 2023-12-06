@@ -11,7 +11,7 @@ public class ShotsQueue {
     }
 
     public synchronized void add(Shot shot) throws InterruptedException {
-        if (shots.size() == this.size){
+        if (shots.size() == this.size) {
             System.out.println("Buffer is full: waiting for consumption");
             wait();
         }
@@ -24,7 +24,7 @@ public class ShotsQueue {
     }
 
     public synchronized Shot remove() throws InterruptedException {
-        if (shots.isEmpty()){
+        if (shots.isEmpty()) {
             System.out.println("Buffer is empty: waiting for production");
             wait();
         }

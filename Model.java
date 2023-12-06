@@ -32,6 +32,7 @@ public class Model {
             }
             System.out.println();
         }
+
         lock = new Object();
         enemyBoard = new Cell(650, 100, 10 * 50, 10 * 50, 0);
         userBoard = new Cell(50, 100, 10 * 50, 10 * 50, 0);

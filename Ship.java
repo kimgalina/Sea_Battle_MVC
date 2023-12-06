@@ -7,6 +7,7 @@ public class Ship {
     public Ship(int health) {
         this.health = health;
     }
+
     public Ship(int health, boolean isHorizontal) {
         this(health);
         this.isHorizontal = isHorizontal;
