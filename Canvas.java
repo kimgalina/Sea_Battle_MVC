@@ -49,8 +49,7 @@ public class Canvas extends JPanel {
     }
 
     private void drawBoardNames(Graphics2D g2d) {
-        Font numberFont = new Font("Arial", Font.BOLD, 30);
-        Font font = new Font("Arial", Font.BOLD, 25);
+        Font numberFont = new Font("Franklin Gothic Heavy", Font.PLAIN, 30);
 
         drawBoardName(g2d, numberFont, Color.BLACK, "User's Board", 240, 30);
         drawBoardName(g2d, numberFont, new Color(153, 0, 0), "Computer's Board", 780, 30);
@@ -63,17 +62,17 @@ public class Canvas extends JPanel {
     }
 
     private void drawButtons(Graphics2D g2d) {
-        Font font = new Font("Arial", Font.BOLD, 25);
-        int arcWidth = 20;
-        int arcHeight = 20;
+        Font font = new Font("Franklin Gothic Heavy", Font.PLAIN, 25);
+        int arcWidth = 30;
+        int arcHeight = 30;
 
         RoundRectangle2D exitButton = new RoundRectangle2D.Double(100, 620, 100, 50, arcWidth, arcHeight);
         RoundRectangle2D restartButton = new RoundRectangle2D.Double(250, 620, 100, 50, arcWidth, arcHeight);
         RoundRectangle2D startButton = new RoundRectangle2D.Double(400, 620, 100, 50, arcWidth, arcHeight);
 
-        drawButton(g2d, Color.RED, "Exit", 120, 650, font, exitButton);
-        drawButton(g2d, new Color(189, 189, 0), "Restart", 260, 650, font, restartButton);
-        drawButton(g2d, new Color(0, 102, 0), "Start", 420, 650, font, startButton);
+        drawButton(g2d, Color.RED, "Exit", 120, 655, font, exitButton);
+        drawButton(g2d, new Color(189, 189, 0), "Restart", 260, 655, font, restartButton);
+        drawButton(g2d, new Color(0, 102, 0), "Start", 420, 655, font, startButton);
     }
 
     private void drawButton(Graphics2D g2d, Color color, String label, int x, int y, Font font, RoundRectangle2D roundedRectangle) {

@@ -1,9 +1,13 @@
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.Timer;
 
 public class Model {
 
     private Viewer viewer;
     private FieldGenerator fieldGenerator;
+    private volatile boolean isGameRunning;
+    private volatile boolean isUserTurn;
     private Player user;
     private Player computer;
     private GameLogic gameLogic;
@@ -14,7 +18,6 @@ public class Model {
     private Cell[][] enemyBoardArray;
     private Cell[][] visualUserBoard; //computer pov on player map
     private Cell enemyBoard;
-    private Cell userBoard;
     private Cell exitButton;
     private Cell restartButton;
     private Cell startButton;
@@ -27,16 +30,8 @@ public class Model {
         userBoardArray = fieldGenerator.getGeneratedField(50, 100);
         enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
 
-        for (int i = 0; i < userBoardArray.length; i++) {
-            for (int j = 0; j < userBoardArray[i].length; j++) {
-                System.out.print(userBoardArray[i][j].getValue());
-            }
-            System.out.println();
-        }
-
         lock = new Object();
         enemyBoard = new Cell(650, 100, 10 * 50, 10 * 50, 0);
-        userBoard = new Cell(50, 100, 10 * 50, 10 * 50, 0);
         exitButton = new Cell(100, 620, 100, 50, 0);
         restartButton = new Cell(250, 620, 100, 50, 0);
         startButton = new Cell(400, 620, 100, 50, 0);
@@ -44,10 +39,12 @@ public class Model {
     }
 
     private void startGame() {
-        ShotsQueue buffer = new ShotsQueue(1);
-        user = new User(this, buffer);
-        computer = new Computer(this, buffer);
-        gameLogic = new GameLogic(buffer);
+        isGameRunning = true;
+
+        ShotsQueue shotsQueue = new ShotsQueue(1);
+        user = new User(this, shotsQueue, isGameRunning);
+        computer = new Computer(this, shotsQueue, isGameRunning);
+        gameLogic = new GameLogic(this, shotsQueue, isGameRunning);
 
         user.start();
         computer.start();
@@ -58,8 +55,7 @@ public class Model {
         this.x = x;
         this.y = y;
 
-        if (enemyBoard.contains(x, y) || userBoard.contains(x, y)) {
-            updateBoard(userBoard, userBoardArray, 50, 100);
+        if (enemyBoard.contains(x, y)) {
             updateBoard(enemyBoard, enemyBoardArray, 650, 100);
 
             viewer.update();
@@ -125,6 +121,18 @@ public class Model {
         synchronized (lock) {
             lock.notify();
         }
+    }
+
+    public boolean isGameRunning() {
+        return isGameRunning;
+    }
+
+    public boolean isUserTurn() {
+        return isUserTurn;
+    }
+
+    public void setUserTurn(boolean userTurn) {
+        isUserTurn = userTurn;
     }
 
     public Object getLock() {
@@ -227,5 +235,21 @@ public class Model {
             }
         }
         return true;
+    }
+
+
+    public void playRocketAnimation(int x, int y) {
+        ImageIcon rocketIcon = new ImageIcon("images/missile.png");
+        JLabel rocketLabel = new JLabel(rocketIcon);
+        viewer.addRocket(rocketIcon, x, y); // добавляем ракету на панель с указанными координатами
+
+        // Для задержки перед удалением ракеты, чтобы она успела отобразиться
+        Timer timer = new Timer(1000000, e -> {
+            viewer.removeRocket(rocketLabel); // удаляем ракету с панели
+            viewer.update(); // обновляем представление для отображения изменений
+        });
+
+        timer.setRepeats(false); // Устанавливаем повторение таймера только один раз
+        timer.start(); // запускаем таймер для удаления ракеты через 1 секунду
     }
 }

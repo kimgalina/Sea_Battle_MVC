@@ -1,15 +1,14 @@
 public class User extends Player {
 
-    private Object lock;
+    private final Object lock;
     private Model model;
 
-    public User(Model model, ShotsQueue shotsQueue) {
-        super(shotsQueue);
+    public User(Model model, ShotsQueue shotsQueue, boolean isGameRunning) {
+        super(shotsQueue, isGameRunning);
         this.model = model;
         lock = model.getLock();
     }
 
-    @Override
     public void doAction() {
         synchronized (lock) {
             waitForClick();
@@ -27,7 +26,9 @@ public class User extends Player {
     }
 
     private void produceShot() {
-        Shot shot = new Shot(model.getX(), model.getY(), PlayerType.USER);
+        int y = (model.getY() - 100) / 50;
+        int x = (model.getX() - 650) / 50;
+        Shot shot = new Shot(x, y, PlayerType.USER);
         ShotsQueue shots = getShotsQueue();
         try {
             shots.add(shot);
