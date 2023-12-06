@@ -35,6 +35,7 @@ public class Model {
         exitButton = new Cell(100, 620, 100, 50, 0);
         restartButton = new Cell(250, 620, 100, 50, 0);
         startButton = new Cell(400, 620, 100, 50, 0);
+        startButton.setVisible(false);
         startGame();
     }
 
@@ -55,7 +56,7 @@ public class Model {
         this.x = x;
         this.y = y;
 
-        if (enemyBoard.contains(x, y)) {
+        if (enemyBoard.contains(x, y) && startButton.isVisible()) {
             updateBoard(enemyBoard, enemyBoardArray, 650, 100);
 
             viewer.update();
@@ -63,9 +64,12 @@ public class Model {
 
         if (startButton.contains(x, y)) {
             System.out.println("Do something for START");
+            startButton.setVisible(true);
             viewer.update();
-        } else if (restartButton.contains(x, y)) {
+        } else if (restartButton.contains(x, y) && startButton.isVisible()) {
             System.out.println("Do something for RESTART");
+            userBoardArray = fieldGenerator.getGeneratedField(50, 100);
+            enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
             viewer.update();
         } else if (exitButton.contains(x, y)) {
             System.out.println("Do something for EXIT");
