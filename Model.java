@@ -57,53 +57,12 @@ public class Model {
         this.x = x;
         this.y = y;
 
-        if (enemyBoard.contains(x, y)) {
-            System.out.println("In Enemy board pressed mouse!!!");
-            makeUserShot();
-            int indexY = (y - 100) / 50;
-            int indexX = (x - 650) / 50;
+            if(enemyBoard.contains(x, y) || userBoard.contains(x, y)) {
+                updateBoard(userBoard, userBoardArray, 50, 100);
+                updateBoard(enemyBoard, enemyBoardArray, 650, 100);
 
-            if (enemyBoardArray[indexY][indexX].isVisible()) {
-                enemyBoardArray[indexY][indexX].setVisible(false);
+                viewer.update();
             }
-
-            Ship ship = enemyBoardArray[indexY][indexX].getShip();
-
-            if (ship != null) {
-                Cell[] shipCells = ship.getCells();
-
-                for (int i = 0; i < shipCells.length; i++) {
-                    Cell cell = shipCells[i];
-                    if (cell.equals(enemyBoardArray[indexY][indexX]) && cell.getValue() < 2) {
-                        cell.setValue(2);
-                        String imagePath = cell.getImagePath();
-                        String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
-                        cell.setImage(new ImageIcon(sharpedImagePath).getImage());
-                        cell.setImagePath(imagePath);
-                    }
-                }
-
-                if (isShipSink(shipCells)) {
-                    for (int i = 0; i < shipCells.length; i++) {
-                        Cell cell = shipCells[i];
-                        cell.setValue(4);
-                    }
-                }
-
-            }
-
-            viewer.update();
-        }
-
-        if (userBoard.contains(x, y)) {
-            System.out.println("In User board pressed mouse!!!");
-            int indexY = (y - 100) / 50;
-            int indexX = (x - 50) / 50;
-            if (userBoardArray[indexY][indexX].isVisible()) {
-                userBoardArray[indexY][indexX].setVisible(false);
-            }
-            viewer.update();
-        }
 
         if (startButton.contains(x, y)) {
             System.out.println("Do something for START");
@@ -114,6 +73,40 @@ public class Model {
         } else if (exitButton.contains(x, y)) {
             System.out.println("Do something for EXIT");
             viewer.update();
+        }
+    }
+
+    private void updateBoard(Cell board, Cell[][] boardArray, int xOffset, int yOffset) {
+        if (board.contains(x, y)) {
+            System.out.println("In pressed mouse!!!");
+
+            int indexY = (y - yOffset) / 50;
+            int indexX = (x - xOffset) / 50;
+
+            if (boardArray[indexY][indexX].isVisible()) {
+                boardArray[indexY][indexX].setVisible(false);
+            }
+
+            Ship ship = boardArray[indexY][indexX].getShip();
+
+            if (ship != null) {
+                Cell[] shipCells = ship.getCells();
+
+                for (Cell cell : shipCells) {
+                    if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() < 2) {
+                        cell.setValue(2);
+                        String imagePath = cell.getImagePath();
+                        String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
+                        cell.setImage(new ImageIcon(sharpedImagePath).getImage());
+                    }
+                }
+
+                if (isShipSink(shipCells)) {
+                    for (Cell cell : shipCells) {
+                        cell.setValue(4);
+                    }
+                }
+            }
         }
     }
 
@@ -139,11 +132,6 @@ public class Model {
 
     public Cell[][] getUserBoardArray() {
         return userBoardArray;
-    }
-
-
-    public Cell getEnemyBoard() {
-        return enemyBoard;
     }
 
     public Cell[][] getEnemyBoardArray() {
@@ -234,17 +222,5 @@ public class Model {
             }
         }
         return true;
-    }
-
-    public Cell getExitButton() {
-        return exitButton;
-    }
-
-    public Cell getRestartButton() {
-        return restartButton;
-    }
-
-    public Cell getStartButton() {
-        return startButton;
     }
 }
