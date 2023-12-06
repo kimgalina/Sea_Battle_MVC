@@ -3,8 +3,8 @@ public class User extends Player {
     private final Object lock;
     private Model model;
 
-    public User(Model model, ShotsQueue shotsQueue, boolean isGameRunning) {
-        super(shotsQueue, isGameRunning);
+    public User(Model model, ShotsQueue shotsQueue) {
+        super(shotsQueue);
         this.model = model;
         lock = model.getLock();
     }
