@@ -10,6 +10,14 @@ public class Shot {
         this.playerType = playerType;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     public PlayerType getPlayerType() {
         return playerType;
     }
