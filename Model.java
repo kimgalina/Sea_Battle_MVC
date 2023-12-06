@@ -1,4 +1,6 @@
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.Timer;
 
 public class Model {
 
@@ -12,24 +14,36 @@ public class Model {
     private final Object lock;
     private int x;
     private int y;
-    private Cell[][] boardArray;
+    private Cell[][] userBoardArray;
+    private Cell[][] enemyBoardArray;
+    private Cell[][] visualUserBoard; //computer pov on player map
     private Cell enemyBoard;
+    private Cell userBoard;
+    private Cell exitButton;
+    private Cell restartButton;
+    private Cell startButton;
 
     public Model(Viewer viewer) {
         this.viewer = viewer;
         x = -1;
         y = -1;
         fieldGenerator = new FieldGenerator();
-        boardArray = fieldGenerator.getGeneratedField();
+        userBoardArray = fieldGenerator.getGeneratedField(50, 100);
+        enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
 
-        for (int i = 0; i < boardArray.length; i++) {
-            for (int j = 0; j < boardArray[i].length; j++) {
-                 System.out.print(boardArray[j][i].getValue());
+        for (int i = 0; i < userBoardArray.length; i++) {
+            for (int j = 0; j < userBoardArray[i].length; j++) {
+                System.out.print(userBoardArray[i][j].getValue());
             }
-             System.out.println();
+            System.out.println();
         }
+
         lock = new Object();
         enemyBoard = new Cell(650, 100, 10 * 50, 10 * 50, 0);
+        userBoard = new Cell(50, 100, 10 * 50, 10 * 50, 0);
+        exitButton = new Cell(100, 620, 100, 50, 0);
+        restartButton = new Cell(250, 620, 100, 50, 0);
+        startButton = new Cell(400, 620, 100, 50, 0);
         startGame();
     }
 
@@ -46,74 +60,60 @@ public class Model {
         gameLogic.start();
     }
 
-    public Cell getEnemyBoard() {
-        return enemyBoard;
-    }
-
     public void doAction(int x, int y) {
         this.x = x;
         this.y = y;
 
-        if (enemyBoard.contains(x, y)) {
-//            System.out.println("In Enemy board pressed mouse!!!");
-            makeUserShot();
-            int indexY = (y - 100) / 50;
-            int indexX = (x - 650) / 50;
-            if(boardArray[indexX][indexY].isVisible()) {
-                boardArray[indexX][indexY].setVisible();
-            }
-            Ship ship = boardArray[indexY][indexX].getShip();
-            Cell[] cells = ship.getCells();
+        if (enemyBoard.contains(x, y) || userBoard.contains(x, y)) {
+            updateBoard(userBoard, userBoardArray, 50, 100);
+            updateBoard(enemyBoard, enemyBoardArray, 650, 100);
 
-            for (int i = 0; i < cells.length; i++) {
-                Cell cell = cells[i];
-                if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() < 2) {
-                    cell.setValue(2);
-                    updateCellImage(i, cells.length, cell);
-                }
-            }
+            viewer.update();
+        }
 
-            if (isShipSink(cells)) {
-                for (int i = 0; i < cells.length; i++) {
-                    Cell cell = cells[i];
-                    cell.setValue(4);
-                    updateCellImage(i, cells.length, cell);
-                }
-            }
-
+        if (startButton.contains(x, y)) {
+            System.out.println("Do something for START");
+            viewer.update();
+        } else if (restartButton.contains(x, y)) {
+            System.out.println("Do something for RESTART");
+            viewer.update();
+        } else if (exitButton.contains(x, y)) {
+            System.out.println("Do something for EXIT");
             viewer.update();
         }
     }
 
-    private void updateCellImage(int i, int shipSize, Cell cell) {
-        switch (shipSize) {
-            case 1:
-                if (cell.getValue() == 2) {
-                    cell.setImage(new ImageIcon("images/1ship-1-sharped.png").getImage());
-                    cell.setValue(4);
+    private void updateBoard(Cell board, Cell[][] boardArray, int xOffset, int yOffset) {
+        if (board.contains(x, y)) {
+            System.out.println("In pressed mouse!!!");
+
+            int indexY = (y - yOffset) / 50;
+            int indexX = (x - xOffset) / 50;
+
+            if (boardArray[indexY][indexX].isVisible()) {
+                boardArray[indexY][indexX].setVisible(false);
+            }
+
+            Ship ship = boardArray[indexY][indexX].getShip();
+
+            if (ship != null) {
+                Cell[] shipCells = ship.getCells();
+
+                for (Cell cell : shipCells) {
+                    if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() < 2) {
+                        cell.setValue(2);
+                        String imagePath = cell.getImagePath();
+                        String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
+                        cell.setImage(new ImageIcon(sharpedImagePath).getImage());
+                    }
                 }
-                break;
-            case 2:
-                if (cell.getValue() == 2) {
-                    cell.setImage(new ImageIcon("images/2ship-" + i + "-sharped.png").getImage());
-                } else if (cell.getValue() == 4) {
-                    cell.setImage(new ImageIcon("images/2ship-" + i + "-sharped.png").getImage());
+
+                if (isShipSink(shipCells)) {
+                    for (Cell cell : shipCells) {
+                        cell.setValue(4);
+                    }
                 }
-                break;
-            case 3:
-                if (cell.getValue() == 2) {
-                    cell.setImage(new ImageIcon("images/3ship-" + i + "-sharped.png").getImage());
-                } else if (cell.getValue() == 4) {
-                    cell.setImage(new ImageIcon("images/2ship-" + i + "-sharped.png").getImage());
-                }
-                break;
-            case 4:
-                if (cell.getValue() == 2) {
-                    cell.setImage(new ImageIcon("images/4ship-" + i + "-sharped.png").getImage());
-                } else if (cell.getValue() == 4) {
-                    cell.setImage(new ImageIcon("images/4ship-" + i + "-sharped.png").getImage());
-                }
-                break;
+            }
         }
     }
 
@@ -149,12 +149,16 @@ public class Model {
         return lock;
     }
 
-    public Cell[][] getBoardArray() {
-        return boardArray;
+    public Cell[][] getUserBoardArray() {
+        return userBoardArray;
     }
 
-    public Cell getBoardEnemyBoard() {
-        return enemyBoard;
+    public Cell[][] getEnemyBoardArray() {
+        return enemyBoardArray;
+    }
+
+    public Cell[][] getVisualUserBoard() {
+        return visualUserBoard;
     }
 
     public int getX() {
@@ -165,40 +169,7 @@ public class Model {
         return y;
     }
 
-    public int getBoardSize() {
-        return 10;
-    }
-
-    public int[][] findShipCoordinates(int[][] field, int x, int y) {
-        int shipStartX = x;
-        int shipStartY = y;
-        int shipEndX = x;
-        int shipEndY = y;
-
-        if (field[x][y] != 1) {
-            return null;
-        }
-
-        while (shipStartY > 0 && field[x][shipStartY - 1] == 1) {
-            shipStartY--;
-        }
-
-        while (shipEndY < field[0].length - 1 && field[x][shipEndY + 1] == 1) {
-            shipEndY++;
-        }
-
-        while (shipStartX > 0 && field[shipStartX - 1][y] == 1) {
-            shipStartX--;
-        }
-
-        while (shipEndX < field.length - 1 && field[shipEndX + 1][y] == 1) {
-            shipEndX++;
-        }
-
-        return new int[][]{{shipStartX, shipStartY}, {shipEndX, shipEndY}};
-    }
-
-    public boolean validateBattlefield(int[][] field) {
+    public boolean validateBattlefield(Cell[][] field) {
         if (field.length != 10 || field[0].length != 10) {
             return false;
         }
@@ -208,7 +179,7 @@ public class Model {
 
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                int cellValue = field[i][j];
+                int cellValue = field[i][j].getValue();
 
                 if (cellValue != 0 && cellValue != 1) {
                     return false;
@@ -241,16 +212,16 @@ public class Model {
         return true;
     }
 
-    private int getShipSize(int[][] field, boolean[][] visited, int i, int j, boolean isHorizontal) {
+    private int getShipSize(Cell[][] field, boolean[][] visited, int i, int j, boolean isHorizontal) {
         int size = 1;
 
         if (isHorizontal) {
-            while (j + size < 10 && field[i][j + size] == 1) {
+            while (j + size < 10 && field[i][j + size].getValue() == 1) {
                 visited[i][j + size] = true;
                 size++;
             }
         } else {
-            while (i + size < 10 && field[i + size][j] == 1) {
+            while (i + size < 10 && field[i + size][j].getValue() == 1) {
                 visited[i + size][j] = true;
                 size++;
             }
@@ -259,21 +230,36 @@ public class Model {
         return size;
     }
 
-    private boolean isValidPosition(int[][] field, int i, int j, int shipSizeHorizontal, int shipSizeVertical) {
+    private boolean isValidPosition(Cell[][] field, int i, int j, int shipSizeHorizontal, int shipSizeVertical) {
         if (i - 1 >= 0) {
-            if (j - 1 >= 0 && field[i - 1][j - 1] == 1) {
+            if (j - 1 >= 0 && field[i - 1][j - 1].getValue() == 1) {
                 return false;
-            } else if (j + shipSizeHorizontal < 10 && field[i - 1][j + shipSizeHorizontal] == 1) {
+            } else if (j + shipSizeHorizontal < 10 && field[i - 1][j + shipSizeHorizontal].getValue() == 1) {
                 return false;
             }
         } else if (i + shipSizeVertical < 10) {
-            if (j - 1 >= 10 && field[i + shipSizeVertical][j - 1] == 1) {
+            if (j - 1 >= 10 && field[i + shipSizeVertical][j - 1].getValue() == 1) {
                 return false;
-            } else if (j + shipSizeHorizontal < 10 && field[i + shipSizeVertical][j + shipSizeHorizontal] == 1) {
+            } else if (j + shipSizeHorizontal < 10 && field[i + shipSizeVertical][j + shipSizeHorizontal].getValue() == 1) {
                 return false;
             }
         }
-
         return true;
+    }
+
+
+    public void playRocketAnimation(int x, int y) {
+        ImageIcon rocketIcon = new ImageIcon("images/missile.png");
+        JLabel rocketLabel = new JLabel(rocketIcon);
+        viewer.addRocket(rocketIcon, x, y); // добавляем ракету на панель с указанными координатами
+
+        // Для задержки перед удалением ракеты, чтобы она успела отобразиться
+        Timer timer = new Timer(1000000, e -> {
+            viewer.removeRocket(rocketLabel); // удаляем ракету с панели
+            viewer.update(); // обновляем представление для отображения изменений
+        });
+
+        timer.setRepeats(false); // Устанавливаем повторение таймера только один раз
+        timer.start(); // запускаем таймер для удаления ракеты через 1 секунду
     }
 }

@@ -1,17 +1,29 @@
 import java.awt.Rectangle;
 import java.awt.Image;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
+@SuppressWarnings("serial")
 public class Cell extends Rectangle {
 
     private Image image;
     private int value;
     private Ship ship;
     private boolean isVisible;
+    private String imagePath;
 
     public Cell(int x, int y, int width, int height, int value) {
         super(x, y, width, height);
         this.value = value;
         isVisible = true;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public Ship getShip() {
@@ -42,7 +54,11 @@ public class Cell extends Rectangle {
         return isVisible;
     }
 
-    public void setVisible() {
-        isVisible = !isVisible;
+    public void setVisible(boolean visible) {
+        isVisible = visible;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }

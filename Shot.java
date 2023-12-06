@@ -1,5 +1,5 @@
 public class Shot {
-  
+
     private int x;
     private int y;
     private PlayerType playerType;
