@@ -2,7 +2,7 @@ public class Computer extends Player {
 
     private Object lock;
     private Model model;
-    
+
     public Computer(Model model, ShotsQueue shotsQueue) {
         super(shotsQueue);
         this.model = model;
