@@ -8,10 +8,9 @@ public class GameLogic implements Runnable {
     private final int HIT_SHOT = 2;
     private final int MISS_SHOT = 3;
 
-    public GameLogic(Model model, ShotsQueue shotsQueue, boolean isRunning) {
+    public GameLogic(Model model, ShotsQueue shotsQueue) {
         this.model = model;
         this.shotsQueue = shotsQueue;
-        this.isRunning = isRunning;
         thread = new Thread(this);
     }
 
@@ -24,16 +23,17 @@ public class GameLogic implements Runnable {
     }
 
     public void run() {
-        consumeShot();
+        isRunning = true;
+        while (isRunning) {
+            consumeShot();
+        }
     }
 
     private void consumeShot() {
-        while (isRunning) {
-            try {
-                Shot shot = shotsQueue.remove();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        try {
+            Shot shot = shotsQueue.remove();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
