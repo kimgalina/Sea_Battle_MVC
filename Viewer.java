@@ -1,4 +1,9 @@
 import javax.swing.JFrame;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JComponent;
+
+
 
 public class Viewer {
     private Controller controller;
@@ -8,7 +13,7 @@ public class Viewer {
     public Viewer() {
         controller = new Controller(this);
         Model model = controller.getModel();
-        canvas = new Canvas(model,controller);
+        canvas = new Canvas(model, controller);
 
         frame = new JFrame("Battleship");
         frame.setSize(1200, 720);
@@ -24,4 +29,28 @@ public class Viewer {
     public void update() {
         canvas.repaint();
     }
+
+    // Метод для добавления ракеты на игровую панель
+    public void addRocket(ImageIcon rocketIcon, int x, int y) {
+        JLabel rocketLabel = new JLabel(rocketIcon);
+        rocketLabel.setBounds(x, y, rocketIcon.getIconWidth(), rocketIcon.getIconHeight());
+        frame.add(rocketLabel); // добавляем ракету на игровую панель
+        frame.repaint(); // перерисовываем панель, чтобы увидеть изменения
+    }
+
+
+    // Метод для удаления ракеты с игровой панели
+    public void removeRocket(JLabel rocketLabel) {
+        frame.remove(rocketLabel); // удаляем ракету с игровой панели
+        frame.repaint(); // перерисовываем панель, чтобы увидеть изменения
+    }
+
+    // Метод для добавления компонента на игровую панель
+    public void add(JComponent component, int x, int y) {
+        component.setBounds(x, y, component.getWidth(), component.getHeight());
+        frame.add(component); // добавляем компонент на игровую панель
+        frame.repaint(); // перерисовываем панель, чтобы увидеть изменения
+    }
+
+
 }

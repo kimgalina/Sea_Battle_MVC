@@ -1,4 +1,6 @@
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.Timer;
 
 public class Model {
 
@@ -20,14 +22,14 @@ public class Model {
         x = -1;
         y = -1;
         fieldGenerator = new FieldGenerator();
-        userBoardArray = fieldGenerator.getGeneratedField(50,100);
-        enemyBoardArray = fieldGenerator.getGeneratedField(650,100);
+        userBoardArray = fieldGenerator.getGeneratedField(50, 100);
+        enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
 
         for (int i = 0; i < userBoardArray.length; i++) {
             for (int j = 0; j < userBoardArray[i].length; j++) {
-                 System.out.print(userBoardArray[i][j].getValue());
+                System.out.print(userBoardArray[i][j].getValue());
             }
-             System.out.println();
+            System.out.println();
         }
         lock = new Object();
         enemyBoard = new Cell(650, 100, 10 * 50, 10 * 50, 0);
@@ -52,17 +54,16 @@ public class Model {
 
         if (enemyBoard.contains(x, y)) {
             System.out.println("In Enemy board pressed mouse!!!");
-
             //makeUserShot();
             int indexY = (y - 100) / 50;
             int indexX = (x - 650) / 50;
 
-            if(enemyBoardArray[indexY][indexX].isVisible()) {
+            if (enemyBoardArray[indexY][indexX].isVisible()) {
                 enemyBoardArray[indexY][indexX].setVisible(false);
             }
             Ship ship = enemyBoardArray[indexY][indexX].getShip();
 
-            if(ship != null) {
+            if (ship != null) {
                 Cell[] shipCells = ship.getCells();
 
                 for (int i = 0; i < shipCells.length; i++) {
@@ -70,7 +71,7 @@ public class Model {
                     if (cell.equals(enemyBoardArray[indexY][indexX]) && cell.getValue() < 2) {
                         cell.setValue(2);
                         String imagePath = cell.getImagePath();
-                        String sharpedImagePath = imagePath.substring(0,imagePath.length() - 4) + "-sharped.png";
+                        String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
                         cell.setImage(new ImageIcon(sharpedImagePath).getImage());
 
                     }
@@ -89,11 +90,11 @@ public class Model {
             viewer.update();
         }
 
-        if(userBoard.contains(x,y)) {
+        if (userBoard.contains(x, y)) {
             System.out.println("In User board pressed mouse!!!");
             int indexY = (y - 100) / 50;
             int indexX = (x - 50) / 50;
-            if(userBoardArray[indexY][indexX].isVisible()) {
+            if (userBoardArray[indexY][indexX].isVisible()) {
                 userBoardArray[indexY][indexX].setVisible(false);
             }
             viewer.update();
@@ -221,5 +222,21 @@ public class Model {
             }
         }
         return true;
+    }
+
+
+    public void playRocketAnimation(int x, int y) {
+        ImageIcon rocketIcon = new ImageIcon("images/missile.png");
+        JLabel rocketLabel = new JLabel(rocketIcon);
+        viewer.addRocket(rocketIcon, x, y); // добавляем ракету на панель с указанными координатами
+
+        // Для задержки перед удалением ракеты, чтобы она успела отобразиться
+        Timer timer = new Timer(1000000, e -> {
+            viewer.removeRocket(rocketLabel); // удаляем ракету с панели
+            viewer.update(); // обновляем представление для отображения изменений
+        });
+
+        timer.setRepeats(false); // Устанавливаем повторение таймера только один раз
+        timer.start(); // запускаем таймер для удаления ракеты через 1 секунду
     }
 }
