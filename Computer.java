@@ -41,7 +41,7 @@ public class Computer extends Player {
         int[] shotCoordinates = generateRandomShot();
         int y = shotCoordinates[0];
         int x = shotCoordinates[1];
-        return new Shot(y, x, PlayerType.COMPUTER); //logic of computer's shot generation
+        return new Shot(x, y, PlayerType.COMPUTER); //logic of computer's shot generation
     }
 
     private int[] generateRandomShot() {
