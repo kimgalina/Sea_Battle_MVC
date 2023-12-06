@@ -1,4 +1,6 @@
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.Timer;
 
 public class Model {
 
@@ -217,5 +219,21 @@ public class Model {
             }
         }
         return true;
+    }
+
+
+    public void playRocketAnimation(int x, int y) {
+        ImageIcon rocketIcon = new ImageIcon("images/missile.png");
+        JLabel rocketLabel = new JLabel(rocketIcon);
+        viewer.addRocket(rocketIcon, x, y); // добавляем ракету на панель с указанными координатами
+
+        // Для задержки перед удалением ракеты, чтобы она успела отобразиться
+        Timer timer = new Timer(1000000, e -> {
+            viewer.removeRocket(rocketLabel); // удаляем ракету с панели
+            viewer.update(); // обновляем представление для отображения изменений
+        });
+
+        timer.setRepeats(false); // Устанавливаем повторение таймера только один раз
+        timer.start(); // запускаем таймер для удаления ракеты через 1 секунду
     }
 }
