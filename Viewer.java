@@ -8,7 +8,7 @@ public class Viewer {
     public Viewer() {
         controller = new Controller(this);
         Model model = controller.getModel();
-        canvas = new Canvas(model,controller);
+        canvas = new Canvas(model, controller);
 
         frame = new JFrame("Battleship");
         frame.setSize(1200, 720);

@@ -23,21 +23,21 @@ public class Model {
         x = -1;
         y = -1;
         fieldGenerator = new FieldGenerator();
-        userBoardArray = fieldGenerator.getGeneratedField(50,100);
-        enemyBoardArray = fieldGenerator.getGeneratedField(650,100);
+        userBoardArray = fieldGenerator.getGeneratedField(50, 100);
+        enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
 
         for (int i = 0; i < userBoardArray.length; i++) {
             for (int j = 0; j < userBoardArray[i].length; j++) {
-                 System.out.print(userBoardArray[i][j].getValue());
+                System.out.print(userBoardArray[i][j].getValue());
             }
-             System.out.println();
+            System.out.println();
         }
         lock = new Object();
         enemyBoard = new Cell(650, 100, 10 * 50, 10 * 50, 0);
         userBoard = new Cell(50, 100, 10 * 50, 10 * 50, 0);
-        exitButton = new Cell(100,620,100,50,0);
-        restartButton = new Cell(250,620,100,50,0);
-        startButton = new Cell(400,620,100,50,0);
+        exitButton = new Cell(100, 620, 100, 50, 0);
+        restartButton = new Cell(250, 620, 100, 50, 0);
+        startButton = new Cell(400, 620, 100, 50, 0);
         startGame();
     }
 
@@ -56,65 +56,56 @@ public class Model {
         this.x = x;
         this.y = y;
 
-        if (enemyBoard.contains(x, y)) {
-            System.out.println("In Enemy board pressed mouse!!!");
-            makeUserShot();
-            int indexY = (y - 100) / 50;
-            int indexX = (x - 650) / 50;
+            if(enemyBoard.contains(x, y) || userBoard.contains(x, y)) {
+                updateBoard(userBoard, userBoardArray, 50, 100);
+                updateBoard(enemyBoard, enemyBoardArray, 650, 100);
 
-
-
-            if(enemyBoardArray[indexY][indexX].isVisible()) {
-                enemyBoardArray[indexY][indexX].setVisible(false);
+                viewer.update();
             }
-            Ship ship = enemyBoardArray[indexY][indexX].getShip();
 
-            if(ship != null) {
+        if (startButton.contains(x, y)) {
+            System.out.println("Do something for START");
+            viewer.update();
+        } else if (restartButton.contains(x, y)) {
+            System.out.println("Do something for RESTART");
+            viewer.update();
+        } else if (exitButton.contains(x, y)) {
+            System.out.println("Do something for EXIT");
+            viewer.update();
+        }
+    }
+
+    private void updateBoard(Cell board, Cell[][] boardArray, int xOffset, int yOffset) {
+        if (board.contains(x, y)) {
+            System.out.println("In pressed mouse!!!");
+
+            int indexY = (y - yOffset) / 50;
+            int indexX = (x - xOffset) / 50;
+
+            if (boardArray[indexY][indexX].isVisible()) {
+                boardArray[indexY][indexX].setVisible(false);
+            }
+
+            Ship ship = boardArray[indexY][indexX].getShip();
+
+            if (ship != null) {
                 Cell[] shipCells = ship.getCells();
 
-                for (int i = 0; i < shipCells.length; i++) {
-                    Cell cell = shipCells[i];
-                    if (cell.equals(enemyBoardArray[indexY][indexX]) && cell.getValue() < 2) {
+                for (Cell cell : shipCells) {
+                    if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() < 2) {
                         cell.setValue(2);
                         String imagePath = cell.getImagePath();
-                        String sharpedImagePath = imagePath.substring(0,imagePath.length() - 4) + "-sharped.png";
+                        String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
                         cell.setImage(new ImageIcon(sharpedImagePath).getImage());
-
                     }
                 }
 
                 if (isShipSink(shipCells)) {
-                    for (int i = 0; i < shipCells.length; i++) {
-                        Cell cell = shipCells[i];
+                    for (Cell cell : shipCells) {
                         cell.setValue(4);
-
                     }
                 }
-
             }
-
-            viewer.update();
-        }
-
-        if(userBoard.contains(x,y)) {
-            System.out.println("In User board pressed mouse!!!");
-            int indexY = (y - 100) / 50;
-            int indexX = (x - 50) / 50;
-            if(userBoardArray[indexY][indexX].isVisible()) {
-                userBoardArray[indexY][indexX].setVisible(false);
-            }
-            viewer.update();
-        }
-
-        if(startButton.contains(x,y)) {
-            System.out.println("Do something for START");
-            viewer.update();
-        }else if(restartButton.contains(x,y)) {
-            System.out.println("Do something for RESTART");
-            viewer.update();
-        }else if(exitButton.contains(x,y)) {
-            System.out.println("Do something for EXIT");
-            viewer.update();
         }
     }
 
@@ -140,11 +131,6 @@ public class Model {
 
     public Cell[][] getUserBoardArray() {
         return userBoardArray;
-    }
-
-
-    public Cell getEnemyBoard() {
-        return enemyBoard;
     }
 
     public Cell[][] getEnemyBoardArray() {
@@ -235,17 +221,5 @@ public class Model {
             }
         }
         return true;
-    }
-
-    public Cell getExitButton() {
-        return exitButton;
-    }
-
-    public Cell getRestartButton() {
-        return restartButton;
-    }
-
-    public Cell getStartButton() {
-        return startButton;
     }
 }
