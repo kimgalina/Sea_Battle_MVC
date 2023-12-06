@@ -12,6 +12,7 @@ public class Model {
     private int y;
     private Cell[][] userBoardArray;
     private Cell[][] enemyBoardArray;
+    private Cell[][] visualUserBoard; //computer pov on player map
     private Cell enemyBoard;
     private Cell userBoard;
     private Cell exitButton;
@@ -136,6 +137,10 @@ public class Model {
 
     public Cell[][] getEnemyBoardArray() {
         return enemyBoardArray;
+    }
+
+    public Cell[][] getVisualUserBoard() {
+        return visualUserBoard;
     }
 
     public int getX() {
