@@ -94,14 +94,12 @@ public class Model {
         Ship ship = boardArray[indexY][indexX].getShip();
 
         if (ship == null) {
-            boardArray[indexY][indexX].setValue(3);
             return;
         }
         Cell[] shipCells = ship.getCells();
 
         for (Cell cell : shipCells) {
             if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() == 1) {
-                cell.setValue(2);
                 String imagePath = cell.getImagePath();
                 String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
                 cell.setImage(new ImageIcon(sharpedImagePath).getImage());
@@ -117,7 +115,7 @@ public class Model {
             for (Cell cell : shipCells) {
                 cell.setValue(4);
             }
-                }
+        }
 
     }
 
