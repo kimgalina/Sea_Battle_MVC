@@ -17,10 +17,10 @@ public class Model {
     private Cell[][] userBoardArray;
     private Cell[][] enemyBoardArray;
     private Cell[][] visualUserBoard; //computer pov on player map
-    private Cell enemyBoard;
-    private Cell exitButton;
-    private Cell restartButton;
-    private Cell startButton;
+    private final Cell enemyBoard;
+    private final Cell exitButton;
+    private final Cell restartButton;
+    private final Cell startButton;
 
     public Model(Viewer viewer) {
         this.viewer = viewer;
@@ -78,37 +78,38 @@ public class Model {
     }
 
     private void updateBoard(Cell board, Cell[][] boardArray, int xOffset, int yOffset) {
-        if (board.contains(x, y)) {
-            System.out.println("In pressed mouse!!!");
+        System.out.println("In pressed mouse!!!");
 
-            int indexY = (y - yOffset) / 50;
-            int indexX = (x - xOffset) / 50;
+        int indexY = (y - yOffset) / 50;
+        int indexX = (x - xOffset) / 50;
 
-            if (boardArray[indexY][indexX].isVisible()) {
-                boardArray[indexY][indexX].setVisible(false);
-            }
+        if (boardArray[indexY][indexX].isVisible()) {
+            boardArray[indexY][indexX].setVisible(false);
+        }
 
-            Ship ship = boardArray[indexY][indexX].getShip();
+        Ship ship = boardArray[indexY][indexX].getShip();
 
-            if (ship != null) {
-                Cell[] shipCells = ship.getCells();
+        if (ship == null) {
+            boardArray[indexY][indexX].setValue(3);
+            return;
+        }
+        Cell[] shipCells = ship.getCells();
 
-                for (Cell cell : shipCells) {
-                    if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() < 2) {
-                        cell.setValue(2);
-                        String imagePath = cell.getImagePath();
-                        String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
-                        cell.setImage(new ImageIcon(sharpedImagePath).getImage());
-                    }
-                }
-
-                if (isShipSink(shipCells)) {
-                    for (Cell cell : shipCells) {
-                        cell.setValue(4);
-                    }
-                }
+        for (Cell cell : shipCells) {
+            if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() == 1) {
+                cell.setValue(2);
+                String imagePath = cell.getImagePath();
+                String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
+                cell.setImage(new ImageIcon(sharpedImagePath).getImage());
             }
         }
+
+        if (isShipSink(shipCells)) {
+            for (Cell cell : shipCells) {
+                cell.setValue(4);
+            }
+        }
+
     }
 
     private boolean isShipSink(Cell[] cells) {
