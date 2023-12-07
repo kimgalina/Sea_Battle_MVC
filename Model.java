@@ -262,4 +262,8 @@ public class Model {
         timer.setRepeats(false); // Устанавливаем повторение таймера только один раз
         timer.start(); // запускаем таймер для удаления ракеты через 1 секунду
     }
+
+    public void viewerUpdate() {
+        viewer.update();
+    }
 }
