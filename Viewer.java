@@ -2,26 +2,26 @@ import javax.swing.JFrame;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JComponent;
-
-
+import javax.swing.JProgressBar;
 
 public class Viewer {
     private Controller controller;
     private Canvas canvas;
     private JFrame frame;
+    private JProgressBar progressBar;
 
     public Viewer() {
+        new SplashScreen();
+
         controller = new Controller(this);
         Model model = controller.getModel();
         canvas = new Canvas(model, controller);
-
         frame = new JFrame("Battleship");
         frame.setSize(1200, 720);
-        frame.setLocation(100, 10);
+        frame.setLocation(300, 100);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.add(canvas);
-
         frame.setVisible(true);
         frame.setResizable(true);
     }

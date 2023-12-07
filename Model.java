@@ -6,7 +6,6 @@ public class Model {
 
     private Viewer viewer;
     private FieldGenerator fieldGenerator;
-    private volatile boolean isGameRunning;
     private volatile boolean isUserTurn;
     private Player user;
     private Player computer;
@@ -40,12 +39,10 @@ public class Model {
     }
 
     private void startGame() {
-        isGameRunning = true;
-
         ShotsQueue shotsQueue = new ShotsQueue(1);
-        user = new User(this, shotsQueue, isGameRunning);
-        computer = new Computer(this, shotsQueue, isGameRunning);
-        gameLogic = new GameLogic(this, shotsQueue, isGameRunning);
+        user = new User(this, shotsQueue);
+        computer = new Computer(this, shotsQueue);
+        gameLogic = new GameLogic(this, shotsQueue);
 
         user.start();
         computer.start();
@@ -58,22 +55,22 @@ public class Model {
 
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
             updateBoard(enemyBoard, enemyBoardArray, 650, 100);
-
+            makeUserShot();
             viewer.update();
         }
 
         if (startButton.contains(x, y)) {
-            System.out.println("Do something for START");
             startButton.setVisible(true);
             viewer.update();
         } else if (restartButton.contains(x, y) && startButton.isVisible()) {
-            System.out.println("Do something for RESTART");
             userBoardArray = fieldGenerator.getGeneratedField(50, 100);
             enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
             viewer.update();
         } else if (exitButton.contains(x, y)) {
-            System.out.println("Do something for EXIT");
-            viewer.update();
+            user.stop();
+            computer.stop();
+            gameLogic.stop();
+            System.exit(0);
         }
     }
 
@@ -126,10 +123,6 @@ public class Model {
         synchronized (lock) {
             lock.notify();
         }
-    }
-
-    public boolean isGameRunning() {
-        return isGameRunning;
     }
 
     public boolean isUserTurn() {

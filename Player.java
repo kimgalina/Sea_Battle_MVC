@@ -3,22 +3,25 @@ public abstract class Player implements Runnable {
     private ShotsQueue shotsQueue;
     private boolean isRunning;
 
-    public Player(ShotsQueue shotsQueue, boolean isRunning) {
+    public Player(ShotsQueue shotsQueue) {
         thread = new Thread(this);
         this.shotsQueue = shotsQueue;
-        this.isRunning = isRunning;
-    }
-
-    public void run() {
-        while (isRunning) {
-            doAction();
-        }
     }
 
     public void start() {
         thread.start();
     }
 
+    public void stop() {
+        isRunning = false;
+    }
+
+    public void run() {
+        isRunning = true;
+        while (isRunning) {
+            doAction();
+        }
+    }
 
     public abstract void doAction();
 
