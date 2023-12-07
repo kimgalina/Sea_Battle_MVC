@@ -1,3 +1,5 @@
+import javax.swing.ImageIcon;
+
 public class GameLogic implements Runnable {
 
     private Model model;
@@ -69,9 +71,19 @@ public class GameLogic implements Runnable {
 
         if (shottedCell.getValue() == SHIP) {
             shottedCell.setValue(HIT_SHOT);
+            String imagePath = shottedCell.getImagePath();
+            String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
+            shottedCell.setImage(new ImageIcon(sharpedImagePath).getImage());
+
+            if (shottedCell.isVisible()) {
+                shottedCell.setVisible(false);
+            }
             return true;
         } else {
             shottedCell.setValue(MISS_SHOT);
+            if (shottedCell.isVisible()) {
+                shottedCell.setVisible(false);
+            }
             return false;
         }
     }

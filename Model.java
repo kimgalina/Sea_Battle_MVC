@@ -61,7 +61,7 @@ public class Model {
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
             if (userShipsNumber > 0 && computerShipsNumber > 0) {
                 makeUserShot();
-                updateBoard(enemyBoard, enemyBoardArray, 650, 100, true);
+                updateBoard(enemyBoardArray, 650, 100, true);
                 viewer.update();
             } else {
                 System.out.println("The game is OVER");
@@ -83,7 +83,7 @@ public class Model {
         }
     }
 
-    private void updateBoard(Cell board, Cell[][] boardArray, int xOffset, int yOffset, boolean isUser) {
+    private void updateBoard(Cell[][] boardArray, int xOffset, int yOffset, boolean isUser) {
         int indexY = (y - yOffset) / 50;
         int indexX = (x - xOffset) / 50;
 
