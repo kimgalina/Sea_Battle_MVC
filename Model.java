@@ -6,11 +6,12 @@ public class Model {
 
     private Viewer viewer;
     private FieldGenerator fieldGenerator;
-    private volatile boolean isGameRunning;
     private volatile boolean isUserTurn;
     private Player user;
     private Player computer;
     private GameLogic gameLogic;
+    private int userShipsNumber;
+    private int computerShipsNumber;
     private final Object lock;
     private int x;
     private int y;
@@ -26,6 +27,9 @@ public class Model {
         this.viewer = viewer;
         x = -1;
         y = -1;
+        userShipsNumber = 10;
+        computerShipsNumber = 10;
+
         fieldGenerator = new FieldGenerator();
         userBoardArray = fieldGenerator.getGeneratedField(50, 100);
         enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
@@ -35,16 +39,15 @@ public class Model {
         exitButton = new Cell(100, 620, 100, 50, 0);
         restartButton = new Cell(250, 620, 100, 50, 0);
         startButton = new Cell(400, 620, 100, 50, 0);
+        startButton.setVisible(false);
         startGame();
     }
 
     private void startGame() {
-        isGameRunning = true;
-
         ShotsQueue shotsQueue = new ShotsQueue(1);
-        user = new User(this, shotsQueue, isGameRunning);
-        computer = new Computer(this, shotsQueue, isGameRunning);
-        gameLogic = new GameLogic(this, shotsQueue, isGameRunning);
+        user = new User(this, shotsQueue);
+        computer = new Computer(this, shotsQueue);
+        gameLogic = new GameLogic(this, shotsQueue);
 
         user.start();
         computer.start();
@@ -55,25 +58,32 @@ public class Model {
         this.x = x;
         this.y = y;
 
-        if (enemyBoard.contains(x, y)) {
-            updateBoard(enemyBoard, enemyBoardArray, 650, 100);
-
-            viewer.update();
+        if (enemyBoard.contains(x, y) && startButton.isVisible()) {
+            if (userShipsNumber > 0 && computerShipsNumber > 0) {
+                makeUserShot();
+                updateBoard(enemyBoard, enemyBoardArray, 650, 100, true);
+                viewer.update();
+            } else {
+                System.out.println("The game is OVER");
+            }
         }
 
         if (startButton.contains(x, y)) {
-            System.out.println("Do something for START");
+            startButton.setVisible(true);
             viewer.update();
-        } else if (restartButton.contains(x, y)) {
-            System.out.println("Do something for RESTART");
+        } else if (restartButton.contains(x, y) && startButton.isVisible()) {
+            userBoardArray = fieldGenerator.getGeneratedField(50, 100);
+            enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
             viewer.update();
         } else if (exitButton.contains(x, y)) {
-            System.out.println("Do something for EXIT");
-            viewer.update();
+            user.stop();
+            computer.stop();
+            gameLogic.stop();
+            System.exit(0);
         }
     }
 
-    private void updateBoard(Cell board, Cell[][] boardArray, int xOffset, int yOffset) {
+    private void updateBoard(Cell board, Cell[][] boardArray, int xOffset, int yOffset, boolean isUser) {
         if (board.contains(x, y)) {
             System.out.println("In pressed mouse!!!");
 
@@ -99,6 +109,11 @@ public class Model {
                 }
 
                 if (isShipSink(shipCells)) {
+                    if (isUser) {
+                        userShipsNumber--;
+                    } else {
+                        computerShipsNumber--;
+                    }
                     for (Cell cell : shipCells) {
                         cell.setValue(4);
                     }
@@ -121,10 +136,6 @@ public class Model {
         synchronized (lock) {
             lock.notify();
         }
-    }
-
-    public boolean isGameRunning() {
-        return isGameRunning;
     }
 
     public boolean isUserTurn() {

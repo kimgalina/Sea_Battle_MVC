@@ -5,8 +5,8 @@ public class Computer extends Player {
     private final Object lock;
     private Model model;
 
-    public Computer(Model model, ShotsQueue shotsQueue, boolean isGameRunning) {
-        super(shotsQueue, isGameRunning);
+    public Computer(Model model, ShotsQueue shotsQueue) {
+        super(shotsQueue);
         this.model = model;
         lock = model.getLock();
     }
@@ -18,7 +18,7 @@ public class Computer extends Player {
         }
     }
 
-    public void waitForTurn() {
+    private void waitForTurn() {
         try {
             lock.wait();
         } catch (InterruptedException e) {
@@ -46,7 +46,7 @@ public class Computer extends Player {
     private int[] generateRandomShot() {
         int[] shotCoordinates = new int[2];
         Random random = new Random();
-        Cell[][] playerBoard = model.getVisualUserBoard();
+        Cell[][] playerBoard = model.getUserBoardArray();
         while(true) {
           int y = random.nextInt(10);
           int x = random.nextInt(10);
