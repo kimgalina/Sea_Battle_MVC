@@ -10,6 +10,8 @@ public class Model {
     private Player user;
     private Player computer;
     private GameLogic gameLogic;
+    private int userShipsNumber;
+    private int computerShipsNumber;
     private final Object lock;
     private int x;
     private int y;
@@ -25,6 +27,9 @@ public class Model {
         this.viewer = viewer;
         x = -1;
         y = -1;
+        userShipsNumber = 10;
+        computerShipsNumber = 10;
+
         fieldGenerator = new FieldGenerator();
         userBoardArray = fieldGenerator.getGeneratedField(50, 100);
         enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
@@ -54,9 +59,13 @@ public class Model {
         this.y = y;
 
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
-            updateBoard(enemyBoard, enemyBoardArray, 650, 100);
-            makeUserShot();
-            viewer.update();
+            if (userShipsNumber > 0 && computerShipsNumber > 0) {
+                makeUserShot();
+                updateBoard(enemyBoard, enemyBoardArray, 650, 100, true);
+                viewer.update();
+            } else {
+                System.out.println("The game is OVER");
+            }
         }
 
         if (startButton.contains(x, y)) {
@@ -74,7 +83,7 @@ public class Model {
         }
     }
 
-    private void updateBoard(Cell board, Cell[][] boardArray, int xOffset, int yOffset) {
+    private void updateBoard(Cell board, Cell[][] boardArray, int xOffset, int yOffset, boolean isUser) {
         if (board.contains(x, y)) {
             System.out.println("In pressed mouse!!!");
 
@@ -100,6 +109,11 @@ public class Model {
                 }
 
                 if (isShipSink(shipCells)) {
+                    if (isUser) {
+                        userShipsNumber--;
+                    } else {
+                        computerShipsNumber--;
+                    }
                     for (Cell cell : shipCells) {
                         cell.setValue(4);
                     }
