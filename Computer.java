@@ -18,7 +18,7 @@ public class Computer extends Player {
         }
     }
 
-    public void waitForTurn() {
+    private void waitForTurn() {
         try {
             lock.wait();
         } catch (InterruptedException e) {

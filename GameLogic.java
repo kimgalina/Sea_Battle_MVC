@@ -4,6 +4,7 @@ public class GameLogic implements Runnable {
     private Thread thread;
     private ShotsQueue shotsQueue;
     private boolean isRunning;
+    private final int EMPTY = 0;
     private final int SHIP = 1;
     private final int HIT_SHOT = 2;
     private final int MISS_SHOT = 3;
@@ -25,20 +26,46 @@ public class GameLogic implements Runnable {
     public void run() {
         isRunning = true;
         while (isRunning) {
-            consumeShot();
+            handleAction();
         }
     }
 
-    private void consumeShot() {
+    private void handleAction() {
+        Shot shot = consumeShot();
+        if (shot != null) {
+            if (shot.getPlayerType() == PlayerType.USER) {
+                boolean isShipHit = processUserShot(shot);
+                if (isShipHit) {
+                    // user's turn
+                }
+            } else {
+                boolean isShipHit = processComputerShot(shot);
+                if (isShipHit) {
+                    // computer's turn
+                }
+            }
+        }
+    }
+
+    private Shot consumeShot() {
         try {
-            Shot shot = shotsQueue.remove();
+            return shotsQueue.remove();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
-    private boolean handleShot(Cell[][] field, Shot shot) {
-        Cell shottedCell = field[shot.getY()][shot.getX()];
+    private boolean processUserShot(Shot shot) {
+        return processShot(model.getEnemyBoardArray(), shot);
+    }
+
+    private boolean processComputerShot(Shot shot) {
+        return processShot(model.getUserBoardArray(), shot);
+    }
+
+    private boolean processShot(Cell[][] board, Shot shot) {
+        Cell shottedCell = board[shot.getY()][shot.getX()];
 
         if (shottedCell.getValue() == SHIP) {
             shottedCell.setValue(HIT_SHOT);
