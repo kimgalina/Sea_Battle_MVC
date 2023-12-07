@@ -60,11 +60,9 @@ public class Model {
         }
 
         if (startButton.contains(x, y)) {
-            System.out.println("Do something for START");
             startButton.setVisible(true);
             viewer.update();
         } else if (restartButton.contains(x, y) && startButton.isVisible()) {
-            System.out.println("Do something for RESTART");
             userBoardArray = fieldGenerator.getGeneratedField(50, 100);
             enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
             viewer.update();
