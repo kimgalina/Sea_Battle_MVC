@@ -74,6 +74,8 @@ public class Model {
         } else if (restartButton.contains(x, y) && startButton.isVisible()) {
             userBoardArray = fieldGenerator.getGeneratedField(50, 100);
             enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
+            userShipsNumber = 10;
+            computerShipsNumber = 10;
             viewer.update();
         } else if (exitButton.contains(x, y)) {
             user.stop();
