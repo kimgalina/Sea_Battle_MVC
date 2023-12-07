@@ -74,6 +74,8 @@ public class Model {
         } else if (restartButton.contains(x, y) && startButton.isVisible()) {
             userBoardArray = fieldGenerator.getGeneratedField(50, 100);
             enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
+            userShipsNumber = 10;
+            computerShipsNumber = 10;
             viewer.update();
         } else if (exitButton.contains(x, y)) {
             user.stop();
@@ -259,5 +261,9 @@ public class Model {
 
         timer.setRepeats(false); // Устанавливаем повторение таймера только один раз
         timer.start(); // запускаем таймер для удаления ракеты через 1 секунду
+    }
+
+    public void viewerUpdate() {
+        viewer.update();
     }
 }

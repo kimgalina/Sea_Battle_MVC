@@ -6,14 +6,18 @@ public class GameLogic implements Runnable {
     private Thread thread;
     private ShotsQueue shotsQueue;
     private boolean isRunning;
-    private final int EMPTY = 0;
-    private final int SHIP = 1;
-    private final int HIT_SHOT = 2;
-    private final int MISS_SHOT = 3;
+    private final int EMPTY;
+    private final int SHIP;
+    private final int HIT_SHOT;
+    private final int MISS_SHOT;
 
     public GameLogic(Model model, ShotsQueue shotsQueue) {
         this.model = model;
         this.shotsQueue = shotsQueue;
+        EMPTY = 0;
+        SHIP = 1;
+        HIT_SHOT = 2;
+        MISS_SHOT = 3;
         thread = new Thread(this);
     }
 
@@ -44,6 +48,7 @@ public class GameLogic implements Runnable {
                 boolean isShipHit = processComputerShot(shot);
                 if (isShipHit) {
                     // computer's turn
+                    model.viewerUpdate();
                 }
             }
         }
@@ -69,7 +74,7 @@ public class GameLogic implements Runnable {
     private boolean processShot(Cell[][] board, Shot shot) {
         Cell shottedCell = board[shot.getY()][shot.getX()];
 
-        if (shottedCell.getValue() == SHIP) {
+        if (shottedCell.getValue() == SHIP || shottedCell.getValue() == HIT_SHOT) {
             shottedCell.setValue(HIT_SHOT);
             String imagePath = shottedCell.getImagePath();
             String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
