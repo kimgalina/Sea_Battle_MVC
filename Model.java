@@ -133,8 +133,17 @@ public class Model {
 
     private void makeUserShot() {
         synchronized (lock) {
-            lock.notify();
+            if (isShotValid()) {
+                lock.notify();
+            }
         }
+    }
+
+    private boolean isShotValid() {
+        int indexY = (y - 100) / 50;
+        int indexX = (x - 650) / 50;
+        Cell shottedCell = enemyBoardArray[indexY][indexX];
+        return shottedCell.getValue() < 2;
     }
 
     public boolean isUserTurn() {

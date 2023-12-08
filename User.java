@@ -12,15 +12,8 @@ public class User extends Player {
     public void doAction() {
         synchronized (lock) {
             waitForClick();
-
-            int x = model.getX();
-            int y = model.getY();
-            Shot shot = parseToShot(x, y);
-
-            if (isShotValid(shot)) {
-                produceShot(shot);
-                lock.notify();
-            }
+            produceShot();
+            lock.notify();
         }
     }
 
@@ -32,25 +25,20 @@ public class User extends Player {
         }
     }
 
-    private Shot parseToShot(int x, int y) {
-        int i = (y - 100) / 50;
-        int j = (x - 650) / 50;
-        return new Shot(j, i, PlayerType.USER);
-    }
 
-    private boolean isShotValid(Shot shot) {
-        Cell[][] computerBoard = model.getEnemyBoardArray();
-        Cell shottedCell = computerBoard[shot.getY()][shot.getX()];
-
-        return shottedCell.getValue() < 2;
-    }
-
-    private void produceShot(Shot shot) {
+    private void produceShot() {
+        Shot shot = parseToShot(model.getX(), model.getY());
         ShotsQueue shots = getShotsQueue();
         try {
             shots.add(shot);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Shot parseToShot(int x, int y) {
+        int i = (y - 100) / 50;
+        int j = (x - 650) / 50;
+        return new Shot(j, i, PlayerType.USER);
     }
 }
