@@ -48,9 +48,9 @@ public class GameLogic implements Runnable {
                 boolean isShipHit = processComputerShot(shot);
                 if (isShipHit) {
                     // computer's turn
-                    model.viewerUpdate();
                 }
             }
+            model.viewerUpdate();
         }
     }
 

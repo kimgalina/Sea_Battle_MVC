@@ -56,22 +56,6 @@ public class Model {
     }
 
     public void doAction(int x, int y) {
-      System.out.println("\n\n\n USER BOARD"); //delete
-      for (int i = 0; i < 10; i++) { //delete
-        for (int j = 0; j < 10; j++) { //delete
-            System.out.print(userBoardArray[i][j].getValue() + " "); //delete
-        } //delete
-        System.out.println(); //delete
-      } //delete
- //delete
-int[][] computerPov = computer.getPOV();
- System.out.println("\n\n\n HOW COMPUTER SEES USER BOARD"); //delete
- for (int i = 0; i < computerPov.length; i++) { //delete
-     for (int j = 0; j < computerPov[i].length; j++) { //delete
-         System.out.print(computerPov[i][j] + " "); //delete
-     } //delete
-     System.out.println(); //delete
- } //delete
         this.x = x;
         this.y = y;
 
@@ -94,16 +78,6 @@ int[][] computerPov = computer.getPOV();
             userShipsNumber = 10;
             computerShipsNumber = 10;
             computer.resetPov();
-
-            ArrayList<int[]> list = computer.getHitsLog();
-
-            for (int[] array : list) {
-              for (int element : array) {
-                  System.out.print(element + " ");
-              }
-              System.out.println();
-            }
-
             viewer.update();
         } else if (exitButton.contains(x, y)) {
             user.stop();
@@ -137,7 +111,7 @@ int[][] computerPov = computer.getPOV();
         }
 
         if (isShipSink(shipCells)) {
-            if (isUser) {
+            if (!isUser) {
                 userShipsNumber--;
             } else {
                 computerShipsNumber--;
@@ -146,7 +120,6 @@ int[][] computerPov = computer.getPOV();
                 cell.setValue(4);
             }
         }
-
     }
 
     private boolean isShipSink(Cell[] cells) {
@@ -155,7 +128,6 @@ int[][] computerPov = computer.getPOV();
                 return false;
             }
         }
-
         return true;
     }
 

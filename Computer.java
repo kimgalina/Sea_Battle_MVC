@@ -6,13 +6,11 @@ public class Computer extends Player {
     private final Object lock;
     private Model model;
     private int[][] computerPov;
-    private ArrayList<int[]> hitsLog; //temp delete
 
     public Computer(Model model, ShotsQueue shotsQueue) {
         super(shotsQueue);
         this.model = model;
         computerPov = new int[10][10];
-        hitsLog = new ArrayList<>(); //delete
         resetPov();
         lock = model.getLock();
     }
@@ -31,10 +29,6 @@ public class Computer extends Player {
           }
         }
     }
-
-    public int[][] getPOV() { //delete
-      return computerPov; //delete
-    } //delete
 
     private void refreshComputerPovBoard() {
         Cell[][] realUserCell = model.getUserBoardArray();
@@ -72,6 +66,7 @@ public class Computer extends Player {
     }
 
     private Shot generateShot() {
+        refreshComputerPovBoard();
         int[] shotCoordinates = new int[2];
         ArrayList<int[]> visibleShips = findShipsCoordinates();
         if (visibleShips != null) {
@@ -81,18 +76,12 @@ public class Computer extends Player {
                 shotCoordinates = findNearShots.get(index);
                 int x = shotCoordinates[1];
                 int y = shotCoordinates[0];
-                System.out.println("\n\nGenerating SPECIAL shot, shotCoords x=" + shotCoordinates[1] + " y=" + shotCoordinates[0]); //delete
-                refreshComputerPovBoard();
-                hitsLog.add(new int[] {x, y}); //delete
                 return new Shot(x, y, PlayerType.COMPUTER);
             }
         }
         shotCoordinates = generateRandomShot();
-        System.out.println("\n\nGenerating RANDOM shot, shotCoords x=" + shotCoordinates[1] + " y=" + shotCoordinates[0]); //delete
         int x = shotCoordinates[1];
         int y = shotCoordinates[0];
-        refreshComputerPovBoard();
-        hitsLog.add(new int[] {x, y}); //delete
         return new Shot(x, y, PlayerType.COMPUTER);
     }
 
@@ -108,10 +97,6 @@ public class Computer extends Player {
               return shotCoordinates;
           }
         }
-    }
-
-    public ArrayList<int[]> getHitsLog() {
-        return hitsLog;
     }
 
     private ArrayList<int[]> findShipsCoordinates() {
@@ -175,7 +160,7 @@ public class Computer extends Player {
     }
 
     private boolean botIsReachable(int y) {
-        return (y + 1 < 9);
+        return (y + 1 <= 9);
     }
 
     private boolean leftIsReachable(int x) {
@@ -183,6 +168,6 @@ public class Computer extends Player {
     }
 
     private boolean rightIsReachable(int x) {
-        return (x + 1 < 9);
+        return (x + 1 <= 9);
     }
 }
