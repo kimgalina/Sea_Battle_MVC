@@ -74,6 +74,8 @@ public class Model {
         } else if (restartButton.contains(x, y) && startButton.isVisible()) {
             userBoardArray = fieldGenerator.getGeneratedField(50, 100);
             enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
+            userShipsNumber = 10;
+            computerShipsNumber = 10;
             viewer.update();
         } else if (exitButton.contains(x, y)) {
             user.stop();
@@ -94,14 +96,12 @@ public class Model {
         Ship ship = boardArray[indexY][indexX].getShip();
 
         if (ship == null) {
-            boardArray[indexY][indexX].setValue(3);
             return;
         }
         Cell[] shipCells = ship.getCells();
 
         for (Cell cell : shipCells) {
             if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() == 1) {
-                cell.setValue(2);
                 String imagePath = cell.getImagePath();
                 String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
                 cell.setImage(new ImageIcon(sharpedImagePath).getImage());
@@ -117,7 +117,7 @@ public class Model {
             for (Cell cell : shipCells) {
                 cell.setValue(4);
             }
-                }
+        }
 
     }
 
@@ -133,8 +133,17 @@ public class Model {
 
     private void makeUserShot() {
         synchronized (lock) {
-            lock.notify();
+            if (isShotValid()) {
+                lock.notify();
+            }
         }
+    }
+
+    private boolean isShotValid() {
+        int indexY = (y - 100) / 50;
+        int indexX = (x - 650) / 50;
+        Cell shottedCell = enemyBoardArray[indexY][indexX];
+        return shottedCell.getValue() < 2;
     }
 
     public boolean isUserTurn() {
@@ -261,5 +270,9 @@ public class Model {
 
         timer.setRepeats(false); // Устанавливаем повторение таймера только один раз
         timer.start(); // запускаем таймер для удаления ракеты через 1 секунду
+    }
+
+    public void viewerUpdate() {
+        viewer.update();
     }
 }

@@ -8,7 +8,6 @@ public class Viewer {
     private Controller controller;
     private Canvas canvas;
     private JFrame frame;
-    private JProgressBar progressBar;
 
     public Viewer() {
         new SplashScreen();
