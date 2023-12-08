@@ -17,7 +17,7 @@ public class Viewer {
         canvas = new Canvas(model, controller);
         frame = new JFrame("Battleship");
         frame.setSize(1200, 720);
-        frame.setLocation(100, 50);
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.add(canvas);

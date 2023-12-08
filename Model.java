@@ -2,13 +2,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
+import java.util.ArrayList; //delete
+
 public class Model {
 
     private Viewer viewer;
     private FieldGenerator fieldGenerator;
     private volatile boolean isUserTurn;
-    private Player user;
-    private Player computer;
+    private User user;
+    private Computer computer;
     private GameLogic gameLogic;
     private int userShipsNumber;
     private int computerShipsNumber;
@@ -17,7 +19,6 @@ public class Model {
     private int y;
     private Cell[][] userBoardArray;
     private Cell[][] enemyBoardArray;
-    private Cell[][] visualUserBoard; //computer pov on player map
     private final Cell enemyBoard;
     private final Cell exitButton;
     private final Cell restartButton;
@@ -76,6 +77,7 @@ public class Model {
             enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
             userShipsNumber = 10;
             computerShipsNumber = 10;
+            computer.resetPov();
             viewer.update();
         } else if (exitButton.contains(x, y)) {
             user.stop();
@@ -109,7 +111,7 @@ public class Model {
         }
 
         if (isShipSink(shipCells)) {
-            if (isUser) {
+            if (!isUser) {
                 userShipsNumber--;
             } else {
                 computerShipsNumber--;
@@ -118,7 +120,6 @@ public class Model {
                 cell.setValue(4);
             }
         }
-
     }
 
     private boolean isShipSink(Cell[] cells) {
@@ -127,7 +128,6 @@ public class Model {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -164,10 +164,6 @@ public class Model {
 
     public Cell[][] getEnemyBoardArray() {
         return enemyBoardArray;
-    }
-
-    public Cell[][] getVisualUserBoard() {
-        return visualUserBoard;
     }
 
     public int getX() {
