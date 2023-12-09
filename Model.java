@@ -63,6 +63,9 @@ public class Model {
     public Music getWaterShotSound() {
         return waterShotSound;
     }
+    public Music getKilledShipSound() {
+        return killedShipSound;
+    }
 
     private void startGame() {
         ShotsQueue shotsQueue = new ShotsQueue(1);
@@ -122,64 +125,12 @@ public class Model {
         }
     }
 
-//    private void updateBoard(Cell[][] boardArray, int xOffset, int yOffset) {
-//        int indexY = (y - yOffset) / 50;
-//        int indexX = (x - xOffset) / 50;
-//
-//        if (boardArray[indexY][indexX].isVisible()) {
-//            boardArray[indexY][indexX].setVisible(false);
-//        }
-//
-//        Ship ship = boardArray[indexY][indexX].getShip();
-//
-//        if (ship == null) {
-//            return;
-//        }
-//        Cell[] shipCells = ship.getCells();
-//
-//        for (Cell cell : shipCells) {
-//            if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() == 1) {
-//                String imagePath = cell.getImagePath();
-//                String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
-//                cell.setImage(new ImageIcon(sharpedImagePath).getImage());
-//            }
-//        }
-//
-//        if (isShipSink(shipCells)) {
-//            // если корабль потонул проигрывать музыку взрыва корабля
-//            killedShipSound.play();
-//            for (Cell cell : shipCells) {
-//                cell.setValue(4);
-//            }
-//        }
-//    }
-
-    private boolean isShipSink(Cell[] cells) {
-        for (Cell cell : cells) {
-            if (cell.getValue() == 1) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     private boolean isShotValid() {
         int indexY = (y - 100) / 50;
         int indexX = (x - 650) / 50;
         Cell shottedCell = enemyBoardArray[indexY][indexX];
-        if(shottedCell.getValue() == 0) {
-            System.out.println("Звук плеска воды");
-//            shotSound.play();
-            waterShotSound.play();
-            return true;
-        } else if(shottedCell.getValue() == 1) {
-            System.out.println("Звук попадания в корабль");
-//            shotSound.play();
-            successShotSound.play();
-
-            return true;
-        }
-        return false;
+        return shottedCell.getValue() < 2;
     }
 
     public boolean isUserTurn() {
