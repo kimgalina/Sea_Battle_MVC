@@ -103,7 +103,7 @@ public class Model {
             enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
             userShipsNumber = 10;
             computerShipsNumber = 10;
-            computer.resetPov();
+            computer.reset();
             viewer.update();
         } else if (stopButton.contains(x,y)) {
             System.out.println("Something do for stop or pause game");
