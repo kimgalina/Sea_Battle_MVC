@@ -40,12 +40,8 @@ public class GameLogic implements Runnable {
         }
     }
 
-    public boolean isGameRunning() {
-        return userShipsNumber > 0 && computerShipsNumber > 0;
-    }
-
-    public boolean isUserWon() {
-        return computerShipsNumber == 0;
+    public boolean isGameOver() {
+        return userShipsNumber == 0 || computerShipsNumber == 0;
     }
 
     public void updateShipsNumber() {
@@ -58,12 +54,9 @@ public class GameLogic implements Runnable {
         synchronized (lock) {
             if (shot != null) {
                 if (shot.getPlayerType() == PlayerType.USER) {
-                    boolean isShipHit = processUserShot(shot);
-                    model.setUserTurn(isShipHit);
-                    lock.notify();
+                    handleUserAction(shot);
                 } else {
-                    boolean isShipHit = processComputerShot(shot);
-                    model.setUserTurn(!isShipHit);
+                    handleComputerAction(shot);
                 }
                 model.viewerUpdate();
             }
@@ -77,6 +70,20 @@ public class GameLogic implements Runnable {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void handleUserAction(Shot shot) {
+        boolean isShipHit = processUserShot(shot);
+        model.setUserTurn(isShipHit);
+        lock.notify();
+    }
+
+    private void handleComputerAction(Shot shot) {
+        boolean isShipHit = processComputerShot(shot);
+        model.setUserTurn(!isShipHit);
+        if (isShipHit) {
+            lock.notifyAll();
+        }
     }
 
     private boolean processUserShot(Shot shot) {

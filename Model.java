@@ -57,12 +57,7 @@ public class Model {
         this.y = y;
 
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
-            if (gameLogic.isGameRunning()) {
-                makeUserShot();
-            } else {
-                System.out.println("The game is OVER");
-                System.out.println("IS USER WON: " + gameLogic.isUserWon());
-            }
+            makeUserShot();
         }
 
         if (startButton.contains(x, y)) {
@@ -83,7 +78,7 @@ public class Model {
 
     private void makeUserShot() {
         synchronized (lock) {
-            if (isShotValid()) {
+            if (isShotValid() && isUserTurn) {
                 lock.notify();
             }
         }
