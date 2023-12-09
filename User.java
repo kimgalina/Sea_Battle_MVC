@@ -12,8 +12,21 @@ public class User extends Player {
     public void doAction() {
         synchronized (lock) {
             waitForClick();
-            produceShot();
-            lock.notify();
+            if (model.isUserTurn()) {
+                printComputerBoard();
+                produceShot();
+            }
+        }
+    }
+
+    private void printComputerBoard() {
+        System.out.println("\nCOMPUTER");
+        Cell[][] board = model.getEnemyBoardArray();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                System.out.print(board[i][j].getValue());
+            }
+            System.out.println();
         }
     }
 

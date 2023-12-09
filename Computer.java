@@ -14,7 +14,26 @@ public class Computer extends Player {
     public void doAction() {
         synchronized (lock) {
             waitForTurn();
-            produceShot();
+            if (!model.isUserTurn()) {
+                printUserBoard();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                produceShot();
+            }
+        }
+    }
+
+    private void printUserBoard() {
+        System.out.println("\nUSER");
+        Cell[][] board = model.getUserBoardArray();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                System.out.print(board[i][j].getValue());
+            }
+            System.out.println();
         }
     }
 

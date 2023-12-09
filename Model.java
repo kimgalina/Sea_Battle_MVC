@@ -10,8 +10,6 @@ public class Model {
     private Player user;
     private Player computer;
     private GameLogic gameLogic;
-    private int userShipsNumber;
-    private int computerShipsNumber;
     private final Object lock;
     private int x;
     private int y;
@@ -27,8 +25,6 @@ public class Model {
         this.viewer = viewer;
         x = -1;
         y = -1;
-        userShipsNumber = 10;
-        computerShipsNumber = 10;
 
         fieldGenerator = new FieldGenerator();
         userBoardArray = fieldGenerator.getGeneratedField(50, 100);
@@ -40,6 +36,8 @@ public class Model {
         restartButton = new Cell(250, 620, 100, 50, 0);
         startButton = new Cell(400, 620, 100, 50, 0);
         startButton.setVisible(false);
+
+        isUserTurn = true;
         startGame();
     }
 
@@ -59,12 +57,11 @@ public class Model {
         this.y = y;
 
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
-            if (userShipsNumber > 0 && computerShipsNumber > 0) {
+            if (gameLogic.isGameRunning()) {
                 makeUserShot();
-                updateBoard(enemyBoardArray, 650, 100, true);
-                viewer.update();
             } else {
                 System.out.println("The game is OVER");
+                System.out.println("IS USER WON: " + gameLogic.isUserWon());
             }
         }
 
@@ -74,8 +71,7 @@ public class Model {
         } else if (restartButton.contains(x, y) && startButton.isVisible()) {
             userBoardArray = fieldGenerator.getGeneratedField(50, 100);
             enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
-            userShipsNumber = 10;
-            computerShipsNumber = 10;
+            gameLogic.updateShipsNumber();
             viewer.update();
         } else if (exitButton.contains(x, y)) {
             user.stop();
@@ -83,52 +79,6 @@ public class Model {
             gameLogic.stop();
             System.exit(0);
         }
-    }
-
-    private void updateBoard(Cell[][] boardArray, int xOffset, int yOffset, boolean isUser) {
-        int indexY = (y - yOffset) / 50;
-        int indexX = (x - xOffset) / 50;
-
-        if (boardArray[indexY][indexX].isVisible()) {
-            boardArray[indexY][indexX].setVisible(false);
-        }
-
-        Ship ship = boardArray[indexY][indexX].getShip();
-
-        if (ship == null) {
-            return;
-        }
-        Cell[] shipCells = ship.getCells();
-
-        for (Cell cell : shipCells) {
-            if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() == 1) {
-                String imagePath = cell.getImagePath();
-                String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
-                cell.setImage(new ImageIcon(sharpedImagePath).getImage());
-            }
-        }
-
-        if (isShipSink(shipCells)) {
-            if (isUser) {
-                userShipsNumber--;
-            } else {
-                computerShipsNumber--;
-            }
-            for (Cell cell : shipCells) {
-                cell.setValue(4);
-            }
-        }
-
-    }
-
-    private boolean isShipSink(Cell[] cells) {
-        for (Cell cell : cells) {
-            if (cell.getValue() == 1) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private void makeUserShot() {
