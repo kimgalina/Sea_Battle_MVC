@@ -19,6 +19,8 @@ public class Model {
     private int x;
     private int y;
     private Music shotSound;
+    private Music successShot;
+    private Music waterShot;
     private Cell[][] userBoardArray;
     private Cell[][] enemyBoardArray;
     private final Cell enemyBoard;
@@ -45,12 +47,23 @@ public class Model {
         startButton = new Cell(400, 620, 100, 50, 0);
         startButton.setVisible(false);
         File file = new File("music/shotSound.wav");
+        File file1 = new File("music/succesShot.wav");
+        File file2 = new File("music/waterShot.wav");
         shotSound = new Music(file);
+        successShot = new Music(file1);
+        waterShot = new Music(file2);
+
         startGame();
     }
 
     public Music getShotSound() {
         return shotSound;
+    }
+    public Music getSuccessShot() {
+        return successShot;
+    }
+    public Music getWaterShot() {
+        return  waterShot;
     }
 
     private void startGame() {
@@ -154,11 +167,13 @@ public class Model {
         Cell shottedCell = enemyBoardArray[indexY][indexX];
         if(shottedCell.getValue() == 0) {
             System.out.println("Звук плеска воды");
-            shotSound.play();
+//            shotSound.play();
+            waterShot.play();
             return true;
         } else if(shottedCell.getValue() == 1) {
             System.out.println("Звук попадания в корабль");
-            shotSound.play();
+//            shotSound.play();
+            successShot.play();
             
             return true;
         }
