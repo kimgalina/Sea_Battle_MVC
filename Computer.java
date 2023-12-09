@@ -11,9 +11,8 @@ public class Computer extends Player {
         super(shotsQueue);
         this.model = model;
         computerPov = new int[10][10];
-        resetPov();
+        reset();
         lock = model.getLock();
-
     }
 
     public void doAction() {
@@ -30,7 +29,7 @@ public class Computer extends Player {
         }
     }
 
-    public void resetPov() {
+    public void reset() {
         for (int i = 0; i < computerPov.length; i++) {
           for (int j = 0; j < computerPov[i].length; j++) {
               computerPov[j][i] = 0;
