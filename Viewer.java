@@ -18,6 +18,7 @@ public class Viewer {
         frame.setSize(1200, 720);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setIconImage(new ImageIcon("images/game-icon.png").getImage());
 
         frame.add(canvas);
         frame.setVisible(true);
