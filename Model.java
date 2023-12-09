@@ -78,21 +78,21 @@ public class Model {
     public void doAction(int x, int y) {
         this.x = x;
         this.y = y;
-//        System.out.println("user ship number " + userShipsNumber + "computer ship number " + computerShipsNumber);
-        if (enemyBoard.contains(x, y) && startButton.isVisible()) {
-            makeUserShot();
 
-            // if (userShipsNumber > 0 && computerShipsNumber > 0) {
-            //     if (!isShotValid()) {
-            //         System.out.println("Invalid shot!");
-            //         return;
-            //     }
-            //     makeUserShot();
-            //     updateBoard(enemyBoardArray, 650, 100, true);
-            //     viewer.update();
-            // } else {
-            //     System.out.println("The game is OVER");
-            // }
+        int userShipsNumber = gameLogic.getUserShipsNumber();
+        int computerShipsNumber = gameLogic.getComputerShipsNumber();
+        System.out.println("user ship number " + userShipsNumber + "computer ship number " + computerShipsNumber);
+
+        if (enemyBoard.contains(x, y) && startButton.isVisible()) {
+             if (userShipsNumber > 0 && computerShipsNumber > 0) {
+                 if (!isShotValid()) {
+                     System.out.println("Invalid shot!");
+                     return;
+                 }
+                 makeUserShot();
+             } else {
+                 System.out.println("The game is OVER");
+             }
         }
 
         if (startButton.contains(x, y)) {
@@ -312,12 +312,12 @@ public class Model {
         return startButton;
     }
 
-//    public int getUserShipsNumber() {
-//        return userShipsNumber;
-//    }
-//
-//    public int getComputerShipsNumber() {
-//        return computerShipsNumber;
-//    }
+    public int getUserShipsNumber() {
+        return gameLogic.getUserShipsNumber();
+    }
+
+    public int getComputerShipsNumber() {
+        return gameLogic.getComputerShipsNumber();
+    }
 
 }

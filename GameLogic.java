@@ -44,6 +44,14 @@ public class GameLogic implements Runnable {
         return userShipsNumber == 0 || computerShipsNumber == 0;
     }
 
+    public int getUserShipsNumber() {
+        return userShipsNumber;
+    }
+
+    public int getComputerShipsNumber() {
+        return computerShipsNumber;
+    }
+
     public void updateShipsNumber() {
         userShipsNumber = SHIPS_NUMBER;
         computerShipsNumber = SHIPS_NUMBER;
