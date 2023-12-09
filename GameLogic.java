@@ -1,4 +1,5 @@
 import javax.swing.ImageIcon;
+import java.awt.Image;
 
 public class GameLogic implements Runnable {
 
@@ -160,9 +161,14 @@ public class GameLogic implements Runnable {
 
     private void checkIfShipDestroyed(Ship ship, boolean isUserTurn) {
         Cell[] shipCells = ship.getCells();
+        int i = 1;
         if (isShipDestroyed(shipCells)) {
             for (Cell cell : shipCells) {
                 cell.setValue(DESTROYED);
+                cell.setImage(new ImageIcon("images/ship-" + i + "-sinked.png").getImage());
+                if(i < 3) {
+                    i++;
+                }
             }
             model.getKilledShipSound().play();
             if (isUserTurn) {
