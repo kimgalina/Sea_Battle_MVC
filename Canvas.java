@@ -22,6 +22,7 @@ public class Canvas extends JPanel {
     private final RoundRectangle2D exitButton;
     private final RoundRectangle2D restartButton;
     private final RoundRectangle2D stopButton;
+    private final RoundRectangle2D soundButton;
     private final RoundRectangle2D largeStartButton;
 
     public Canvas(Model model, Controller controller) {
@@ -38,6 +39,7 @@ public class Canvas extends JPanel {
         add(backgroundLabel);
 
         exitButton = new RoundRectangle2D.Double(100, 620, 100, 50, arcWidth, arcHeight);
+        soundButton = new RoundRectangle2D.Double(900, 620, 100, 100, arcWidth, arcHeight);
         restartButton = new RoundRectangle2D.Double(250, 620, 100, 50, arcWidth, arcHeight);
         stopButton = new RoundRectangle2D.Double(400, 620, 100, 50, arcWidth, arcHeight);
         largeStartButton = new RoundRectangle2D.Double(500, 300, 200, 100, arcWidth, arcHeight);
@@ -49,8 +51,9 @@ public class Canvas extends JPanel {
 
     public void paint(Graphics g) {
         super.paint(g);
+        System.out.println("DRAW CANVAS");
         Graphics2D g2d = (Graphics2D) g;
-        
+
         if (model.getUserShipsNumber() == 0) {
             drawFinish(g2d, true);
         } else if (model.getComputerShipsNumber() == 0) {
@@ -78,14 +81,6 @@ public class Canvas extends JPanel {
         g2d.drawString("YOU WIN!", 650, 640);
     }
 
-    private Image makeImageTransparent(Image image, float alpha, int x, int y) {
-        BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = bufferedImage.createGraphics();
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-        g2d.drawImage(image, x, y, this);
-        g2d.dispose();
-        return bufferedImage;
-    }
 
     private void setComposite(Graphics2D g2d, float alpha) {
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
@@ -125,6 +120,7 @@ public class Canvas extends JPanel {
         drawButton(g2d, Color.RED, "Exit", 120, 655, font, exitButton);
         drawButton(g2d, new Color(128, 128, 0), "Restart", 260, 655, font, restartButton);
         drawButton(g2d, new Color(199, 52, 0), "Stop", 420, 655, font, stopButton);
+        drawSoundButton(g2d, model.getSoundButton());
 
         if (!model.getStartButton().isVisible()) {
             drawButton(g2d, new Color(1, 84, 6), "Start", 530, 370,new Font("Franklin Gothic Heavy", Font.PLAIN, 55), largeStartButton);
@@ -141,6 +137,11 @@ public class Canvas extends JPanel {
         }
         g2d.setFont(font);
         g2d.drawString(label, x, y);
+
+    }
+
+    private void drawSoundButton(Graphics2D g2d, Cell cell) {
+        g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
     }
 
     public void drawBoards(Graphics2D g2d) {
