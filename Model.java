@@ -2,6 +2,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
+import java.io.File;
 import java.util.ArrayList; //delete
 
 public class Model {
@@ -17,12 +18,14 @@ public class Model {
     private final Object lock;
     private int x;
     private int y;
+    private Music shotSound;
     private Cell[][] userBoardArray;
     private Cell[][] enemyBoardArray;
     private final Cell enemyBoard;
     private final Cell exitButton;
     private final Cell restartButton;
     private final Cell startButton;
+
 
     public Model(Viewer viewer) {
         this.viewer = viewer;
@@ -41,7 +44,13 @@ public class Model {
         restartButton = new Cell(250, 620, 100, 50, 0);
         startButton = new Cell(400, 620, 100, 50, 0);
         startButton.setVisible(false);
+        File file = new File("music/shotSound.wav");
+        shotSound = new Music(file);
         startGame();
+    }
+
+    public Music getShotSound() {
+        return shotSound;
     }
 
     private void startGame() {
@@ -143,7 +152,17 @@ public class Model {
         int indexY = (y - 100) / 50;
         int indexX = (x - 650) / 50;
         Cell shottedCell = enemyBoardArray[indexY][indexX];
-        return shottedCell.getValue() < 2;
+        if(shottedCell.getValue() == 0) {
+            System.out.println("Звук плеска воды");
+            shotSound.play();
+            return true;
+        } else if(shottedCell.getValue() == 1) {
+            System.out.println("Звук попадания в корабль");
+            shotSound.play();
+            
+            return true;
+        }
+        return false;
     }
 
     public boolean isUserTurn() {

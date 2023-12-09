@@ -57,6 +57,8 @@ public class Computer extends Player {
 
     private void produceShot() {
         Shot shot = generateShot();
+        produceShotMusic(shot);
+
         ShotsQueue shots = getShotsQueue();
         try {
             shots.add(shot);
@@ -64,6 +66,22 @@ public class Computer extends Player {
             throw new RuntimeException(e);
         }
     }
+
+    private void produceShotMusic(Shot shot) {
+        int indexY = shot.getY();
+        int indexX = shot.getX();
+        System.out.println("coord of computer shot >>> " + indexX + " " + indexY);
+        Cell shottedCell = model.getUserBoardArray()[indexY][indexX];
+        if(shottedCell.getValue() == 0) {
+            System.out.println("Звук плеска воды стреляет комп");
+            model.getShotSound().play();
+
+        } else if(shottedCell.getValue() == 1) {
+            System.out.println("Звук попадания в корабль стреляет комп");
+            model.getShotSound().play();
+        }
+    }
+
 
     private Shot generateShot() {
         refreshComputerPovBoard();
