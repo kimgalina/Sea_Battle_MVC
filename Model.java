@@ -78,10 +78,10 @@ public class Model {
     public void doAction(int x, int y) {
         this.x = x;
         this.y = y;
-        System.out.println("user ship number " + userShipsNumber + "computer ship number " + computerShipsNumber);
+//        System.out.println("user ship number " + userShipsNumber + "computer ship number " + computerShipsNumber);
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
             makeUserShot();
-=======
+
             // if (userShipsNumber > 0 && computerShipsNumber > 0) {
             //     if (!isShotValid()) {
             //         System.out.println("Invalid shot!");
@@ -119,43 +119,40 @@ public class Model {
             if (isShotValid() && isUserTurn) {
                 lock.notify();
             }
-
-    private void updateBoard(Cell[][] boardArray, int xOffset, int yOffset, boolean isUser) {
-        int indexY = (y - yOffset) / 50;
-        int indexX = (x - xOffset) / 50;
-
-        if (boardArray[indexY][indexX].isVisible()) {
-            boardArray[indexY][indexX].setVisible(false);
-        }
-
-        Ship ship = boardArray[indexY][indexX].getShip();
-
-        if (ship == null) {
-            return;
-        }
-        Cell[] shipCells = ship.getCells();
-
-        for (Cell cell : shipCells) {
-            if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() == 1) {
-                String imagePath = cell.getImagePath();
-                String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
-                cell.setImage(new ImageIcon(sharpedImagePath).getImage());
-            }
-        }
-
-        if (isShipSink(shipCells)) {
-            // если корабль потонул проигрывать музыку взрыва корабля
-            killedShipSound.play();
-            if (!isUser) {
-                userShipsNumber--;
-            } else {
-                computerShipsNumber--;
-            }
-            for (Cell cell : shipCells) {
-                cell.setValue(4);
-            }
         }
     }
+
+//    private void updateBoard(Cell[][] boardArray, int xOffset, int yOffset) {
+//        int indexY = (y - yOffset) / 50;
+//        int indexX = (x - xOffset) / 50;
+//
+//        if (boardArray[indexY][indexX].isVisible()) {
+//            boardArray[indexY][indexX].setVisible(false);
+//        }
+//
+//        Ship ship = boardArray[indexY][indexX].getShip();
+//
+//        if (ship == null) {
+//            return;
+//        }
+//        Cell[] shipCells = ship.getCells();
+//
+//        for (Cell cell : shipCells) {
+//            if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() == 1) {
+//                String imagePath = cell.getImagePath();
+//                String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
+//                cell.setImage(new ImageIcon(sharpedImagePath).getImage());
+//            }
+//        }
+//
+//        if (isShipSink(shipCells)) {
+//            // если корабль потонул проигрывать музыку взрыва корабля
+//            killedShipSound.play();
+//            for (Cell cell : shipCells) {
+//                cell.setValue(4);
+//            }
+//        }
+//    }
 
     private boolean isShipSink(Cell[] cells) {
         for (Cell cell : cells) {
@@ -315,12 +312,12 @@ public class Model {
         return startButton;
     }
 
-    public int getUserShipsNumber() {
-        return userShipsNumber;
-    }
-
-    public int getComputerShipsNumber() {
-        return computerShipsNumber;
-    }
+//    public int getUserShipsNumber() {
+//        return userShipsNumber;
+//    }
+//
+//    public int getComputerShipsNumber() {
+//        return computerShipsNumber;
+//    }
 
 }
