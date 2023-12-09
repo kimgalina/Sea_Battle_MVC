@@ -19,7 +19,14 @@ public class Computer extends Player {
     public void doAction() {
         synchronized (lock) {
             waitForTurn();
-            produceShot();
+            if (!model.isUserTurn()) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                produceShot();
+            }
         }
     }
 

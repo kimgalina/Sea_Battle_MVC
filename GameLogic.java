@@ -5,20 +5,24 @@ public class GameLogic implements Runnable {
     private Model model;
     private Thread thread;
     private ShotsQueue shotsQueue;
+    private final Object lock;
     private boolean isRunning;
-    private final int EMPTY;
-    private final int SHIP;
-    private final int HIT_SHOT;
-    private final int MISS_SHOT;
+    private int userShipsNumber;
+    private int computerShipsNumber;
+    private final int SHIPS_NUMBER = 10;
+    private final int EMPTY = 0;
+    private final int SHIP = 1;
+    private final int HIT_SHOT = 2;
+    private final int MISS_SHOT = 3;
+    private final int DESTROYED = 4;
 
     public GameLogic(Model model, ShotsQueue shotsQueue) {
         this.model = model;
         this.shotsQueue = shotsQueue;
-        EMPTY = 0;
-        SHIP = 1;
-        HIT_SHOT = 2;
-        MISS_SHOT = 3;
         thread = new Thread(this);
+        lock = model.getLock();
+        userShipsNumber = SHIPS_NUMBER;
+        computerShipsNumber = SHIPS_NUMBER;
     }
 
     public void start() {
@@ -36,21 +40,26 @@ public class GameLogic implements Runnable {
         }
     }
 
+    public boolean isGameOver() {
+        return userShipsNumber == 0 || computerShipsNumber == 0;
+    }
+
+    public void updateShipsNumber() {
+        userShipsNumber = SHIPS_NUMBER;
+        computerShipsNumber = SHIPS_NUMBER;
+    }
+
     private void handleAction() {
         Shot shot = consumeShot();
-        if (shot != null) {
-            if (shot.getPlayerType() == PlayerType.USER) {
-                boolean isShipHit = processUserShot(shot);
-                if (isShipHit) {
-                    // user's turn
+        synchronized (lock) {
+            if (shot != null) {
+                if (shot.getPlayerType() == PlayerType.USER) {
+                    handleUserAction(shot);
+                } else {
+                    handleComputerAction(shot);
                 }
-            } else {
-                boolean isShipHit = processComputerShot(shot);
-                if (isShipHit) {
-                    // computer's turn
-                }
+                model.viewerUpdate();
             }
-            model.viewerUpdate();
         }
     }
 
@@ -63,33 +72,93 @@ public class GameLogic implements Runnable {
         return null;
     }
 
+    private void handleUserAction(Shot shot) {
+        boolean isShipHit = processUserShot(shot);
+        model.setUserTurn(isShipHit);
+        lock.notify();
+    }
+
+    private void handleComputerAction(Shot shot) {
+        boolean isShipHit = processComputerShot(shot);
+        model.setUserTurn(!isShipHit);
+        if (isShipHit) {
+            lock.notifyAll();
+        }
+    }
+
     private boolean processUserShot(Shot shot) {
-        return processShot(model.getEnemyBoardArray(), shot);
+        Cell[][] computerBoard = model.getEnemyBoardArray();
+        boolean isHit = processShot(computerBoard, shot);
+
+        Cell shottedCell = computerBoard[shot.getY()][shot.getX()];
+        Ship ship = shottedCell.getShip();
+
+        if (ship != null) {
+            checkIfShipDestroyed(ship, true);
+        }
+        return isHit;
     }
 
     private boolean processComputerShot(Shot shot) {
-        return processShot(model.getUserBoardArray(), shot);
+        Cell[][] userBoard = model.getUserBoardArray();
+        boolean isHit = processShot(userBoard, shot);
+
+        Cell shottedCell = userBoard[shot.getY()][shot.getX()];
+        Ship ship = shottedCell.getShip();
+
+        if (ship != null) {
+            checkIfShipDestroyed(ship, false);
+        }
+        return isHit;
     }
 
     private boolean processShot(Cell[][] board, Shot shot) {
         Cell shottedCell = board[shot.getY()][shot.getX()];
+        hideIfVisible(shottedCell);
 
-        if (shottedCell.getValue() == SHIP || shottedCell.getValue() == HIT_SHOT) {
+        if (shottedCell.getValue() == SHIP) {
             shottedCell.setValue(HIT_SHOT);
-            String imagePath = shottedCell.getImagePath();
-            String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
-            shottedCell.setImage(new ImageIcon(sharpedImagePath).getImage());
-
-            if (shottedCell.isVisible()) {
-                shottedCell.setVisible(false);
-            }
+            setHitImage(shottedCell);
             return true;
         } else {
             shottedCell.setValue(MISS_SHOT);
-            if (shottedCell.isVisible()) {
-                shottedCell.setVisible(false);
-            }
             return false;
         }
     }
+
+    private void setHitImage(Cell cell) {
+        String imagePath = cell.getImagePath();
+        String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
+        cell.setImage(new ImageIcon(sharpedImagePath).getImage());
+    }
+
+    private void hideIfVisible(Cell cell) {
+        if (cell.isVisible()) {
+            cell.setVisible(false);
+        }
+    }
+
+    private void checkIfShipDestroyed(Ship ship, boolean isUserTurn) {
+        Cell[] shipCells = ship.getCells();
+        if (isShipDestroyed(shipCells)) {
+            for (Cell cell : shipCells) {
+                cell.setValue(DESTROYED);
+            }
+            if (isUserTurn) {
+                computerShipsNumber--;
+            } else {
+                userShipsNumber--;
+            }
+        }
+    }
+
+    private boolean isShipDestroyed(Cell[] cells) {
+        for (Cell cell : cells) {
+            if (cell.getValue() == 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

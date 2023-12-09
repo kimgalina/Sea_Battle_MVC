@@ -12,8 +12,6 @@ public class Model {
     private User user;
     private Computer computer;
     private GameLogic gameLogic;
-    private int userShipsNumber;
-    private int computerShipsNumber;
     private final Object lock;
     private int x;
     private int y;
@@ -34,8 +32,6 @@ public class Model {
         this.viewer = viewer;
         x = -1;
         y = -1;
-        userShipsNumber = 10;
-        computerShipsNumber = 10;
 
         fieldGenerator = new FieldGenerator();
         userBoardArray = fieldGenerator.getGeneratedField(50, 100);
@@ -53,6 +49,8 @@ public class Model {
         successShotSound = new Music(new File("music/succesShot.wav"));
         waterShotSound = new Music(new File("music/waterShot.wav"));
         killedShipSound = new Music(new File("music/KilledShipSound.wav"));
+
+        isUserTurn = true;
         startGame();
     }
 
@@ -82,17 +80,19 @@ public class Model {
         this.y = y;
         System.out.println("user ship number " + userShipsNumber + "computer ship number " + computerShipsNumber);
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
-            if (userShipsNumber > 0 && computerShipsNumber > 0) {
-                if (!isShotValid()) {
-                    System.out.println("Invalid shot!");
-                    return;
-                }
-                makeUserShot();
-                updateBoard(enemyBoardArray, 650, 100, true);
-                viewer.update();
-            } else {
-                System.out.println("The game is OVER");
-            }
+            makeUserShot();
+=======
+            // if (userShipsNumber > 0 && computerShipsNumber > 0) {
+            //     if (!isShotValid()) {
+            //         System.out.println("Invalid shot!");
+            //         return;
+            //     }
+            //     makeUserShot();
+            //     updateBoard(enemyBoardArray, 650, 100, true);
+            //     viewer.update();
+            // } else {
+            //     System.out.println("The game is OVER");
+            // }
         }
 
         if (startButton.contains(x, y)) {
@@ -101,8 +101,7 @@ public class Model {
         } else if (restartButton.contains(x, y) && startButton.isVisible()) {
             userBoardArray = fieldGenerator.getGeneratedField(50, 100);
             enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
-            userShipsNumber = 10;
-            computerShipsNumber = 10;
+            gameLogic.updateShipsNumber();
             computer.resetPov();
             viewer.update();
         } else if (stopButton.contains(x,y)) {
@@ -114,6 +113,12 @@ public class Model {
             System.exit(0);
         }
     }
+
+    private void makeUserShot() {
+        synchronized (lock) {
+            if (isShotValid() && isUserTurn) {
+                lock.notify();
+            }
 
     private void updateBoard(Cell[][] boardArray, int xOffset, int yOffset, boolean isUser) {
         int indexY = (y - yOffset) / 50;
@@ -159,12 +164,6 @@ public class Model {
             }
         }
         return true;
-    }
-
-    private void makeUserShot() {
-        synchronized (lock) {
-              lock.notify();
-        }
     }
 
     private boolean isShotValid() {

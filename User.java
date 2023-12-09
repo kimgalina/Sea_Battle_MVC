@@ -12,8 +12,10 @@ public class User extends Player {
     public void doAction() {
         synchronized (lock) {
             waitForClick();
-            produceShot();
-            lock.notify();
+            System.out.println("NOTIFIED");
+            if (model.isUserTurn()) {
+                produceShot();
+            }
         }
     }
 
