@@ -2,7 +2,6 @@ import javax.swing.JFrame;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JComponent;
-import javax.swing.JProgressBar;
 
 public class Viewer {
     private Controller controller;
@@ -10,7 +9,7 @@ public class Viewer {
     private JFrame frame;
 
     public Viewer() {
-//        new SplashScreen();
+        new SplashScreen();
 
         controller = new Controller(this);
         Model model = controller.getModel();
