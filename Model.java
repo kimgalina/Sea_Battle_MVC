@@ -12,8 +12,6 @@ public class Model {
     private User user;
     private Computer computer;
     private GameLogic gameLogic;
-    private int userShipsNumber;
-    private int computerShipsNumber;
     private final Object lock;
     private int x;
     private int y;
@@ -34,8 +32,6 @@ public class Model {
         this.viewer = viewer;
         x = -1;
         y = -1;
-        userShipsNumber = 10;
-        computerShipsNumber = 10;
 
         fieldGenerator = new FieldGenerator();
         userBoardArray = fieldGenerator.getGeneratedField(50, 100);
@@ -53,6 +49,8 @@ public class Model {
         successShotSound = new Music(new File("music/succesShot.wav"));
         waterShotSound = new Music(new File("music/waterShot.wav"));
         killedShipSound = new Music(new File("music/KilledShipSound.wav"));
+
+        isUserTurn = true;
         startGame();
     }
 
@@ -80,19 +78,21 @@ public class Model {
     public void doAction(int x, int y) {
         this.x = x;
         this.y = y;
+
+        int userShipsNumber = gameLogic.getUserShipsNumber();
+        int computerShipsNumber = gameLogic.getComputerShipsNumber();
         System.out.println("user ship number " + userShipsNumber + "computer ship number " + computerShipsNumber);
+
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
-            if (userShipsNumber > 0 && computerShipsNumber > 0) {
-                if (!isShotValid()) {
-                    System.out.println("Invalid shot!");
-                    return;
-                }
-                makeUserShot();
-                updateBoard(enemyBoardArray, 650, 100, true);
-                viewer.update();
-            } else {
-                System.out.println("The game is OVER");
-            }
+             if (userShipsNumber > 0 && computerShipsNumber > 0) {
+                 if (!isShotValid()) {
+                     System.out.println("Invalid shot!");
+                     return;
+                 }
+                 makeUserShot();
+             } else {
+                 System.out.println("The game is OVER");
+             }
         }
 
         if (startButton.contains(x, y)) {
@@ -101,8 +101,7 @@ public class Model {
         } else if (restartButton.contains(x, y) && startButton.isVisible()) {
             userBoardArray = fieldGenerator.getGeneratedField(50, 100);
             enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
-            userShipsNumber = 10;
-            computerShipsNumber = 10;
+            gameLogic.updateShipsNumber();
             computer.reset();
             viewer.update();
         } else if (stopButton.contains(x,y)) {
@@ -115,42 +114,45 @@ public class Model {
         }
     }
 
-    private void updateBoard(Cell[][] boardArray, int xOffset, int yOffset, boolean isUser) {
-        int indexY = (y - yOffset) / 50;
-        int indexX = (x - xOffset) / 50;
-
-        if (boardArray[indexY][indexX].isVisible()) {
-            boardArray[indexY][indexX].setVisible(false);
-        }
-
-        Ship ship = boardArray[indexY][indexX].getShip();
-
-        if (ship == null) {
-            return;
-        }
-        Cell[] shipCells = ship.getCells();
-
-        for (Cell cell : shipCells) {
-            if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() == 1) {
-                String imagePath = cell.getImagePath();
-                String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
-                cell.setImage(new ImageIcon(sharpedImagePath).getImage());
-            }
-        }
-
-        if (isShipSink(shipCells)) {
-            // если корабль потонул проигрывать музыку взрыва корабля
-            killedShipSound.play();
-            if (!isUser) {
-                userShipsNumber--;
-            } else {
-                computerShipsNumber--;
-            }
-            for (Cell cell : shipCells) {
-                cell.setValue(4);
+    private void makeUserShot() {
+        synchronized (lock) {
+            if (isShotValid() && isUserTurn) {
+                lock.notify();
             }
         }
     }
+
+//    private void updateBoard(Cell[][] boardArray, int xOffset, int yOffset) {
+//        int indexY = (y - yOffset) / 50;
+//        int indexX = (x - xOffset) / 50;
+//
+//        if (boardArray[indexY][indexX].isVisible()) {
+//            boardArray[indexY][indexX].setVisible(false);
+//        }
+//
+//        Ship ship = boardArray[indexY][indexX].getShip();
+//
+//        if (ship == null) {
+//            return;
+//        }
+//        Cell[] shipCells = ship.getCells();
+//
+//        for (Cell cell : shipCells) {
+//            if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() == 1) {
+//                String imagePath = cell.getImagePath();
+//                String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
+//                cell.setImage(new ImageIcon(sharpedImagePath).getImage());
+//            }
+//        }
+//
+//        if (isShipSink(shipCells)) {
+//            // если корабль потонул проигрывать музыку взрыва корабля
+//            killedShipSound.play();
+//            for (Cell cell : shipCells) {
+//                cell.setValue(4);
+//            }
+//        }
+//    }
 
     private boolean isShipSink(Cell[] cells) {
         for (Cell cell : cells) {
@@ -159,12 +161,6 @@ public class Model {
             }
         }
         return true;
-    }
-
-    private void makeUserShot() {
-        synchronized (lock) {
-              lock.notify();
-        }
     }
 
     private boolean isShotValid() {
@@ -317,11 +313,11 @@ public class Model {
     }
 
     public int getUserShipsNumber() {
-        return userShipsNumber;
+        return gameLogic.getUserShipsNumber();
     }
 
     public int getComputerShipsNumber() {
-        return computerShipsNumber;
+        return gameLogic.getComputerShipsNumber();
     }
 
 }
