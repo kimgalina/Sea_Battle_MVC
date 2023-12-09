@@ -83,6 +83,10 @@ public class Model {
         System.out.println("user ship number " + userShipsNumber + "computer ship number " + computerShipsNumber);
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
             if (userShipsNumber > 0 && computerShipsNumber > 0) {
+                if (!isShotValid()) {
+                    System.out.println("Invalid shot!");
+                    return;
+                }
                 makeUserShot();
                 updateBoard(enemyBoardArray, 650, 100, true);
                 viewer.update();
@@ -159,9 +163,7 @@ public class Model {
 
     private void makeUserShot() {
         synchronized (lock) {
-            if (isShotValid()) {
-                lock.notify();
-            }
+              lock.notify();
         }
     }
 
@@ -178,7 +180,7 @@ public class Model {
             System.out.println("Звук попадания в корабль");
 //            shotSound.play();
             successShotSound.play();
-            
+
             return true;
         }
         return false;
