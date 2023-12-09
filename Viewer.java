@@ -2,7 +2,6 @@ import javax.swing.JFrame;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JComponent;
-import javax.swing.JProgressBar;
 
 public class Viewer {
     private Controller controller;
@@ -17,7 +16,7 @@ public class Viewer {
         canvas = new Canvas(model, controller);
         frame = new JFrame("Battleship");
         frame.setSize(1200, 720);
-        frame.setLocation(100, 50);
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.add(canvas);
