@@ -3,7 +3,6 @@ import javax.swing.JLabel;
 import javax.swing.Timer;
 
 import java.io.File;
-import java.util.ArrayList; //delete
 
 public class Model {
 
@@ -19,8 +18,9 @@ public class Model {
     private int x;
     private int y;
     private Music shotSound;
-    private Music successShot;
-    private Music waterShot;
+    private Music successShotSound;
+    private Music waterShotSound;
+    private Music killedShipSound;
     private Cell[][] userBoardArray;
     private Cell[][] enemyBoardArray;
     private final Cell enemyBoard;
@@ -46,24 +46,22 @@ public class Model {
         restartButton = new Cell(250, 620, 100, 50, 0);
         startButton = new Cell(400, 620, 100, 50, 0);
         startButton.setVisible(false);
-        File file = new File("music/shotSound.wav");
-        File file1 = new File("music/succesShot.wav");
-        File file2 = new File("music/waterShot.wav");
-        shotSound = new Music(file);
-        successShot = new Music(file1);
-        waterShot = new Music(file2);
 
+        shotSound = new Music(new File("music/shotSound.wav"));
+        successShotSound = new Music(new File("music/succesShot.wav"));
+        waterShotSound = new Music(new File("music/waterShot.wav"));
+        killedShipSound = new Music(new File("music/KilledShipSound.wav"));
         startGame();
     }
 
     public Music getShotSound() {
         return shotSound;
     }
-    public Music getSuccessShot() {
-        return successShot;
+    public Music getSuccessShotSound() {
+        return successShotSound;
     }
-    public Music getWaterShot() {
-        return  waterShot;
+    public Music getWaterShotSound() {
+        return waterShotSound;
     }
 
     private void startGame() {
@@ -133,6 +131,8 @@ public class Model {
         }
 
         if (isShipSink(shipCells)) {
+            // если корабль потонул проигрывать музыку взрыва корабля
+            killedShipSound.play();
             if (!isUser) {
                 userShipsNumber--;
             } else {
@@ -168,12 +168,12 @@ public class Model {
         if(shottedCell.getValue() == 0) {
             System.out.println("Звук плеска воды");
 //            shotSound.play();
-            waterShot.play();
+            waterShotSound.play();
             return true;
         } else if(shottedCell.getValue() == 1) {
             System.out.println("Звук попадания в корабль");
 //            shotSound.play();
-            successShot.play();
+            successShotSound.play();
             
             return true;
         }

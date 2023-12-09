@@ -1,4 +1,3 @@
-import java.io.File;
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -77,13 +76,13 @@ public class Computer extends Player {
         if(shottedCell.getValue() == 0) {
             System.out.println("Звук плеска воды стреляет комп");
 //            model.getShotSound().play();
-            model.getWaterShot().play();
+            model.getWaterShotSound().play();
 
 
         } else if(shottedCell.getValue() == 1) {
             System.out.println("Звук попадания в корабль стреляет комп");
 //            model.getShotSound().play();
-            model.getSuccessShot().play();
+            model.getSuccessShotSound().play();
         }
     }
 
