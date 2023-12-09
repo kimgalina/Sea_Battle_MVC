@@ -1,4 +1,5 @@
 import javax.swing.ImageIcon;
+import java.awt.Image;
 
 public class GameLogic implements Runnable {
 
@@ -7,6 +8,7 @@ public class GameLogic implements Runnable {
     private ShotsQueue shotsQueue;
     private final Object lock;
     private boolean isRunning;
+    private boolean isUser;
     private int userShipsNumber;
     private int computerShipsNumber;
     private final int SHIPS_NUMBER = 10;
@@ -62,8 +64,10 @@ public class GameLogic implements Runnable {
         synchronized (lock) {
             if (shot != null) {
                 if (shot.getPlayerType() == PlayerType.USER) {
+                    isUser = true;
                     handleUserAction(shot);
                 } else {
+                    isUser = false;
                     handleComputerAction(shot);
                 }
                 model.viewerUpdate();
@@ -139,6 +143,11 @@ public class GameLogic implements Runnable {
     }
 
     private void setHitImage(Cell cell) {
+        if(isUser) {
+            cell.setImage(new ImageIcon("images/ship_shot.png").getImage());
+            return;
+        }
+
         String imagePath = cell.getImagePath();
         String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
         cell.setImage(new ImageIcon(sharpedImagePath).getImage());
@@ -152,9 +161,14 @@ public class GameLogic implements Runnable {
 
     private void checkIfShipDestroyed(Ship ship, boolean isUserTurn) {
         Cell[] shipCells = ship.getCells();
+        int i = 1;
         if (isShipDestroyed(shipCells)) {
             for (Cell cell : shipCells) {
                 cell.setValue(DESTROYED);
+                cell.setImage(new ImageIcon("images/ship-" + i + "-sinked.png").getImage());
+                if(i < 3) {
+                    i++;
+                }
             }
             model.getKilledShipSound().play();
             if (isUserTurn) {
