@@ -80,7 +80,7 @@ public class Model {
     public void doAction(int x, int y) {
         this.x = x;
         this.y = y;
-
+        System.out.println("user ship number " + userShipsNumber + "computer ship number " + computerShipsNumber);
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
             if (userShipsNumber > 0 && computerShipsNumber > 0) {
                 makeUserShot();
@@ -313,4 +313,13 @@ public class Model {
     public Cell getStartButton() {
         return startButton;
     }
+
+    public int getUserShipsNumber() {
+        return userShipsNumber;
+    }
+
+    public int getComputerShipsNumber() {
+        return computerShipsNumber;
+    }
+
 }

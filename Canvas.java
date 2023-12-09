@@ -50,12 +50,32 @@ public class Canvas extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
+        
+        if (model.getUserShipsNumber() == 0) {
+            drawFinish(g2d, true);
+        } else if (model.getComputerShipsNumber() == 0) {
+            drawFinish(g2d, false);
+        }
+
+        drawGrid(g2d);
 
         if(!model.getStartButton().isVisible()) {
-            setComposite(g2d, 0.5f);
+            setComposite(g2d, 0.2f);
         }
+
         drawBoards(g2d);
-        drawGrid(g2d);
+    }
+
+    private void drawFinish(Graphics2D g2d, boolean isUser) {
+        Font finishFont = new Font("Rockwell Extra Bold", Font.BOLD, 30);
+        g2d.setFont(finishFont);
+        if(isUser){
+            g2d.setColor(Color.RED);
+            g2d.drawString("Computer WIN!", 650, 640);
+            return;
+        }
+        g2d.setColor(new Color(22, 73, 1));
+        g2d.drawString("YOU WIN!", 650, 640);
     }
 
     private Image makeImageTransparent(Image image, float alpha, int x, int y) {
@@ -105,6 +125,7 @@ public class Canvas extends JPanel {
         drawButton(g2d, Color.RED, "Exit", 120, 655, font, exitButton);
         drawButton(g2d, new Color(128, 128, 0), "Restart", 260, 655, font, restartButton);
         drawButton(g2d, new Color(199, 52, 0), "Stop", 420, 655, font, stopButton);
+
         if (!model.getStartButton().isVisible()) {
             drawButton(g2d, new Color(1, 84, 6), "Start", 530, 370,new Font("Franklin Gothic Heavy", Font.PLAIN, 55), largeStartButton);
         }
