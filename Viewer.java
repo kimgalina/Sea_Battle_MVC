@@ -10,7 +10,7 @@ public class Viewer {
     private JFrame frame;
 
     public Viewer() {
-        new SplashScreen();
+//        new SplashScreen();
 
         controller = new Controller(this);
         Model model = controller.getModel();

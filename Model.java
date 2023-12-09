@@ -27,6 +27,7 @@ public class Model {
     private final Cell exitButton;
     private final Cell restartButton;
     private final Cell startButton;
+    private final Cell stopButton;
 
 
     public Model(Viewer viewer) {
@@ -44,7 +45,8 @@ public class Model {
         enemyBoard = new Cell(650, 100, 10 * 50, 10 * 50, 0);
         exitButton = new Cell(100, 620, 100, 50, 0);
         restartButton = new Cell(250, 620, 100, 50, 0);
-        startButton = new Cell(400, 620, 100, 50, 0);
+        stopButton = new Cell(400, 620, 100, 50, 0);
+        startButton = new Cell(500, 300, 200, 100, 0);
         startButton.setVisible(false);
         File file = new File("music/shotSound.wav");
         File file1 = new File("music/succesShot.wav");
@@ -101,6 +103,8 @@ public class Model {
             computerShipsNumber = 10;
             computer.resetPov();
             viewer.update();
+        } else if (stopButton.contains(x,y)) {
+            System.out.println("Something do for stop or pause game");
         } else if (exitButton.contains(x, y)) {
             user.stop();
             computer.stop();
@@ -304,5 +308,9 @@ public class Model {
 
     public void viewerUpdate() {
         viewer.update();
+    }
+
+    public Cell getStartButton() {
+        return startButton;
     }
 }

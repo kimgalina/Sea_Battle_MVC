@@ -16,16 +16,16 @@ import java.io.ObjectOutputStream;
 public class Canvas extends JPanel {
 
     private final Model model;
-    private final Image backgroundImage;
     private final Image seaBattleImage;
     private final Font font;
     private final Font numberFont;
     private final RoundRectangle2D exitButton;
     private final RoundRectangle2D restartButton;
-    private final RoundRectangle2D startButton;
+    private final RoundRectangle2D stopButton;
+    private final RoundRectangle2D largeStartButton;
 
     public Canvas(Model model, Controller controller) {
-        backgroundImage = new ImageIcon("images/background.jpg").getImage();
+        Image backgroundImage = new ImageIcon("images/background.jpg").getImage();
         seaBattleImage = new ImageIcon("images/sea-battle-cell.png").getImage();
 
         font = new Font("Franklin Gothic Heavy", Font.PLAIN, 25);
@@ -33,16 +33,14 @@ public class Canvas extends JPanel {
         int arcWidth = 30;
         int arcHeight = 30;
 
-        makeImageTransparent(backgroundImage, 1f, 0 , 0);
-        makeImageTransparent(seaBattleImage, 1f, 50, 50);
-
         JLabel backgroundLabel = new JLabel(new ImageIcon(backgroundImage));
         backgroundLabel.setSize(1200,720);
         add(backgroundLabel);
 
         exitButton = new RoundRectangle2D.Double(100, 620, 100, 50, arcWidth, arcHeight);
         restartButton = new RoundRectangle2D.Double(250, 620, 100, 50, arcWidth, arcHeight);
-        startButton = new RoundRectangle2D.Double(400, 620, 100, 50, arcWidth, arcHeight);
+        stopButton = new RoundRectangle2D.Double(400, 620, 100, 50, arcWidth, arcHeight);
+        largeStartButton = new RoundRectangle2D.Double(500, 300, 200, 100, arcWidth, arcHeight);
 
         this.model = model;
         addMouseListener(controller);
@@ -53,11 +51,11 @@ public class Canvas extends JPanel {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
 
-//        float alpha = 0.5f;
-//        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-
-//        drawGrid(g2d);
-//        drawBoards(g2d);
+        if(!model.getStartButton().isVisible()) {
+            setComposite(g2d, 0.5f);
+        }
+        drawBoards(g2d);
+        drawGrid(g2d);
     }
 
     private Image makeImageTransparent(Image image, float alpha, int x, int y) {
@@ -69,15 +67,25 @@ public class Canvas extends JPanel {
         return bufferedImage;
     }
 
+    private void setComposite(Graphics2D g2d, float alpha) {
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+    }
+
 
     private void drawGrid(Graphics2D g2d) {
-        drawBackground(g2d);
+
+        if(!model.getStartButton().isVisible()) {
+            setComposite(g2d, 0.5f);
+        }
+
+        drawSeaBattle(g2d);
         drawBoardNames(g2d);
+
+        setComposite(g2d, 1.0f);
         drawButtons(g2d);
     }
 
-    private void drawBackground(Graphics2D g2d) {
-//        g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+    private void drawSeaBattle(Graphics2D g2d) {
         g2d.drawImage(seaBattleImage, 0, 50, 600, 600, this);
         g2d.drawImage(seaBattleImage, 600, 50, 600, 600, this);
     }
@@ -95,13 +103,21 @@ public class Canvas extends JPanel {
 
     private void drawButtons(Graphics2D g2d) {
         drawButton(g2d, Color.RED, "Exit", 120, 655, font, exitButton);
-        drawButton(g2d, new Color(189, 189, 0), "Restart", 260, 655, font, restartButton);
-        drawButton(g2d, new Color(0, 102, 0), "Start", 420, 655, font, startButton);
+        drawButton(g2d, new Color(128, 128, 0), "Restart", 260, 655, font, restartButton);
+        drawButton(g2d, new Color(199, 52, 0), "Stop", 420, 655, font, stopButton);
+        if (!model.getStartButton().isVisible()) {
+            drawButton(g2d, new Color(1, 84, 6), "Start", 530, 370,new Font("Franklin Gothic Heavy", Font.PLAIN, 55), largeStartButton);
+        }
     }
 
     private void drawButton(Graphics2D g2d, Color color, String label, int x, int y, Font font, RoundRectangle2D roundedRectangle) {
         g2d.setColor(color);
         g2d.draw(roundedRectangle);
+
+        if(!model.getStartButton().isVisible()) {
+            g2d.fill(roundedRectangle);
+            g2d.setColor(Color.BLACK);
+        }
         g2d.setFont(font);
         g2d.drawString(label, x, y);
     }
