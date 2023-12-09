@@ -1,5 +1,4 @@
 import javax.swing.ImageIcon;
-import java.awt.Image;
 
 public class GameLogic implements Runnable {
 
@@ -12,7 +11,6 @@ public class GameLogic implements Runnable {
     private int userShipsNumber;
     private int computerShipsNumber;
     private final int SHIPS_NUMBER = 10;
-    private final int EMPTY = 0;
     private final int SHIP = 1;
     private final int HIT_SHOT = 2;
     private final int MISS_SHOT = 3;
@@ -93,7 +91,7 @@ public class GameLogic implements Runnable {
     private void handleComputerAction(Shot shot) {
         boolean isShipHit = processComputerShot(shot);
         model.setUserTurn(!isShipHit);
-        if (isShipHit) {
+        if (isShipHit && !isGameOver()) {
             lock.notifyAll();
         }
     }
