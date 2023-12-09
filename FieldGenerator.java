@@ -42,7 +42,7 @@ public class FieldGenerator {
     }
 
     private void initializeField(Cell[][] matrix, int xOffset, int yOffset) {
-        String imagePath = "images/shot.png";
+        String imagePath = "images/miss_shot.png";
         Image image = new ImageIcon(imagePath).getImage();
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
