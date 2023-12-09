@@ -32,9 +32,7 @@ public class Music {
     public void play() {
         System.out.println("in play music");
         if (initialization) {
-            System.out.println("initialize");
             if (!isPlaying()) {
-                System.out.println("isPlaying");
                 clip.setFramePosition(0);
                 clip.start();
 //                try {
