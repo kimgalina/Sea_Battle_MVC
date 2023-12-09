@@ -1,20 +1,46 @@
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.AlphaComposite;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
 @SuppressWarnings("serial")
 public class Canvas extends JPanel {
 
-    private Model model;
+    private final Model model;
+    private final Image seaBattleImage;
+    private final Font font;
+    private final Font numberFont;
+    private final RoundRectangle2D exitButton;
+    private final RoundRectangle2D restartButton;
+    private final RoundRectangle2D stopButton;
+    private final RoundRectangle2D largeStartButton;
 
     public Canvas(Model model, Controller controller) {
+        Image backgroundImage = new ImageIcon("images/background.jpg").getImage();
+        seaBattleImage = new ImageIcon("images/sea-battle-cell.png").getImage();
+
+        font = new Font("Franklin Gothic Heavy", Font.PLAIN, 25);
+        numberFont = new Font("Franklin Gothic Heavy", Font.PLAIN, 30);
+        int arcWidth = 30;
+        int arcHeight = 30;
+
+        JLabel backgroundLabel = new JLabel(new ImageIcon(backgroundImage));
+        backgroundLabel.setSize(1200,720);
+        add(backgroundLabel);
+
+        exitButton = new RoundRectangle2D.Double(100, 620, 100, 50, arcWidth, arcHeight);
+        restartButton = new RoundRectangle2D.Double(250, 620, 100, 50, arcWidth, arcHeight);
+        stopButton = new RoundRectangle2D.Double(400, 620, 100, 50, arcWidth, arcHeight);
+        largeStartButton = new RoundRectangle2D.Double(500, 300, 200, 100, arcWidth, arcHeight);
 
         this.model = model;
         addMouseListener(controller);
@@ -24,33 +50,67 @@ public class Canvas extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
+        
+        if (model.getUserShipsNumber() == 0) {
+            drawFinish(g2d, true);
+        } else if (model.getComputerShipsNumber() == 0) {
+            drawFinish(g2d, false);
+        }
 
         drawGrid(g2d);
+
+        if(!model.getStartButton().isVisible()) {
+            setComposite(g2d, 0.2f);
+        }
+
         drawBoards(g2d);
+    }
+
+    private void drawFinish(Graphics2D g2d, boolean isUser) {
+        Font finishFont = new Font("Rockwell Extra Bold", Font.BOLD, 30);
+        g2d.setFont(finishFont);
+        if(isUser){
+            g2d.setColor(Color.RED);
+            g2d.drawString("Computer WIN!", 650, 640);
+            return;
+        }
+        g2d.setColor(new Color(22, 73, 1));
+        g2d.drawString("YOU WIN!", 650, 640);
+    }
+
+    private Image makeImageTransparent(Image image, float alpha, int x, int y) {
+        BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = bufferedImage.createGraphics();
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        g2d.drawImage(image, x, y, this);
+        g2d.dispose();
+        return bufferedImage;
+    }
+
+    private void setComposite(Graphics2D g2d, float alpha) {
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
     }
 
 
     private void drawGrid(Graphics2D g2d) {
-        drawBackground(g2d);
-        drawSeaBattleImages(g2d);
+
+        if(!model.getStartButton().isVisible()) {
+            setComposite(g2d, 0.5f);
+        }
+
+        drawSeaBattle(g2d);
         drawBoardNames(g2d);
+
+        setComposite(g2d, 1.0f);
         drawButtons(g2d);
     }
 
-    private void drawBackground(Graphics2D g2d) {
-        Image backgroundImage = new ImageIcon("images/background.jpg").getImage();
-        g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-    }
-
-    private void drawSeaBattleImages(Graphics2D g2d) {
-        Image seaBattleImage = new ImageIcon("images/sea-battle-cell.png").getImage();
+    private void drawSeaBattle(Graphics2D g2d) {
         g2d.drawImage(seaBattleImage, 0, 50, 600, 600, this);
         g2d.drawImage(seaBattleImage, 600, 50, 600, 600, this);
     }
 
     private void drawBoardNames(Graphics2D g2d) {
-        Font numberFont = new Font("Franklin Gothic Heavy", Font.PLAIN, 30);
-
         drawBoardName(g2d, numberFont, Color.BLACK, "User's Board", 240, 30);
         drawBoardName(g2d, numberFont, new Color(153, 0, 0), "Computer's Board", 780, 30);
     }
@@ -62,22 +122,23 @@ public class Canvas extends JPanel {
     }
 
     private void drawButtons(Graphics2D g2d) {
-        Font font = new Font("Franklin Gothic Heavy", Font.PLAIN, 25);
-        int arcWidth = 30;
-        int arcHeight = 30;
-
-        RoundRectangle2D exitButton = new RoundRectangle2D.Double(100, 620, 100, 50, arcWidth, arcHeight);
-        RoundRectangle2D restartButton = new RoundRectangle2D.Double(250, 620, 100, 50, arcWidth, arcHeight);
-        RoundRectangle2D startButton = new RoundRectangle2D.Double(400, 620, 100, 50, arcWidth, arcHeight);
-
         drawButton(g2d, Color.RED, "Exit", 120, 655, font, exitButton);
-        drawButton(g2d, new Color(189, 189, 0), "Restart", 260, 655, font, restartButton);
-        drawButton(g2d, new Color(0, 102, 0), "Start", 420, 655, font, startButton);
+        drawButton(g2d, new Color(128, 128, 0), "Restart", 260, 655, font, restartButton);
+        drawButton(g2d, new Color(199, 52, 0), "Stop", 420, 655, font, stopButton);
+
+        if (!model.getStartButton().isVisible()) {
+            drawButton(g2d, new Color(1, 84, 6), "Start", 530, 370,new Font("Franklin Gothic Heavy", Font.PLAIN, 55), largeStartButton);
+        }
     }
 
     private void drawButton(Graphics2D g2d, Color color, String label, int x, int y, Font font, RoundRectangle2D roundedRectangle) {
         g2d.setColor(color);
         g2d.draw(roundedRectangle);
+
+        if(!model.getStartButton().isVisible()) {
+            g2d.fill(roundedRectangle);
+            g2d.setColor(Color.BLACK);
+        }
         g2d.setFont(font);
         g2d.drawString(label, x, y);
     }
