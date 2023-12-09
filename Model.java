@@ -120,7 +120,7 @@ public class Model {
             userBoardArray = fieldGenerator.getGeneratedField(50, 100);
             enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
             gameLogic.updateShipsNumber();
-            computer.resetPov();
+            computer.reset();
             viewer.update();
         } else if (stopButton.contains(x,y)) {
             System.out.println("Something do for stop or pause game");
