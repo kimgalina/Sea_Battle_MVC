@@ -17,7 +17,7 @@ public class SplashScreen {
         frame.setLocationRelativeTo(null);
         JLabel backgroundImage = new JLabel(new ImageIcon("images/SplashBackground.png"));
         backgroundImage.setSize(1200, 720);
-
+        frame.setIconImage(new ImageIcon("images/game-icon.png").getImage());
         frame.add(backgroundImage);
         frame.setVisible(true);
 
