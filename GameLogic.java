@@ -130,9 +130,13 @@ public class GameLogic implements Runnable {
         if (shottedCell.getValue() == SHIP) {
             shottedCell.setValue(HIT_SHOT);
             setHitImage(shottedCell);
+            model.getShotSound().play();
+            model.getSuccessShotSound().play();
             return true;
         } else {
             shottedCell.setValue(MISS_SHOT);
+            model.getShotSound().play();
+            model.getWaterShotSound().play();
             return false;
         }
     }
@@ -160,6 +164,7 @@ public class GameLogic implements Runnable {
             for (Cell cell : shipCells) {
                 cell.setValue(DESTROYED);
             }
+            model.getKilledShipSound().play();
             if (isUserTurn) {
                 computerShipsNumber--;
             } else {

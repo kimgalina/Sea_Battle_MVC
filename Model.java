@@ -2,6 +2,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
+import java.awt.Image;
 import java.io.File;
 
 public class Model {
@@ -19,6 +20,8 @@ public class Model {
     private Music successShotSound;
     private Music waterShotSound;
     private Music killedShipSound;
+
+    private Music backgroundMusic;
     private Cell[][] userBoardArray;
     private Cell[][] enemyBoardArray;
     private final Cell enemyBoard;
@@ -26,6 +29,11 @@ public class Model {
     private final Cell restartButton;
     private final Cell startButton;
     private final Cell stopButton;
+
+    private final Cell soundButton;
+    private final Image soundOnBtnImage;
+    private final Image soundOffBtnImage;
+
 
 
     public Model(Viewer viewer) {
@@ -44,12 +52,17 @@ public class Model {
         stopButton = new Cell(400, 620, 100, 50, 0);
         startButton = new Cell(500, 300, 200, 100, 0);
         startButton.setVisible(false);
+        soundButton = new Cell(1080,600,70,80,0);
+        soundOnBtnImage = new ImageIcon("images/soundOn.png").getImage();
+        soundOffBtnImage = new ImageIcon("images/soundOff.png").getImage();
+        soundButton.setImage(soundOnBtnImage);
 
         shotSound = new Music(new File("music/shotSound.wav"));
         successShotSound = new Music(new File("music/succesShot.wav"));
         waterShotSound = new Music(new File("music/waterShot.wav"));
         killedShipSound = new Music(new File("music/KilledShipSound.wav"));
-
+        backgroundMusic = new Music(new File("music/backgroundMusic.wav"));
+        backgroundMusic.playLoop();
         isUserTurn = true;
         startGame();
     }
@@ -63,7 +76,12 @@ public class Model {
     public Music getWaterShotSound() {
         return waterShotSound;
     }
-
+    public Music getKilledShipSound() {
+        return killedShipSound;
+    }
+    public Cell getSoundButton() {
+        return soundButton;
+    }
     private void startGame() {
         ShotsQueue shotsQueue = new ShotsQueue(1);
         user = new User(this, shotsQueue);
@@ -102,7 +120,7 @@ public class Model {
             userBoardArray = fieldGenerator.getGeneratedField(50, 100);
             enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
             gameLogic.updateShipsNumber();
-            computer.resetPov();
+            computer.reset();
             viewer.update();
         } else if (stopButton.contains(x,y)) {
             System.out.println("Something do for stop or pause game");
@@ -111,6 +129,16 @@ public class Model {
             computer.stop();
             gameLogic.stop();
             System.exit(0);
+        } else if (soundButton.contains(x,y)) {
+            if(soundButton.getImage().equals(soundOnBtnImage)) {
+                soundButton.setImage(soundOffBtnImage);
+                viewer.update();
+                backgroundMusic.stop();
+            } else {
+                soundButton.setImage(soundOnBtnImage);
+                viewer.update();
+                backgroundMusic.playLoop();
+            }
         }
     }
 
@@ -122,64 +150,12 @@ public class Model {
         }
     }
 
-//    private void updateBoard(Cell[][] boardArray, int xOffset, int yOffset) {
-//        int indexY = (y - yOffset) / 50;
-//        int indexX = (x - xOffset) / 50;
-//
-//        if (boardArray[indexY][indexX].isVisible()) {
-//            boardArray[indexY][indexX].setVisible(false);
-//        }
-//
-//        Ship ship = boardArray[indexY][indexX].getShip();
-//
-//        if (ship == null) {
-//            return;
-//        }
-//        Cell[] shipCells = ship.getCells();
-//
-//        for (Cell cell : shipCells) {
-//            if (cell.equals(boardArray[indexY][indexX]) && cell.getValue() == 1) {
-//                String imagePath = cell.getImagePath();
-//                String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
-//                cell.setImage(new ImageIcon(sharpedImagePath).getImage());
-//            }
-//        }
-//
-//        if (isShipSink(shipCells)) {
-//            // если корабль потонул проигрывать музыку взрыва корабля
-//            killedShipSound.play();
-//            for (Cell cell : shipCells) {
-//                cell.setValue(4);
-//            }
-//        }
-//    }
-
-    private boolean isShipSink(Cell[] cells) {
-        for (Cell cell : cells) {
-            if (cell.getValue() == 1) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     private boolean isShotValid() {
         int indexY = (y - 100) / 50;
         int indexX = (x - 650) / 50;
         Cell shottedCell = enemyBoardArray[indexY][indexX];
-        if(shottedCell.getValue() == 0) {
-            System.out.println("Звук плеска воды");
-//            shotSound.play();
-            waterShotSound.play();
-            return true;
-        } else if(shottedCell.getValue() == 1) {
-            System.out.println("Звук попадания в корабль");
-//            shotSound.play();
-            successShotSound.play();
-
-            return true;
-        }
-        return false;
+        return shottedCell.getValue() < 2;
     }
 
     public boolean isUserTurn() {
