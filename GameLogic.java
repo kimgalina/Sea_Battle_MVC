@@ -141,7 +141,7 @@ public class GameLogic implements Runnable {
     }
 
     private void setHitImage(Cell cell) {
-        if(isUser) {
+        if (isUser) {
             cell.setImage(new ImageIcon("images/ship_shot.png").getImage());
             return;
         }
@@ -164,7 +164,7 @@ public class GameLogic implements Runnable {
             for (Cell cell : shipCells) {
                 cell.setValue(DESTROYED);
                 cell.setImage(new ImageIcon("images/ship-" + i + "-sinked.png").getImage());
-                if(i < 3) {
+                if (i < 3) {
                     i++;
                 }
             }

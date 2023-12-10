@@ -14,12 +14,6 @@ public class FieldGenerator {
 
     public Cell[][] getGeneratedField(int xOffset, int yOffset) {
         Cell[][] generatedField = generateField(xOffset, yOffset);
-        for (int i = 0; i < generatedField.length; i++) {
-            for (int j = 0; j < generatedField[i].length; j++) {
-                System.out.print(generatedField[i][j].getValue() + " ");
-            }
-            System.out.println();
-        }
         return generatedField;
     }
 
@@ -30,11 +24,6 @@ public class FieldGenerator {
             for (int j = k; j > 0; j--) {
                 Ship ship = new Ship(i);
                 buildShip(i, matrix, ship);
-                System.out.println("Новый корабль построен >>> " + ship.getHealth());
-                Cell[] shipCells = ship.getCells();
-                for (int m = 0; m < shipCells.length; m++) {
-                    System.out.println("x = " + shipCells[m].getX() + " y = " + shipCells[m].getY());
-                }
             }
         }
 
@@ -71,7 +60,7 @@ public class FieldGenerator {
             do {
                 x = generateCoordinate();
                 y = generateCoordinate();
-            } while (matrix[x][y].getValue() != 0);// while cell is not empty
+            } while (matrix[x][y].getValue() != 0);
             direction = generateDirection();
         } while (!isDirectionValid(decksCount, matrix, direction, x, y));
         try {

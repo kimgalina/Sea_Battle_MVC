@@ -1,9 +1,13 @@
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import java.awt.*;
+import java.awt.Image;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Graphics;
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
@@ -17,7 +21,6 @@ public class Canvas extends JPanel {
     private final RoundRectangle2D exitButton;
     private final RoundRectangle2D restartButton;
     private final RoundRectangle2D stopButton;
-    private final RoundRectangle2D soundButton;
     private final RoundRectangle2D largeStartButton;
 
     public Canvas(Model model, Controller controller) {
@@ -30,23 +33,21 @@ public class Canvas extends JPanel {
         int arcHeight = 30;
 
         JLabel backgroundLabel = new JLabel(new ImageIcon(backgroundImage));
-        backgroundLabel.setSize(1200,720);
+        backgroundLabel.setSize(1200, 720);
         add(backgroundLabel);
 
         exitButton = new RoundRectangle2D.Double(100, 620, 100, 50, arcWidth, arcHeight);
-        soundButton = new RoundRectangle2D.Double(900, 620, 100, 100, arcWidth, arcHeight);
+        RoundRectangle2D soundButton = new RoundRectangle2D.Double(900, 620, 100, 100, arcWidth, arcHeight);
         restartButton = new RoundRectangle2D.Double(250, 620, 100, 50, arcWidth, arcHeight);
         stopButton = new RoundRectangle2D.Double(400, 620, 100, 50, arcWidth, arcHeight);
         largeStartButton = new RoundRectangle2D.Double(500, 300, 200, 100, arcWidth, arcHeight);
 
         this.model = model;
         addMouseListener(controller);
-
     }
 
     public void paint(Graphics g) {
         super.paint(g);
-        System.out.println("DRAW CANVAS");
         Graphics2D g2d = (Graphics2D) g;
 
         if (model.getUserShipsNumber() == 0) {
@@ -57,7 +58,7 @@ public class Canvas extends JPanel {
 
         drawGrid(g2d);
 
-        if(!model.getStartButton().isVisible()) {
+        if (!model.getStartButton().isVisible()) {
             setComposite(g2d, 0.2f);
         }
 
@@ -67,7 +68,7 @@ public class Canvas extends JPanel {
     private void drawFinish(Graphics2D g2d, boolean isUser) {
         Font finishFont = new Font("Rockwell Extra Bold", Font.BOLD, 30);
         g2d.setFont(finishFont);
-        if(isUser){
+        if (isUser) {
             g2d.setColor(Color.RED);
             g2d.drawString("Computer WIN!", 650, 640);
             return;
@@ -81,16 +82,14 @@ public class Canvas extends JPanel {
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
     }
 
-
     private void drawGrid(Graphics2D g2d) {
 
-        if(!model.getStartButton().isVisible()) {
+        if (!model.getStartButton().isVisible()) {
             setComposite(g2d, 0.5f);
         }
 
         drawSeaBattle(g2d);
         drawBoardNames(g2d);
-//        drawBoardBorder(g2d);
 
         setComposite(g2d, 1.0f);
         drawButtons(g2d);
@@ -119,7 +118,7 @@ public class Canvas extends JPanel {
         drawSoundButton(g2d, model.getSoundButton());
 
         if (!model.getStartButton().isVisible()) {
-            drawButton(g2d, new Color(1, 84, 6), "Start", 530, 370,new Font("Franklin Gothic Heavy", Font.PLAIN, 55), largeStartButton);
+            drawButton(g2d, new Color(1, 84, 6), "Start", 530, 370, new Font("Franklin Gothic Heavy", Font.PLAIN, 55), largeStartButton);
         }
     }
 
@@ -127,7 +126,7 @@ public class Canvas extends JPanel {
         g2d.setColor(color);
         g2d.draw(roundedRectangle);
 
-        if(!model.getStartButton().isVisible()) {
+        if (!model.getStartButton().isVisible()) {
             g2d.fill(roundedRectangle);
             g2d.setColor(Color.BLACK);
         }

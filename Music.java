@@ -30,16 +30,10 @@ public class Music {
     }
 
     public void play() {
-        System.out.println("in play music");
         if (initialization) {
             if (!isPlaying()) {
                 clip.setFramePosition(0);
                 clip.start();
-//                try {
-//                    clip.drain(); // Блокирует выполнение до завершения воспроизведения
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
                 playing = true;
                 return;
             }
@@ -47,11 +41,6 @@ public class Music {
             clip.stop();
             clip.setFramePosition(0);
             clip.start();
-//            try {
-//                clip.drain(); // Блокирует выполнение до завершения воспроизведения
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
             playing = true;
         }
     }

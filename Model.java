@@ -50,17 +50,23 @@ public class Model {
         stopButton = new Cell(400, 620, 100, 50, 0);
         startButton = new Cell(500, 300, 200, 100, 0);
         startButton.setVisible(false);
-        soundButton = new Cell(1080,600,70,80,0);
+        soundButton = new Cell(1080, 600, 70, 80, 0);
         soundOnBtnImage = new ImageIcon("images/soundOn.png").getImage();
         soundOffBtnImage = new ImageIcon("images/soundOff.png").getImage();
         soundButton.setImage(soundOnBtnImage);
 
         shotSound = new Music(new File("music/shotSound.wav"));
+        shotSound.setVolume(0.8f);
         successShotSound = new Music(new File("music/succesShot.wav"));
+        successShotSound.setVolume(0.8f);
         waterShotSound = new Music(new File("music/waterShot.wav"));
+        waterShotSound.setVolume(0.8f);
         killedShipSound = new Music(new File("music/KilledShipSound.wav"));
+        killedShipSound.setVolume(0.8f);
         backgroundMusic = new Music(new File("music/backgroundMusic2.wav"));
+        backgroundMusic.setVolume(0.8f);
         backgroundMusic.playLoop();
+
 
         lock = new Object();
         startGame();
@@ -69,18 +75,23 @@ public class Model {
     public Music getShotSound() {
         return shotSound;
     }
+
     public Music getSuccessShotSound() {
         return successShotSound;
     }
+
     public Music getWaterShotSound() {
         return waterShotSound;
     }
+
     public Music getKilledShipSound() {
         return killedShipSound;
     }
+
     public Cell getSoundButton() {
         return soundButton;
     }
+
     private void startGame() {
         ShotsQueue shotsQueue = new ShotsQueue(1);
         user = new User(this, shotsQueue);
@@ -98,19 +109,14 @@ public class Model {
 
         int userShipsNumber = gameLogic.getUserShipsNumber();
         int computerShipsNumber = gameLogic.getComputerShipsNumber();
-        System.out.println("user ship number " + userShipsNumber + "computer ship number " + computerShipsNumber);
 
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
-            System.out.println(isUserTurn);
-             if (userShipsNumber > 0 && computerShipsNumber > 0) {
-                 if (!isShotValid()) {
-                     System.out.println("Invalid shot!");
-                     return;
-                 }
-                 makeUserShot();
-             } else {
-                 System.out.println("The game is OVER");
-             }
+            if (userShipsNumber > 0 && computerShipsNumber > 0) {
+                if (!isShotValid()) {
+                    return;
+                }
+                makeUserShot();
+            }
         }
 
         if (startButton.contains(x, y)) {
@@ -124,15 +130,15 @@ public class Model {
             isUserTurn = true;
             computer.reset();
             viewer.update();
-        } else if (stopButton.contains(x,y)) {
+        } else if (stopButton.contains(x, y)) {
             System.out.println("Something do for stop or pause game");
         } else if (exitButton.contains(x, y)) {
             user.stop();
             computer.stop();
             gameLogic.stop();
             System.exit(0);
-        } else if (soundButton.contains(x,y)) {
-            if(soundButton.getImage().equals(soundOnBtnImage)) {
+        } else if (soundButton.contains(x, y)) {
+            if (soundButton.getImage().equals(soundOnBtnImage)) {
                 soundButton.setImage(soundOffBtnImage);
                 viewer.update();
                 backgroundMusic.stop();
@@ -187,97 +193,17 @@ public class Model {
         return y;
     }
 
-    public boolean validateBattlefield(Cell[][] field) {
-        if (field.length != 10 || field[0].length != 10) {
-            return false;
-        }
-
-        int[] shipsCount = {4, 3, 2, 1};
-        boolean[][] visited = new boolean[10][10];
-
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                int cellValue = field[i][j].getValue();
-
-                if (cellValue != 0 && cellValue != 1) {
-                    return false;
-                }
-
-                if (cellValue == 1 && !visited[i][j]) {
-                    int shipSizeHorizontal = getShipSize(field, visited, i, j, true);
-                    int shipSizeVertical = getShipSize(field, visited, i, j, false);
-                    int shipSize = Math.max(shipSizeHorizontal, shipSizeVertical);
-
-                    if (shipSize > 4 || (shipSizeHorizontal != 1 && shipSizeVertical != 1)) {
-                        return false;
-                    }
-
-                    if (!isValidPosition(field, i, j, shipSizeHorizontal, shipSizeVertical)) {
-                        return false;
-                    }
-
-                    shipsCount[shipSize - 1]--;
-                }
-            }
-        }
-
-        for (int count : shipsCount) {
-            if (count != 0) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private int getShipSize(Cell[][] field, boolean[][] visited, int i, int j, boolean isHorizontal) {
-        int size = 1;
-
-        if (isHorizontal) {
-            while (j + size < 10 && field[i][j + size].getValue() == 1) {
-                visited[i][j + size] = true;
-                size++;
-            }
-        } else {
-            while (i + size < 10 && field[i + size][j].getValue() == 1) {
-                visited[i + size][j] = true;
-                size++;
-            }
-        }
-
-        return size;
-    }
-
-    private boolean isValidPosition(Cell[][] field, int i, int j, int shipSizeHorizontal, int shipSizeVertical) {
-        if (i - 1 >= 0) {
-            if (j - 1 >= 0 && field[i - 1][j - 1].getValue() == 1) {
-                return false;
-            } else if (j + shipSizeHorizontal < 10 && field[i - 1][j + shipSizeHorizontal].getValue() == 1) {
-                return false;
-            }
-        } else if (i + shipSizeVertical < 10) {
-            if (j - 1 >= 10 && field[i + shipSizeVertical][j - 1].getValue() == 1) {
-                return false;
-            } else if (j + shipSizeHorizontal < 10 && field[i + shipSizeVertical][j + shipSizeHorizontal].getValue() == 1) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public void playRocketAnimation(int x, int y) {
         ImageIcon rocketIcon = new ImageIcon("images/missile.png");
         JLabel rocketLabel = new JLabel(rocketIcon);
-        viewer.addRocket(rocketIcon, x, y); // добавляем ракету на панель с указанными координатами
-
-        // Для задержки перед удалением ракеты, чтобы она успела отобразиться
+        viewer.addRocket(rocketIcon, x, y);
         Timer timer = new Timer(1000000, e -> {
-            viewer.removeRocket(rocketLabel); // удаляем ракету с панели
-            viewer.update(); // обновляем представление для отображения изменений
+            viewer.removeRocket(rocketLabel);
+            viewer.update();
         });
 
-        timer.setRepeats(false); // Устанавливаем повторение таймера только один раз
-        timer.start(); // запускаем таймер для удаления ракеты через 1 секунду
+        timer.setRepeats(false);
+        timer.start();
     }
 
     public void viewerUpdate() {

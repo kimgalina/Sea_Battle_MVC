@@ -29,26 +29,22 @@ public class Viewer {
         canvas.repaint();
     }
 
-    // Метод для добавления ракеты на игровую панель
     public void addRocket(ImageIcon rocketIcon, int x, int y) {
         JLabel rocketLabel = new JLabel(rocketIcon);
         rocketLabel.setBounds(x, y, rocketIcon.getIconWidth(), rocketIcon.getIconHeight());
-        frame.add(rocketLabel); // добавляем ракету на игровую панель
-        frame.repaint(); // перерисовываем панель, чтобы увидеть изменения
+        frame.add(rocketLabel);
+        frame.repaint();
     }
 
-
-    // Метод для удаления ракеты с игровой панели
     public void removeRocket(JLabel rocketLabel) {
-        frame.remove(rocketLabel); // удаляем ракету с игровой панели
-        frame.repaint(); // перерисовываем панель, чтобы увидеть изменения
+        frame.remove(rocketLabel);
+        frame.repaint();
     }
 
-    // Метод для добавления компонента на игровую панель
     public void add(JComponent component, int x, int y) {
         component.setBounds(x, y, component.getWidth(), component.getHeight());
-        frame.add(component); // добавляем компонент на игровую панель
-        frame.repaint(); // перерисовываем панель, чтобы увидеть изменения
+        frame.add(component);
+        frame.repaint();
     }
 
 
