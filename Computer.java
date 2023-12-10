@@ -6,6 +6,8 @@ public class Computer extends Player {
     private final Object lock;
     private Model model;
     private int[][] computerPov;
+    private ArrayList<int[]> blackListCoordinates;
+    private boolean smartPlay;
 
     public Computer(Model model, ShotsQueue shotsQueue) {
         super(shotsQueue);
@@ -13,6 +15,7 @@ public class Computer extends Player {
         computerPov = new int[10][10];
         reset();
         lock = model.getLock();
+        smartPlay = false;
     }
 
     public void doAction() {
@@ -35,6 +38,8 @@ public class Computer extends Player {
               computerPov[j][i] = 0;
           }
         }
+        smartPlay = false;
+        blackListCoordinates = null;
     }
 
     private void refreshComputerPovBoard() {
@@ -43,6 +48,9 @@ public class Computer extends Player {
           for (int j = 0; j < computerPov[i].length; j++) {
               if (realUserCell[i][j].getValue() == 4) {
                   computerPov[i][j] = 3;
+                  if (smartPlay) {
+                      addToBlackList(new int[] {i, j});
+                  }
               }
               if (realUserCell[i][j].getValue() == 2) {
                   computerPov[i][j] = 1;
@@ -51,6 +59,12 @@ public class Computer extends Player {
                   computerPov[i][j] = 2;
               }
           }
+        }
+        int ComputerShipsNumber = model.getComputerShipsNumber();
+        int userShipsNumber = model.getUserShipsNumber();
+        if (!smartPlay && ComputerShipsNumber <= 8 && userShipsNumber <= 9) {
+            smartPlay = true;
+            blackListCoordinates = new ArrayList<>();
         }
     }
 
@@ -104,6 +118,10 @@ public class Computer extends Player {
           if (computerPov[y][x] == 0) {
               shotCoordinates[0] = y;
               shotCoordinates[1] = x;
+              if (smartPlay && checkInBlackList(new int[] {y, x})) {
+                  System.out.println("random: " + x + ", " + y + " in black list, finding other");
+                  return generateRandomShot();
+              }
               return shotCoordinates;
           }
         }
@@ -129,7 +147,6 @@ public class Computer extends Player {
 
     private ArrayList<int[]> calculatePossibleShots(ArrayList<int[]> shipsFoundCoordinates) {
         ArrayList<int[]> possibleShotsCoordinates = new ArrayList<>();
-        int possibleShotsCounter = 0;
         for (int i = 0; i < shipsFoundCoordinates.size(); i++) {
             if (shipsFoundCoordinates.get(i)[2] == -1) {
                 return possibleShotsCoordinates;
@@ -140,23 +157,98 @@ public class Computer extends Player {
             int y = shipsFoundCoordinates.get(i)[0];
             int x = shipsFoundCoordinates.get(i)[1];
             if (topIsReachable(y) && computerPov[y - 1][x] == 0) {
-                possibleShotsCoordinates.add(new int[] {y - 1, x});
-                possibleShotsCounter++;
+                if (smartPlay && checkInBlackList(new int[] {y - 1, x})){
+                    System.out.println("special shot: " + x + ", " + (y-1) + " in black list, skiping coordinate as shot");
+                } else {
+                    possibleShotsCoordinates.add(new int[] {y - 1, x});
+                }
             }
             if (botIsReachable(y) && computerPov[y + 1][x] == 0) {
-                possibleShotsCoordinates.add(new int[] {y + 1, x});
-                possibleShotsCounter++;
+                if (smartPlay && checkInBlackList(new int[] {y + 1, x})){
+                    System.out.println("special shot: " + x + ", " + (y+1) + " in black list, skiping coordinate as shot");
+                } else {
+                    possibleShotsCoordinates.add(new int[] {y + 1, x});
+                }
             }
             if (leftIsReachable(x) && computerPov[y][x - 1] == 0) {
-                possibleShotsCoordinates.add(new int[] {y, x - 1});
-                possibleShotsCounter++;
+                if (smartPlay && checkInBlackList(new int[] {y, x - 1})){
+                    System.out.println("special shot: " + (x-1) + ", " + y + " in black list, skiping coordinate as shot");
+                } else {
+                    possibleShotsCoordinates.add(new int[] {y, x - 1});
+                }
             }
             if (rightIsReachable(x) && computerPov[y][x + 1] == 0) {
-                possibleShotsCoordinates.add(new int[] {y, x + 1});
-                possibleShotsCounter++;
+                if (smartPlay && checkInBlackList(new int[] {y, x + 1})){
+                    System.out.println("special shot: " + (x+1) + ", " + y + " in black list, skiping coordinate as shot");
+                } else {
+                    possibleShotsCoordinates.add(new int[] {y, x + 1});
+                }
             }
         }
         return possibleShotsCoordinates;
+    }
+
+    private boolean checkInBlackList(int[] coordinates) {
+        for (int i = 0; i < blackListCoordinates.size(); i++) {
+            if (blackListCoordinates.get(i)[0] == coordinates[0] &&
+            blackListCoordinates.get(i)[1] == coordinates[1]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void addToBlackList(int[] coordinates) {
+        int x = coordinates[1];
+        int y = coordinates[0];
+        if (topIsReachable(y) && computerPov[y - 1][x] == 0) {
+            if (!(checkInBlackList(new int[] {(y - 1), x}))) {
+                blackListCoordinates.add(new int[] {(y - 1), x});
+                System.out.println("\n\nadded to bl x = " + x + "y=" + (y - 1));
+            }
+        }
+        if (botIsReachable(y) && computerPov[y + 1][x] == 0) {
+            if (!(checkInBlackList(new int[] {(y + 1), x}))) {
+                blackListCoordinates.add(new int[] {(y + 1), x});
+                System.out.println("\n\nadded to bl x = " + x + "y=" + (y + 1));
+            }
+        }
+        if (leftIsReachable(x) && computerPov[y][x - 1] == 0) {
+            if (!(checkInBlackList(new int[] {y, (x - 1)}))) {
+                blackListCoordinates.add(new int[] {y, (x - 1)});
+                System.out.println("\n\nadded to bl x = " + (x - 1) + "y=" + y);
+            }
+        }
+        if (rightIsReachable(x) && computerPov[y][x + 1] == 0) {
+            if (!(checkInBlackList(new int[] {y, (x + 1)}))) {
+                blackListCoordinates.add(new int[] {y, (x + 1)});
+                System.out.println("\n\nadded to bl x = " + (x + 1) + "y=" + y);
+            }
+        }
+        if (topLeftIsReachable(x, y) && computerPov[y - 1][x - 1] == 0) {
+            if (!(checkInBlackList(new int[] {(y - 1), (x - 1)}))) {
+                blackListCoordinates.add(new int[] {(y - 1), (x - 1)});
+                System.out.println("\n\nadded to bl x = " + (x - 1) + "y=" + (y - 1));
+            }
+        }
+        if (topRightIsReachable(x, y) && computerPov[y - 1][x + 1] == 0) {
+            if (!(checkInBlackList(new int[] {(y - 1), (x + 1)}))) {
+                blackListCoordinates.add(new int[] {(y - 1), (x + 1)});
+                System.out.println("\n\nadded to bl x = " + (x + 1) + "y=" + (y - 1));
+            }
+        }
+        if (botLeftIsReachable(x, y) && computerPov[y + 1][x - 1] == 0) {
+            if (!(checkInBlackList(new int[] {(y + 1), (x - 1)}))) {
+                blackListCoordinates.add(new int[] {(y + 1), (x - 1)});
+                System.out.println("\n\nadded to bl x = " + (x - 1) + "y=" + (y + 1));
+            }
+        }
+        if (botRightIsReachable(x, y) && computerPov[y + 1][x + 1] == 0) {
+            if (!(checkInBlackList(new int[] {(y + 1), (x + 1)}))) {
+                blackListCoordinates.add(new int[] {(y + 1), (x + 1)});
+                System.out.println("\n\nadded to bl x = " + (x + 1) + "y=" + (y + 1));
+            }
+        }
     }
 
     private int decideShotIndex(int length) {
@@ -179,5 +271,21 @@ public class Computer extends Player {
 
     private boolean rightIsReachable(int x) {
         return (x + 1 <= 9);
+    }
+
+    private boolean topLeftIsReachable(int x, int y) {
+        return topIsReachable(y) && leftIsReachable(x);
+    }
+
+    private boolean botLeftIsReachable(int x, int y) {
+        return botIsReachable(y) && leftIsReachable(x);
+    }
+
+    private boolean topRightIsReachable(int x, int y) {
+        return topIsReachable(y) && rightIsReachable(x);
+    }
+
+    private boolean botRightIsReachable(int x, int y) {
+        return botIsReachable(y) && rightIsReachable(x);
     }
 }
