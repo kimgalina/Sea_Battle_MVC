@@ -61,7 +61,7 @@ public class Model {
         successShotSound = new Music(new File("music/succesShot.wav"));
         waterShotSound = new Music(new File("music/waterShot.wav"));
         killedShipSound = new Music(new File("music/KilledShipSound.wav"));
-        backgroundMusic = new Music(new File("music/backgroundMusic.wav"));
+        backgroundMusic = new Music(new File("music/backgroundMusic2.wav"));
         backgroundMusic.playLoop();
         isUserTurn = true;
         startGame();
