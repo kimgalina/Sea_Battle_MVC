@@ -20,21 +20,19 @@ public class Model {
     private Music successShotSound;
     private Music waterShotSound;
     private Music killedShipSound;
-
     private Music backgroundMusic;
     private Cell[][] userBoardArray;
     private Cell[][] enemyBoardArray;
+    private Cell userBoardBorder;
+    private Cell computerBoardBorder;
     private final Cell enemyBoard;
     private final Cell exitButton;
     private final Cell restartButton;
     private final Cell startButton;
     private final Cell stopButton;
-
     private final Cell soundButton;
     private final Image soundOnBtnImage;
     private final Image soundOffBtnImage;
-
-
 
     public Model(Viewer viewer) {
         this.viewer = viewer;
@@ -44,8 +42,8 @@ public class Model {
         fieldGenerator = new FieldGenerator();
         userBoardArray = fieldGenerator.getGeneratedField(50, 100);
         enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
+//        computerBoardBorder = new Cell(625, 75, 550, 550, 0);
 
-        lock = new Object();
         enemyBoard = new Cell(650, 100, 10 * 50, 10 * 50, 0);
         exitButton = new Cell(100, 620, 100, 50, 0);
         restartButton = new Cell(250, 620, 100, 50, 0);
@@ -63,7 +61,8 @@ public class Model {
         killedShipSound = new Music(new File("music/KilledShipSound.wav"));
         backgroundMusic = new Music(new File("music/backgroundMusic2.wav"));
         backgroundMusic.playLoop();
-        isUserTurn = true;
+
+        lock = new Object();
         startGame();
     }
 
@@ -115,6 +114,7 @@ public class Model {
 
         if (startButton.contains(x, y)) {
             startButton.setVisible(true);
+            isUserTurn = true;
             viewer.update();
         } else if (restartButton.contains(x, y) && startButton.isVisible()) {
             userBoardArray = fieldGenerator.getGeneratedField(50, 100);
@@ -149,7 +149,6 @@ public class Model {
             }
         }
     }
-
 
     private boolean isShotValid() {
         int indexY = (y - 100) / 50;
@@ -264,7 +263,6 @@ public class Model {
         return true;
     }
 
-
     public void playRocketAnimation(int x, int y) {
         ImageIcon rocketIcon = new ImageIcon("images/missile.png");
         JLabel rocketLabel = new JLabel(rocketIcon);
@@ -286,6 +284,14 @@ public class Model {
 
     public Cell getStartButton() {
         return startButton;
+    }
+
+    public Cell getUserBoardBorder() {
+        return userBoardBorder;
+    }
+
+    public Cell getComputerBoardBorder() {
+        return computerBoardBorder;
     }
 
     public int getUserShipsNumber() {

@@ -1,13 +1,8 @@
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Font;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
-import java.awt.AlphaComposite;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -95,6 +90,7 @@ public class Canvas extends JPanel {
 
         drawSeaBattle(g2d);
         drawBoardNames(g2d);
+//        drawBoardBorder(g2d);
 
         setComposite(g2d, 1.0f);
         drawButtons(g2d);
@@ -143,6 +139,15 @@ public class Canvas extends JPanel {
     private void drawSoundButton(Graphics2D g2d, Cell cell) {
         g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
     }
+
+//    private void drawBoardBorder(Graphics2D g2d) {
+//        Cell border = model.getComputerBoardBorder();
+//        if (model.isUserTurn()) {
+//            g2d.setColor(Color.GREEN);
+//        }
+//        g2d.setStroke(new BasicStroke(5f));
+//        g2d.drawRoundRect(border.x, border.y, border.width, border.height, 20, 20);
+//    }
 
     public void drawBoards(Graphics2D g2d) {
         Cell[][] userBoard = model.getUserBoardArray();
