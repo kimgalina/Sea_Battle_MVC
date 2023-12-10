@@ -29,7 +29,7 @@ public class Viewer {
         int resizedWidth = 32;
         int resizedHeight = 32;
         Image resizedImage = cursorImage.getScaledInstance(resizedWidth, resizedHeight, Image.SCALE_SMOOTH);
-        Point hotspot = new Point(resizedImage.getWidth(null) / 2, resizedImage.getHeight(null) / 2);
+        Point hotspot = new Point(resizedWidth / 2, resizedHeight / 2);
         Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(resizedImage, hotspot, "Sea Battle cursor");
         frame.setCursor(customCursor);
 
