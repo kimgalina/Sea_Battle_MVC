@@ -24,6 +24,7 @@ public class Canvas extends JPanel {
     private final RoundRectangle2D largeStartButton;
 
     public Canvas(Model model, Controller controller) {
+        setLayout(null);
         Image backgroundImage = new ImageIcon("images/background.jpg").getImage();
         seaBattleImage = new ImageIcon("images/sea-battle-cell.png").getImage();
 

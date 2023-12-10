@@ -64,7 +64,7 @@ public class Computer extends Player {
 
         int ComputerShipsNumber = model.getComputerShipsNumber();
         int userShipsNumber = model.getUserShipsNumber();
-        if (!smartPlay && ComputerShipsNumber <= 8 && userShipsNumber <= 9) {
+        if (!smartPlay && userShipsNumber <= 9) {
             smartPlay = true;
             blackListCoordinates = new ArrayList<>();
         }
@@ -162,30 +162,22 @@ public class Computer extends Player {
             int y = shipsFoundCoordinates.get(i)[0];
             int x = shipsFoundCoordinates.get(i)[1];
             if (topIsReachable(y) && computerPov[y - 1][x] == 0) {
-                if (smartPlay && checkInBlackList(new int[]{y - 1, x})) {
-                    System.out.println("special shot: " + x + ", " + (y - 1) + " in black list, skiping coordinate as shot");
-                } else {
+                if (!(smartPlay && checkInBlackList(new int[]{y - 1, x}))) {
                     possibleShotsCoordinates.add(new int[]{y - 1, x});
                 }
             }
             if (botIsReachable(y) && computerPov[y + 1][x] == 0) {
-                if (smartPlay && checkInBlackList(new int[]{y + 1, x})) {
-                    System.out.println("special shot: " + x + ", " + (y + 1) + " in black list, skiping coordinate as shot");
-                } else {
+                if (!(smartPlay && checkInBlackList(new int[]{y + 1, x}))) {
                     possibleShotsCoordinates.add(new int[]{y + 1, x});
                 }
             }
             if (leftIsReachable(x) && computerPov[y][x - 1] == 0) {
-                if (smartPlay && checkInBlackList(new int[]{y, x - 1})) {
-                    System.out.println("special shot: " + (x - 1) + ", " + y + " in black list, skiping coordinate as shot");
-                } else {
+                if (!(smartPlay && checkInBlackList(new int[]{y, x - 1}))) {
                     possibleShotsCoordinates.add(new int[]{y, x - 1});
                 }
             }
             if (rightIsReachable(x) && computerPov[y][x + 1] == 0) {
-                if (smartPlay && checkInBlackList(new int[]{y, x + 1})) {
-                    System.out.println("special shot: " + (x + 1) + ", " + y + " in black list, skiping coordinate as shot");
-                } else {
+                if (!(smartPlay && checkInBlackList(new int[]{y, x + 1}))) {
                     possibleShotsCoordinates.add(new int[]{y, x + 1});
                 }
             }
@@ -239,7 +231,6 @@ public class Computer extends Player {
         if (botLeftIsReachable(x, y) && computerPov[y + 1][x - 1] == 0) {
             if (!(checkInBlackList(new int[]{(y + 1), (x - 1)}))) {
                 blackListCoordinates.add(new int[]{(y + 1), (x - 1)});
-                System.out.println("\n\nadded to bl x = " + (x - 1) + "y=" + (y + 1));
             }
         }
         if (botRightIsReachable(x, y) && computerPov[y + 1][x + 1] == 0) {
