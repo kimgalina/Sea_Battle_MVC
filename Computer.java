@@ -163,22 +163,42 @@ public class Computer extends Player {
             int x = shipsFoundCoordinates.get(i)[1];
             if (topIsReachable(y) && computerPov[y - 1][x] == 0) {
                 if (!(smartPlay && checkInBlackList(new int[]{y - 1, x}))) {
-                    possibleShotsCoordinates.add(new int[]{y - 1, x});
+                    if ((leftIsReachable(x) && computerPov[y][x - 1] != 1) &&
+                        (rightIsReachable(x) && computerPov[y][x + 1] != 1)) {
+                            possibleShotsCoordinates.add(new int[]{y - 1, x});
+                    } else if (x == 0 || x == 9) {
+                        possibleShotsCoordinates.add(new int[]{y - 1, x});
+                    }
                 }
             }
             if (botIsReachable(y) && computerPov[y + 1][x] == 0) {
                 if (!(smartPlay && checkInBlackList(new int[]{y + 1, x}))) {
-                    possibleShotsCoordinates.add(new int[]{y + 1, x});
+                    if ((leftIsReachable(x) && computerPov[y][x - 1] != 1) &&
+                        (rightIsReachable(x) && computerPov[y][x + 1] != 1)) {
+                            possibleShotsCoordinates.add(new int[]{y + 1, x});
+                    } else if (x == 0 || x == 9) {
+                        possibleShotsCoordinates.add(new int[]{y + 1, x});
+                    }
                 }
             }
             if (leftIsReachable(x) && computerPov[y][x - 1] == 0) {
                 if (!(smartPlay && checkInBlackList(new int[]{y, x - 1}))) {
-                    possibleShotsCoordinates.add(new int[]{y, x - 1});
+                    if ((topIsReachable(y) && computerPov[y - 1][x] != 1) &&
+                        (botIsReachable(y) && computerPov[y + 1][x] != 1)) {
+                            possibleShotsCoordinates.add(new int[]{y, x - 1});
+                    } else if (y == 0 || y == 9) {
+                        possibleShotsCoordinates.add(new int[]{y, x - 1});
+                    }
                 }
             }
             if (rightIsReachable(x) && computerPov[y][x + 1] == 0) {
                 if (!(smartPlay && checkInBlackList(new int[]{y, x + 1}))) {
-                    possibleShotsCoordinates.add(new int[]{y, x + 1});
+                    if ((topIsReachable(y) && computerPov[y - 1][x] != 1) &&
+                        (botIsReachable(y) && computerPov[y + 1][x] != 1)) {
+                            possibleShotsCoordinates.add(new int[]{y, x + 1});
+                    } else if (y == 0 || y == 9) {
+                        possibleShotsCoordinates.add(new int[]{y, x + 1});
+                    }
                 }
             }
         }
