@@ -101,6 +101,7 @@ public class Model {
         System.out.println("user ship number " + userShipsNumber + "computer ship number " + computerShipsNumber);
 
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
+            System.out.println(isUserTurn);
              if (userShipsNumber > 0 && computerShipsNumber > 0) {
                  if (!isShotValid()) {
                      System.out.println("Invalid shot!");
@@ -120,6 +121,7 @@ public class Model {
             userBoardArray = fieldGenerator.getGeneratedField(50, 100);
             enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
             gameLogic.updateShipsNumber();
+            isUserTurn = true;
             computer.reset();
             viewer.update();
         } else if (stopButton.contains(x,y)) {
