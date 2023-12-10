@@ -166,6 +166,8 @@ public class Computer extends Player {
                     if ((leftIsReachable(x) && computerPov[y][x - 1] != 1) &&
                         (rightIsReachable(x) && computerPov[y][x + 1] != 1)) {
                             possibleShotsCoordinates.add(new int[]{y - 1, x});
+                    } else if (x == 0 || x == 9) {
+                        possibleShotsCoordinates.add(new int[]{y - 1, x});
                     }
                 }
             }
@@ -174,6 +176,8 @@ public class Computer extends Player {
                     if ((leftIsReachable(x) && computerPov[y][x - 1] != 1) &&
                         (rightIsReachable(x) && computerPov[y][x + 1] != 1)) {
                             possibleShotsCoordinates.add(new int[]{y + 1, x});
+                    } else if (x == 0 || x == 9) {
+                        possibleShotsCoordinates.add(new int[]{y + 1, x});
                     }
                 }
             }
@@ -182,6 +186,8 @@ public class Computer extends Player {
                     if ((topIsReachable(y) && computerPov[y - 1][x] != 1) &&
                         (botIsReachable(y) && computerPov[y + 1][x] != 1)) {
                             possibleShotsCoordinates.add(new int[]{y, x - 1});
+                    } else if (y == 0 || y == 9) {
+                        possibleShotsCoordinates.add(new int[]{y, x - 1});
                     }
                 }
             }
@@ -190,6 +196,8 @@ public class Computer extends Player {
                     if ((topIsReachable(y) && computerPov[y - 1][x] != 1) &&
                         (botIsReachable(y) && computerPov[y + 1][x] != 1)) {
                             possibleShotsCoordinates.add(new int[]{y, x + 1});
+                    } else if (y == 0 || y == 9) {
+                        possibleShotsCoordinates.add(new int[]{y, x + 1});
                     }
                 }
             }
