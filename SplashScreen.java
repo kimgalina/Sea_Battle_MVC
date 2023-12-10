@@ -42,7 +42,7 @@ public class SplashScreen {
             try {
                 Thread.sleep(300);
                 progressBar.setValue(i);
-                i += 17;
+                i += 9;
                 if (i >= 100) {
                     frame.dispose();
                 }
