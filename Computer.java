@@ -27,7 +27,9 @@ public class Computer extends Player {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                produceShot();
+                if (!model.isGameStopped()) {
+                    produceShot();
+                }
             }
         }
     }
