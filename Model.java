@@ -24,8 +24,6 @@ public class Model {
     private Music backgroundMusic;
     private Cell[][] userBoardArray;
     private Cell[][] enemyBoardArray;
-    private Cell userBoardBorder;
-    private Cell computerBoardBorder;
     private final Cell enemyBoard;
     private final Cell exitButton;
     private final Cell restartButton;
@@ -43,7 +41,6 @@ public class Model {
         fieldGenerator = new FieldGenerator();
         userBoardArray = fieldGenerator.getGeneratedField(50, 100);
         enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
-//        computerBoardBorder = new Cell(625, 75, 550, 550, 0);
 
         enemyBoard = new Cell(650, 100, 10 * 50, 10 * 50, 0);
         exitButton = new Cell(100, 620, 100, 50, 0);
@@ -238,14 +235,6 @@ public class Model {
 
     public Cell getStartButton() {
         return startButton;
-    }
-
-    public Cell getUserBoardBorder() {
-        return userBoardBorder;
-    }
-
-    public Cell getComputerBoardBorder() {
-        return computerBoardBorder;
     }
 
     public int getUserShipsNumber() {
