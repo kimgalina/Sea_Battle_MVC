@@ -1,4 +1,5 @@
 import javax.swing.ImageIcon;
+import java.awt.*;
 
 public class GameLogic implements Runnable {
 
@@ -7,7 +8,6 @@ public class GameLogic implements Runnable {
     private ShotsQueue shotsQueue;
     private final Object lock;
     private boolean isRunning;
-    private boolean isUser;
     private int userShipsNumber;
     private int computerShipsNumber;
     private final int SHIPS_NUMBER = 10;
@@ -62,10 +62,8 @@ public class GameLogic implements Runnable {
         synchronized (lock) {
             if (shot != null) {
                 if (shot.getPlayerType() == PlayerType.USER) {
-                    isUser = true;
                     handleUserAction(shot);
                 } else {
-                    isUser = false;
                     handleComputerAction(shot);
                 }
                 model.viewerUpdate();
@@ -101,8 +99,11 @@ public class GameLogic implements Runnable {
         boolean isHit = processShot(computerBoard, shot);
 
         Cell shottedCell = computerBoard[shot.getY()][shot.getX()];
-        Ship ship = shottedCell.getShip();
+        if (isHit) {
+            setHitImage(shottedCell, true);
+        }
 
+        Ship ship = shottedCell.getShip();
         if (ship != null) {
             checkIfShipDestroyed(ship, true);
         }
@@ -114,8 +115,11 @@ public class GameLogic implements Runnable {
         boolean isHit = processShot(userBoard, shot);
 
         Cell shottedCell = userBoard[shot.getY()][shot.getX()];
-        Ship ship = shottedCell.getShip();
+        if (isHit) {
+            setHitImage(shottedCell, false);
+        }
 
+        Ship ship = shottedCell.getShip();
         if (ship != null) {
             checkIfShipDestroyed(ship, false);
         }
@@ -128,7 +132,6 @@ public class GameLogic implements Runnable {
 
         if (shottedCell.getValue() == SHIP) {
             shottedCell.setValue(HIT_SHOT);
-            setHitImage(shottedCell);
             model.getShotSound().play();
             model.getSuccessShotSound().play();
             return true;
@@ -140,12 +143,11 @@ public class GameLogic implements Runnable {
         }
     }
 
-    private void setHitImage(Cell cell) {
+    private void setHitImage(Cell cell, boolean isUser) {
         if (isUser) {
             cell.setImage(new ImageIcon("images/ship_shot.png").getImage());
             return;
         }
-
         String imagePath = cell.getImagePath();
         String sharpedImagePath = imagePath.substring(0, imagePath.length() - 4) + "-sharped.png";
         cell.setImage(new ImageIcon(sharpedImagePath).getImage());
