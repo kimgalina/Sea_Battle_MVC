@@ -117,7 +117,7 @@ public class Model {
         int computerShipsNumber = gameLogic.getComputerShipsNumber();
 
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
-            if (userShipsNumber > 0 && computerShipsNumber > 0) {
+            if (userShipsNumber > 0 && computerShipsNumber > 0 && isUserTurn) {
                 if (!isShotValid()) {
                     return;
                 }
@@ -174,7 +174,7 @@ public class Model {
 
     private void makeUserShot() {
         synchronized (lock) {
-            if (isShotValid() && isUserTurn && !isGameStopped) {
+            if (isShotValid() && !isGameStopped) {
                 lock.notify();
             }
         }
