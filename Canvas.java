@@ -39,7 +39,7 @@ public class Canvas extends JPanel {
 
         exitButton = new RoundRectangle2D.Double(100, 620, 100, 50, arcWidth, arcHeight);
         RoundRectangle2D soundButton = new RoundRectangle2D.Double(900, 620, 100, 100, arcWidth, arcHeight);
-        restartButton = new RoundRectangle2D.Double(250, 620, 100, 50, arcWidth, arcHeight);
+        restartButton = new RoundRectangle2D.Double(230, 620, 140, 50, arcWidth, arcHeight);
         stopButton = new RoundRectangle2D.Double(400, 620, 100, 50, arcWidth, arcHeight);
         largeStartButton = new RoundRectangle2D.Double(500, 300, 200, 100, arcWidth, arcHeight);
 
@@ -113,9 +113,15 @@ public class Canvas extends JPanel {
     }
 
     private void drawButtons(Graphics2D g2d) {
-        drawButton(g2d, Color.RED, "Exit", 120, 655, font, exitButton);
-        drawButton(g2d, new Color(128, 128, 0), "Restart", 260, 655, font, restartButton);
-        drawButton(g2d, new Color(199, 52, 0), "Stop", 420, 655, font, stopButton);
+        drawButton(g2d, Color.RED, "Exit", 126, 655, font, exitButton);
+        drawButton(g2d, new Color(128, 128, 0), "Restart", 255, 655, font, restartButton);
+        if (model.isGameStopped()) {
+            RoundRectangle2D continueButton = new RoundRectangle2D.Double(400, 620, 140,
+                    50, 30, 30);
+            drawButton(g2d, new Color(199, 52, 0), "Continue", 420, 655, font, continueButton);
+        } else {
+            drawButton(g2d, new Color(199, 52, 0), "Stop", 425, 655, font, stopButton);
+        }
         drawSoundButton(g2d, model.getSoundButton());
 
         if (!model.getStartButton().isVisible()) {
