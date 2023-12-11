@@ -116,7 +116,7 @@ public class Canvas extends JPanel {
         drawButton(g2d, Color.RED, "Exit", 120, 655, font, exitButton);
         drawButton(g2d, new Color(128, 128, 0), "Restart", 260, 655, font, restartButton);
         if (model.isGameStopped()) {
-            drawButton(g2d, new Color(199, 52, 0), "Continue", 420, 655, font, stopButton);
+            drawButton(g2d, new Color(199, 52, 0), "Conti...", 420, 655, font, stopButton);
         } else {
             drawButton(g2d, new Color(199, 52, 0), "Stop", 420, 655, font, stopButton);
         }
