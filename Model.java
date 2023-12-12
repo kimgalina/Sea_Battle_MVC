@@ -10,6 +10,7 @@ public class Model {
     private Viewer viewer;
     private FieldGenerator fieldGenerator;
     private volatile boolean isUserTurn;
+    private volatile boolean isGameStopped;
     private User user;
     private Computer computer;
     private GameLogic gameLogic;
@@ -23,8 +24,6 @@ public class Model {
     private Music backgroundMusic;
     private Cell[][] userBoardArray;
     private Cell[][] enemyBoardArray;
-    private Cell userBoardBorder;
-    private Cell computerBoardBorder;
     private final Cell enemyBoard;
     private final Cell exitButton;
     private final Cell restartButton;
@@ -42,7 +41,6 @@ public class Model {
         fieldGenerator = new FieldGenerator();
         userBoardArray = fieldGenerator.getGeneratedField(50, 100);
         enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
-//        computerBoardBorder = new Cell(625, 75, 550, 550, 0);
 
         enemyBoard = new Cell(650, 100, 10 * 50, 10 * 50, 0);
         exitButton = new Cell(100, 620, 100, 50, 0);
@@ -67,9 +65,8 @@ public class Model {
         backgroundMusic.setVolume(0.8f);
         backgroundMusic.playLoop();
 
-
         lock = new Object();
-        startGame();
+        startThreads();
     }
 
     public Music getShotSound() {
@@ -92,7 +89,7 @@ public class Model {
         return soundButton;
     }
 
-    private void startGame() {
+    private void startThreads() {
         ShotsQueue shotsQueue = new ShotsQueue(1);
         user = new User(this, shotsQueue);
         computer = new Computer(this, shotsQueue);
@@ -103,6 +100,12 @@ public class Model {
         gameLogic.start();
     }
 
+    private void stopThreads() {
+        user.stop();
+        computer.stop();
+        gameLogic.stop();
+    }
+
     public void doAction(int x, int y) {
         this.x = x;
         this.y = y;
@@ -111,7 +114,7 @@ public class Model {
         int computerShipsNumber = gameLogic.getComputerShipsNumber();
 
         if (enemyBoard.contains(x, y) && startButton.isVisible()) {
-            if (userShipsNumber > 0 && computerShipsNumber > 0) {
+            if (userShipsNumber > 0 && computerShipsNumber > 0 && isUserTurn) {
                 if (!isShotValid()) {
                     return;
                 }
@@ -120,22 +123,13 @@ public class Model {
         }
 
         if (startButton.contains(x, y)) {
-            startButton.setVisible(true);
-            isUserTurn = true;
-            viewer.update();
+            startGame();
         } else if (restartButton.contains(x, y) && startButton.isVisible()) {
-            userBoardArray = fieldGenerator.getGeneratedField(50, 100);
-            enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
-            gameLogic.updateShipsNumber();
-            isUserTurn = true;
-            computer.reset();
-            viewer.update();
+            restartGame();
         } else if (stopButton.contains(x, y)) {
-            System.out.println("Something do for stop or pause game");
+            stopGame();
         } else if (exitButton.contains(x, y)) {
-            user.stop();
-            computer.stop();
-            gameLogic.stop();
+            stopThreads();
             System.exit(0);
         } else if (soundButton.contains(x, y)) {
             if (soundButton.getImage().equals(soundOnBtnImage)) {
@@ -150,9 +144,34 @@ public class Model {
         }
     }
 
+    private void startGame() {
+        startButton.setVisible(true);
+        isUserTurn = true;
+        viewer.update();
+    }
+
+    private void restartGame() {
+        userBoardArray = fieldGenerator.getGeneratedField(50, 100);
+        enemyBoardArray = fieldGenerator.getGeneratedField(650, 100);
+        gameLogic.updateShipsNumber();
+        isUserTurn = true;
+        computer.reset();
+        viewer.update();
+    }
+
+    private void stopGame() {
+        isGameStopped = !isGameStopped;
+        viewer.update();
+        if (!isGameStopped && !isUserTurn) {
+            synchronized (lock) {
+                lock.notifyAll();
+            }
+        }
+    }
+
     private void makeUserShot() {
         synchronized (lock) {
-            if (isShotValid() && isUserTurn) {
+            if (isShotValid() && !isGameStopped) {
                 lock.notify();
             }
         }
@@ -163,6 +182,10 @@ public class Model {
         int indexX = (x - 650) / 50;
         Cell shottedCell = enemyBoardArray[indexY][indexX];
         return shottedCell.getValue() < 2;
+    }
+
+    public boolean isGameStopped() {
+        return isGameStopped;
     }
 
     public boolean isUserTurn() {
@@ -212,14 +235,6 @@ public class Model {
 
     public Cell getStartButton() {
         return startButton;
-    }
-
-    public Cell getUserBoardBorder() {
-        return userBoardBorder;
-    }
-
-    public Cell getComputerBoardBorder() {
-        return computerBoardBorder;
     }
 
     public int getUserShipsNumber() {

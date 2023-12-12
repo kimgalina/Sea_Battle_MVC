@@ -39,7 +39,7 @@ public class Canvas extends JPanel {
 
         exitButton = new RoundRectangle2D.Double(100, 620, 100, 50, arcWidth, arcHeight);
         RoundRectangle2D soundButton = new RoundRectangle2D.Double(900, 620, 100, 100, arcWidth, arcHeight);
-        restartButton = new RoundRectangle2D.Double(250, 620, 100, 50, arcWidth, arcHeight);
+        restartButton = new RoundRectangle2D.Double(230, 620, 140, 50, arcWidth, arcHeight);
         stopButton = new RoundRectangle2D.Double(400, 620, 100, 50, arcWidth, arcHeight);
         largeStartButton = new RoundRectangle2D.Double(500, 300, 200, 100, arcWidth, arcHeight);
 
@@ -71,7 +71,7 @@ public class Canvas extends JPanel {
         g2d.setFont(finishFont);
         if (isUser) {
             g2d.setColor(Color.RED);
-            g2d.drawString("Computer WIN!", 650, 640);
+            g2d.drawString("COMPUTER WIN!", 650, 640);
             return;
         }
         g2d.setColor(new Color(22, 73, 1));
@@ -102,8 +102,13 @@ public class Canvas extends JPanel {
     }
 
     private void drawBoardNames(Graphics2D g2d) {
-        drawBoardName(g2d, numberFont, Color.BLACK, "User's Board", 240, 30);
-        drawBoardName(g2d, numberFont, new Color(153, 0, 0), "Computer's Board", 780, 30);
+        if (model.isUserTurn()) {
+            drawBoardName(g2d, numberFont, Color.BLACK, "User's Board", 240, 30);
+            drawBoardName(g2d, numberFont, new Color(246, 202, 19), "Computer's Board", 780, 30);
+        } else {
+            drawBoardName(g2d, numberFont, new Color(246, 202, 19), "User's Board", 240, 30);
+            drawBoardName(g2d, numberFont, Color.BLACK, "Computer's Board", 780, 30);
+        }
     }
 
     private void drawBoardName(Graphics2D g2d, Font font, Color color, String name, int x, int y) {
@@ -113,9 +118,15 @@ public class Canvas extends JPanel {
     }
 
     private void drawButtons(Graphics2D g2d) {
-        drawButton(g2d, Color.RED, "Exit", 120, 655, font, exitButton);
-        drawButton(g2d, new Color(128, 128, 0), "Restart", 260, 655, font, restartButton);
-        drawButton(g2d, new Color(199, 52, 0), "Stop", 420, 655, font, stopButton);
+        drawButton(g2d, Color.RED, "Exit", 126, 655, font, exitButton);
+        drawButton(g2d, new Color(1, 84, 6), "Restart", 255, 655, font, restartButton);
+        if (model.isGameStopped()) {
+            RoundRectangle2D continueButton = new RoundRectangle2D.Double(400, 620, 140,
+                    50, 30, 30);
+            drawButton(g2d, new Color(246, 202, 19), "Continue", 420, 655, font, continueButton);
+        } else {
+            drawButton(g2d, new Color(246, 202, 19), "Stop", 425, 655, font, stopButton);
+        }
         drawSoundButton(g2d, model.getSoundButton());
 
         if (!model.getStartButton().isVisible()) {
@@ -139,15 +150,6 @@ public class Canvas extends JPanel {
     private void drawSoundButton(Graphics2D g2d, Cell cell) {
         g2d.drawImage(cell.getImage(), cell.x, cell.y, cell.width, cell.height, null);
     }
-
-//    private void drawBoardBorder(Graphics2D g2d) {
-//        Cell border = model.getComputerBoardBorder();
-//        if (model.isUserTurn()) {
-//            g2d.setColor(Color.GREEN);
-//        }
-//        g2d.setStroke(new BasicStroke(5f));
-//        g2d.drawRoundRect(border.x, border.y, border.width, border.height, 20, 20);
-//    }
 
     public void drawBoards(Graphics2D g2d) {
         Cell[][] userBoard = model.getUserBoardArray();
